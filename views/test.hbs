@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script>
+        var ws = new WebSocket("ws://localhost:5000");
+
+        // и навешивает на новый объект три колл-бека:
+
+        // первый вызовется, когда соединение будет установлено:
+        ws.onopen = function() { alert("Connection opened...") };
+
+        // второй - когда соединено закроется
+        //ws.onclose = function() { alert("Connection closed...") };
+
+        // и, наконец, третий - каждый раз, когда браузер получает какие-то данные через веб-сокет
+        ws.onmessage = function(evt) { alert("Connection message...") };
+
+    </script>
+</head>
+<body>
+<script>
+    //ws.send("Привет");
+</script>
+<form>
+    Имя: <input type="text" id="name"><br>
+    Сообщение: <textarea id="message"></textarea><br>
+    <button id="send">Отправить</button>
+</form>
+<ul id="messagesList">
+
+</ul>
+
+</body>
+</html>
