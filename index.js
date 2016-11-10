@@ -39,6 +39,7 @@ const net = require('net');
 
 // Keep track of the chat clients
 var clients = [];
+var matches = [];
 
 // Start a TCP Server
 net.createServer(function (socket) {
@@ -89,6 +90,7 @@ net.createServer(function (socket) {
                     setTimeout(function () {
                         if (opponent) {
                             console.log('начало игры, распределение хода');
+                            //matches.push({player1});
 
                             clients[playerI].opponentI = opponentI;
                             clients[playerI].playerI = playerI;
@@ -100,12 +102,16 @@ net.createServer(function (socket) {
                             var playerTurn = {};
                             playerTurn.messageType = 'setTurn';
                             playerTurn.turn = 'true';
+                            playerTurn.self_tower_hp = clients[socket.playerI].tower_hp;
+                            playerTurn.enemy_tower_hp = clients[socket.opponentI].tower_hp;
                             clients[playerI].turn = 'true';
                             socket.write(JSON.stringify(playerTurn));
 
                             var opponentTurn = {};
                             opponentTurn.messageType = 'setTurn';
                             opponentTurn.turn = 'false';
+                            opponentTurn.self_tower_hp = clients[socket.opponentI].tower_hp;
+                            opponentTurn.enemy_tower_hp = clients[socket.playerI].tower_hp;
                             clients[opponentI].turn = 'false';
                             opponent.write(JSON.stringify(opponentTurn));
                         }
@@ -113,8 +119,10 @@ net.createServer(function (socket) {
                     break;
                 case 'useCard':
                     cards.getCardByID(data['card_id'], function (result) {
+
                         clients[socket.playerI].tower_hp += result.card_self_tower_hp;
                         clients[socket.opponentI].tower_hp += result.card_enemy_tower_hp;
+
                         clients[socket.playerI].turn = 'false';
                         clients[socket.opponentI].turn = 'true';
 
@@ -134,12 +142,13 @@ net.createServer(function (socket) {
 
                         result.messageType = 'getCardOpponent';
                         console.log(JSON.stringify(result));
-                        clients[socket.opponentI].write(JSON.stringify(opponentTurn));
-                    });
-                    cards.getCardRandom(function (result) {
-                        result.messageType = 'getCardRandom';
-                        console.log(JSON.stringify(result));
-                        socket.write(JSON.stringify(result));
+                        clients[socket.opponentI].write(JSON.stringify(result));
+
+                        cards.getCardRandom(function (result) {
+                            result.messageType = 'getCardRandom';
+                            console.log(JSON.stringify(result));
+                            socket.write(JSON.stringify(result));
+                        });
                     });
                     break;
             }
