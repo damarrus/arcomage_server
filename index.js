@@ -47,7 +47,6 @@ net.createServer(function (socket) {
     socket.name = 0;//socket.remoteAddress + ":" + socket.remotePort;
     clients.push(socket);
     console.log('client join');
-    //console.log(clients);
 
     // Handle incoming messages from clients.
     socket.on('data', function (data) {
@@ -92,41 +91,57 @@ net.createServer(function (socket) {
                             console.log('начало игры, распределение хода');
 
                             clients[playerI].opponentI = opponentI;
+                            clients[playerI].playerI = playerI;
+                            clients[playerI].tower_hp = 30;
                             clients[opponentI].opponentI = playerI;
+                            clients[opponentI].playerI = opponentI;
+                            clients[opponentI].tower_hp = 30;
 
                             var playerTurn = {};
                             playerTurn.messageType = 'setTurn';
                             playerTurn.turn = 'true';
+                            clients[playerI].turn = 'true';
                             socket.write(JSON.stringify(playerTurn));
 
                             var opponentTurn = {};
                             opponentTurn.messageType = 'setTurn';
                             opponentTurn.turn = 'false';
+                            clients[opponentI].turn = 'false';
                             opponent.write(JSON.stringify(opponentTurn));
                         }
                     },500);
                     break;
                 case 'useCard':
-                    cards.getCardRandom(function (result) {
-                        result.messageType = 'getCardRandom';
-                        console.log(JSON.stringify(result));
-                        socket.write(JSON.stringify(result));
+                    cards.getCardByID(data['card_id'], function (result) {
+                        clients[socket.playerI].tower_hp += result.card_self_tower_hp;
+                        clients[socket.opponentI].tower_hp += result.card_enemy_tower_hp;
+                        clients[socket.playerI].turn = 'false';
+                        clients[socket.opponentI].turn = 'true';
 
                         var playerTurn = {};
                         playerTurn.messageType = 'setTurn';
-                        playerTurn.turn = 'false';
+                        playerTurn.turn = clients[socket.playerI].turn;
+                        playerTurn.self_tower_hp = clients[socket.playerI].tower_hp;
+                        playerTurn.enemy_tower_hp = clients[socket.opponentI].tower_hp;
                         socket.write(JSON.stringify(playerTurn));
 
                         var opponentTurn = {};
                         opponentTurn.messageType = 'setTurn';
-                        opponentTurn.turn = 'true';
+                        opponentTurn.turn = clients[socket.opponentI].turn;
+                        opponentTurn.self_tower_hp = clients[socket.opponentI].tower_hp;
+                        opponentTurn.enemy_tower_hp = clients[socket.playerI].tower_hp;
+                        clients[socket.opponentI].write(JSON.stringify(opponentTurn));
 
+                        result.messageType = 'getCardOpponent';
+                        console.log(JSON.stringify(result));
                         clients[socket.opponentI].write(JSON.stringify(opponentTurn));
                     });
+                    cards.getCardRandom(function (result) {
+                        result.messageType = 'getCardRandom';
+                        console.log(JSON.stringify(result));
+                        socket.write(JSON.stringify(result));
+                    });
                     break;
-                /*default:
-                    socket.write('fadsfdsfdsafsdafsdfdsasdfasfadfadsdfsfdsafadsfds afadsfsdadfsa');
-                    break;*/
             }
         } catch (e) {
             console.log(e);
@@ -143,7 +158,3 @@ net.createServer(function (socket) {
 
 // Put a friendly message on the terminal of the server.
 console.log("Chat server running at port 5000\n");
-
-function countPlayers() {
-
-}

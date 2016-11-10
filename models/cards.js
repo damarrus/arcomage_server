@@ -32,6 +32,6 @@ var cards = {
                 callback(result[0]);
             });
         });
-    },
+    }
 };
 module.exports = cards;
