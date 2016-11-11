@@ -37,7 +37,9 @@
 <button id="auth1">auth1</button>
 <button id="auth2">auth2</button>
 <button id="searchGame">searchGame</button>
+<button id="gameWithBot">gameWithBot</button>
 <button id="useCard">useCard</button>
+
 
 <script>
     $('#getCardRandom').click(function () {
@@ -76,6 +78,13 @@
         var message = {
             messageType: 'useCard',
             card_id: 1
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#gameWithBot').click(function () {
+        var message = {
+            messageType: 'gameWithBot'
         };
         message = JSON.stringify(message);
         ws.send(message);

@@ -156,6 +156,11 @@ wss.on('connection', function connection(socket) {
                                                     self_tower_hp: socket.player.tower_hp,
                                                     enemy_tower_hp: opponent.player.tower_hp
                                                 });
+                                                setTimeout(function () {
+                                                    cards.getCardByID(card.card_id, function (card) {
+                                                        sendToClient(socket, "getCardOpponent", card);
+                                                    });
+                                                }, 500);
                                             });
                                         });
 
