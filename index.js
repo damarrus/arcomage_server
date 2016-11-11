@@ -13,7 +13,6 @@ const net = require('net');
 const auth = require('./models/auth');
 const cards = require('./models/cards');
 const Player = require('./classes/player');
-const Bot = require('./classes/bot');
 const Match = require('./classes/match');
 
 app.use(bodyParser.json());
@@ -115,32 +114,64 @@ net.createServer(function (socket) {
                 case 'useCard':
                     opponent = socket.opponent;
 
-                    socket.player.useCard(data['card_id'], true);
-                    opponent.player.useCard(data['card_id'], false);
+                    socket.player.useCard(data['card_id'], true, function () {
+                        opponent.player.useCard(data['card_id'], false, function () {
+                            // конец ход игрока
+                            sendToClient(socket, 'setTurn', {
+                                turn: socket.player.turn,
+                                self_tower_hp: socket.player.tower_hp,
+                                enemy_tower_hp: opponent.player.tower_hp
+                            });
 
-                    sendToClient(socket, 'setTurn', {
+                            cards.getCardRandom(function (card) {
+                                sendToClient(socket, 'getCardRandom', card)
+                            });
+
+                            // боту не отправляем инфу, он и так всё знает
+                            if (!socket.withBot) {
+                                sendToClient(opponent, "setTurn", {
+                                    turn: opponent.player.turn,
+                                    self_tower_hp: opponent.player.tower_hp,
+                                    enemy_tower_hp: socket.player.tower_hp
+                                });
+
+                                cards.getCardByID(data['card_id'], function (card) {
+                                    sendToClient(opponent, "getCardOpponent", card);
+                                });
+                            } else {
+                                setTimeout(function () {
+                                    cards.getCardRandom(function (card) {
+                                        socket.player.useCard(card.card_id, false, function () {
+                                            opponent.player.useCard(card.card_id, true, function () {
+                                                // начало хода игрока
+                                                sendToClient(socket, 'setTurn', {
+                                                    turn: socket.player.turn,
+                                                    self_tower_hp: socket.player.tower_hp,
+                                                    enemy_tower_hp: opponent.player.tower_hp
+                                                });
+                                            });
+                                        });
+
+                                    });
+                                }, 3000)
+                            }
+                        });
+                    });
+                    break;
+                case 'gameWithBot':
+                    opponent = {
+                        player: new Player()
+                    };
+                    socket.player.newGame(true);
+                    opponent.player.newGame(false);
+                    socket.opponent = opponent;
+                    socket.withBot = true;
+
+                    sendToClient(socket, "setTurn", {
                         turn: socket.player.turn,
                         self_tower_hp: socket.player.tower_hp,
                         enemy_tower_hp: opponent.player.tower_hp
                     });
-                    sendToClient(opponent, "setTurn", {
-                        turn: opponent.player.turn,
-                        self_tower_hp: opponent.player.tower_hp,
-                        enemy_tower_hp: socket.player.tower_hp
-                    });
-
-                    cards.getCardRandom(function (card) {
-                        sendToClient(socket, 'getCardRandom', card)
-                    });
-
-                    cards.getCardByID(data['card_id'], function (card) {
-                        sendToClient(opponent, "getCardOpponent", card);
-                    });
-                    break;
-                case 'gameWithBot':
-                    var bot = new Bot();
-                    socket.player.newGame(true);
-                    socket.opponent = bot;
                     break;
             }
         } catch (e) {
@@ -148,7 +179,7 @@ net.createServer(function (socket) {
         }
     });
 
-    // Remove the client from the list when it leaves
+    // Клиент отключился
     socket.on('end', function () {
         clients.splice(clients.indexOf(socket), 1);
         console.log('client left');

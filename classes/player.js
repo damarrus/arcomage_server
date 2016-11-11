@@ -14,19 +14,21 @@ connection.connect(function(err) {
         console.error(err);
 });
 
-function Player(info, socket) {
-    this.player_id = info.player_id;
-    this.player_name = info.player_name;
-    this.player_login = info.player_login;
-    this.matchID = 0;
-    this.socket = socket;
-    this.inSearch = false;
+function Player(info = {}, socket = false) {
+    if (socket) {
+        this.player_id = info.player_id;
+        this.player_name = info.player_name;
+        this.player_login = info.player_login;
+        this.matchID = 0;
+        this.socket = socket;
+        this.inSearch = false;
+    }
 
     this.newGame = function (turn) {
         this.tower_hp = 30;
         this.turn = turn;
     };
-    this.useCard = function (card_id, owner) {
+    this.useCard = function (card_id, owner, callback) {
         cards.getCardByID(card_id, function (card) {
             if (owner) {
                 this.tower_hp += card.card_self_tower_hp;
@@ -34,6 +36,7 @@ function Player(info, socket) {
                 this.tower_hp += card.card_enemy_tower_hp;
             }
             changeTurn();
+            callback();
         });
     };
 
