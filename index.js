@@ -8,7 +8,13 @@ const bodyParser = require('body-parser');
 const templating = require('consolidate');
 const request = require('request');
 const cheerio = require('cheerio');
+const net = require('net');
+
+const auth = require('./models/auth');
 const cards = require('./models/cards');
+const Player = require('./classes/player');
+const Bot = require('./classes/bot');
+const Match = require('./classes/match');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -16,31 +22,22 @@ app.engine('hbs', templating.handlebars);
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 
-/*io.sockets.on('connection' , socket => {
-    console.log('connect');
-    socket.on('message', data => {
-        cards.getCardById(data.message, function (result) {
-            data.message = result.card_name;
-            io.sockets.emit('message', data);
-        });
-    });
-});*/
-// pub/sub redis node-cluster
-// DigitalOcean - хостинг
-// netangels.ru
 app.get('/', function(req, res){
     res.render('test', {});
 });
 app.listen(8000);
 
-
-// Load the TCP Library
-const net = require('net');
+function sendToClient(socket, messageType, data = {}) {
+    data.messageType = messageType;
+    data = JSON.stringify(data);
+    socket.write(data);
+    console.log(data)
+}
 
 // Keep track of the chat clients
 var clients = [];
-var matches = [];
-
+var searchGame = [];
+var opponent = {};
 // Start a TCP Server
 net.createServer(function (socket) {
 
@@ -58,98 +55,92 @@ net.createServer(function (socket) {
             data = JSON.parse(data);
             console.log(data);
             switch (data['messageType']) {
-                case 'getCardRandom':
-                    cards.getCardRandom(function (result) {
-                        result.messageType = 'getCardRandom';
-                        console.log(JSON.stringify(result));
-                        socket.write(JSON.stringify(result));
+                // авторизация
+                case 'auth':
+                    auth(data['login'],data['password'], function (result) {
+                        if (result) {
+                            // создание объекта Игрок
+                            var player = new Player(result, socket);
+                            socket.player_id = result.player_id;
+                            socket.player = player;
+
+                            sendToClient(socket, "auth", {
+                                valid: true
+                            });
+                        } else {
+                            sendToClient(socket, "auth", {
+                                valid: false
+                            });
+                        }
                     });
                     break;
-                case 'auth':
-                    if (data['login'] && data['password']) {
-                        var result = {};
-                        result.messageType = 'auth';
-                        result.valid = true;
-                        socket.write(JSON.stringify(result));
+                // Поиск игры
+                case 'searchGame':
+                    // TODO: сделать включение/отключение поиска исходя из действий клиента (отмена поиска)
+                    if (searchGame[0]) {
+                        searchGame.push(socket);
+                        socket.player.inSearch = true;
+                    } else {
+                        opponent = searchGame[0];
+                        searchGame.splice(searchGame.indexOf(opponent), 1);
+
+                        opponent.opponent = socket;
+                        socket.opponent = opponent;
+                        opponent.player.inSearch = false;
+
+                        console.log('начало игры, распределение хода');
+
+                        socket.player.newGame(true);
+                        opponent.player.newGame(false);
+
+                        sendToClient(socket, "setTurn", {
+                            turn: socket.player.turn,
+                            self_tower_hp: socket.player.tower_hp,
+                            enemy_tower_hp: opponent.player.tower_hp
+                        });
+                        sendToClient(opponent, "setTurn", {
+                            turn: opponent.player.turn,
+                            self_tower_hp: opponent.player.tower_hp,
+                            enemy_tower_hp: socket.player.tower_hp
+                        });
                     }
                     break;
-                case 'searchGame':
-                    socket.name = data['player_id'];
-                    var playerI;
-                    var opponentI;
-                    var opponent;
-                    clients.forEach(function (socket, i, clients) {
-                        if (socket.name != 0 && socket.name != data['player_id']) {
-                            opponentI = i;
-                            opponent = socket;
-                        }
-                        if (socket.name == data['player_id']) {
-                            playerI = i;
-                        }
+                // отправка случайной карты
+                case 'getCardRandom':
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardRandom', card)
                     });
-                    setTimeout(function () {
-                        if (opponent) {
-                            console.log('начало игры, распределение хода');
-                            //matches.push({player1});
-
-                            clients[playerI].opponentI = opponentI;
-                            clients[playerI].playerI = playerI;
-                            clients[playerI].tower_hp = 30;
-                            clients[opponentI].opponentI = playerI;
-                            clients[opponentI].playerI = opponentI;
-                            clients[opponentI].tower_hp = 30;
-
-                            var playerTurn = {};
-                            playerTurn.messageType = 'setTurn';
-                            playerTurn.turn = 'true';
-                            playerTurn.self_tower_hp = clients[socket.playerI].tower_hp;
-                            playerTurn.enemy_tower_hp = clients[socket.opponentI].tower_hp;
-                            clients[playerI].turn = 'true';
-                            socket.write(JSON.stringify(playerTurn));
-
-                            var opponentTurn = {};
-                            opponentTurn.messageType = 'setTurn';
-                            opponentTurn.turn = 'false';
-                            opponentTurn.self_tower_hp = clients[socket.opponentI].tower_hp;
-                            opponentTurn.enemy_tower_hp = clients[socket.playerI].tower_hp;
-                            clients[opponentI].turn = 'false';
-                            opponent.write(JSON.stringify(opponentTurn));
-                        }
-                    },500);
                     break;
+                // применение карты
                 case 'useCard':
-                    cards.getCardByID(data['card_id'], function (result) {
+                    opponent = socket.opponent;
 
-                        clients[socket.playerI].tower_hp += result.card_self_tower_hp;
-                        clients[socket.opponentI].tower_hp += result.card_enemy_tower_hp;
+                    socket.player.useCard(data['card_id'], true);
+                    opponent.player.useCard(data['card_id'], false);
 
-                        clients[socket.playerI].turn = 'false';
-                        clients[socket.opponentI].turn = 'true';
-
-                        var playerTurn = {};
-                        playerTurn.messageType = 'setTurn';
-                        playerTurn.turn = clients[socket.playerI].turn;
-                        playerTurn.self_tower_hp = clients[socket.playerI].tower_hp;
-                        playerTurn.enemy_tower_hp = clients[socket.opponentI].tower_hp;
-                        socket.write(JSON.stringify(playerTurn));
-
-                        var opponentTurn = {};
-                        opponentTurn.messageType = 'setTurn';
-                        opponentTurn.turn = clients[socket.opponentI].turn;
-                        opponentTurn.self_tower_hp = clients[socket.opponentI].tower_hp;
-                        opponentTurn.enemy_tower_hp = clients[socket.playerI].tower_hp;
-                        clients[socket.opponentI].write(JSON.stringify(opponentTurn));
-
-                        result.messageType = 'getCardOpponent';
-                        console.log(JSON.stringify(result));
-                        clients[socket.opponentI].write(JSON.stringify(result));
-
-                        cards.getCardRandom(function (result) {
-                            result.messageType = 'getCardRandom';
-                            console.log(JSON.stringify(result));
-                            socket.write(JSON.stringify(result));
-                        });
+                    sendToClient(socket, 'setTurn', {
+                        turn: socket.player.turn,
+                        self_tower_hp: socket.player.tower_hp,
+                        enemy_tower_hp: opponent.player.tower_hp
                     });
+                    sendToClient(opponent, "setTurn", {
+                        turn: opponent.player.turn,
+                        self_tower_hp: opponent.player.tower_hp,
+                        enemy_tower_hp: socket.player.tower_hp
+                    });
+
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardRandom', card)
+                    });
+
+                    cards.getCardByID(data['card_id'], function (card) {
+                        sendToClient(opponent, "getCardOpponent", card);
+                    });
+                    break;
+                case 'gameWithBot':
+                    var bot = new Bot();
+                    socket.player.newGame(true);
+                    socket.opponent = bot;
                     break;
             }
         } catch (e) {

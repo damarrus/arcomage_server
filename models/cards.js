@@ -15,9 +15,8 @@ connection.connect(function(err) {
 });
 
 var cards = {
-    getCardByID: function(id, callback) {
-        var query = 'SELECT * FROM card WHERE card_id='+id;
-        console.log(query);
+    getCardByID: function(card_id, callback) {
+        var query = 'SELECT * FROM card WHERE card_id='+card_id;
         connection.query(query, function(err, result) {
             callback(result[0]);
         });
@@ -27,11 +26,10 @@ var cards = {
         connection.query(query, function(err, result) {
             var id = Math.floor(Math.random() * (result[0].count_card - 2)) + 1;
             query = 'SELECT * FROM card WHERE card_id='+id;
-            console.log(query);
             connection.query(query, function(err, result) {
                 callback(result[0]);
             });
         });
-    }
+    },
 };
 module.exports = cards;
