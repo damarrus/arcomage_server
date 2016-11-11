@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat</title>
+    <script
+            src="https://code.jquery.com/jquery-3.1.1.js"
+            integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+            crossorigin="anonymous"></script>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -10,34 +14,72 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
     <script>
         var ws = new WebSocket("ws://localhost:5000");
 
         // и навешивает на новый объект три колл-бека:
 
         // первый вызовется, когда соединение будет установлено:
-        ws.onopen = function() { alert("Connection opened...") };
+        ws.onopen = function() { console.log("Connection opened...") };
 
         // второй - когда соединено закроется
-        //ws.onclose = function() { alert("Connection closed...") };
+        ws.onclose = function() { console.log("Connection closed...") };
 
         // и, наконец, третий - каждый раз, когда браузер получает какие-то данные через веб-сокет
-        ws.onmessage = function(evt) { alert("Connection message...") };
+        ws.onmessage = function(evt) { console.log(evt.data)};
 
     </script>
 </head>
 <body>
+
+<button id="getCardRandom">getCardRandom</button>
+<button id="auth1">auth1</button>
+<button id="auth2">auth2</button>
+<button id="searchGame">searchGame</button>
+<button id="useCard">useCard</button>
+
 <script>
-    //ws.send("Привет");
+    $('#getCardRandom').click(function () {
+        var message = {
+            messageType: 'getCardRandom'
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#auth1').click(function () {
+        var message = {
+            messageType: 'auth',
+            login: 1,
+            password: 1
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#auth2').click(function () {
+        var message = {
+            messageType: 'auth',
+            login: 2,
+            password: 2
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#searchGame').click(function () {
+        var message = {
+            messageType: 'searchGame'
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#useCard').click(function () {
+        var message = {
+            messageType: 'useCard',
+            card_id: 1
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
 </script>
-<form>
-    Имя: <input type="text" id="name"><br>
-    Сообщение: <textarea id="message"></textarea><br>
-    <button id="send">Отправить</button>
-</form>
-<ul id="messagesList">
-
-</ul>
-
 </body>
 </html>

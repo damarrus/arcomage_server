@@ -15,6 +15,7 @@ connection.connect(function(err) {
 });
 
 function Player(info = {}, socket = false) {
+    var self = this;
     if (socket) {
         this.player_id = info.player_id;
         this.player_name = info.player_name;
@@ -31,11 +32,13 @@ function Player(info = {}, socket = false) {
     this.useCard = function (card_id, owner, callback) {
         cards.getCardByID(card_id, function (card) {
             if (owner) {
-                this.tower_hp += card.card_self_tower_hp;
+                self.tower_hp += card.card_self_tower_hp;
+                self.turn = false;
             } else {
-                this.tower_hp += card.card_enemy_tower_hp;
+                self.tower_hp += card.card_enemy_tower_hp;
+                self.turn = true;
             }
-            changeTurn();
+            //changeTurn();
             callback();
         });
     };

@@ -27,9 +27,10 @@ app.get('/', function(req, res){
 app.listen(8000);
 
 function sendToClient(socket, messageType, data = {}) {
+    console.log(socket.player.tower_hp);
     data.messageType = messageType;
     data = JSON.stringify(data);
-    socket.write(data);
+    socket.send(data);
     console.log(data)
 }
 
@@ -38,7 +39,11 @@ var clients = [];
 var searchGame = [];
 var opponent = {};
 // Start a TCP Server
-net.createServer(function (socket) {
+
+const WebSocketServer = require('ws').Server;
+const wss = new WebSocketServer({ port: 5000 });
+
+wss.on('connection', function connection(socket) {
 
     // Identify this client
     socket.name = 0;//socket.remoteAddress + ":" + socket.remotePort;
@@ -46,8 +51,8 @@ net.createServer(function (socket) {
     console.log('client join');
 
     // Handle incoming messages from clients.
-    socket.on('data', function (data) {
-        console.log(data);
+    socket.on('message', function incoming(data) {
+        //console.log(data);
         data = data.toString('utf8').replace(/\0+$/, "");
         console.log(data);
         try {
@@ -76,7 +81,7 @@ net.createServer(function (socket) {
                 // Поиск игры
                 case 'searchGame':
                     // TODO: сделать включение/отключение поиска исходя из действий клиента (отмена поиска)
-                    if (searchGame[0]) {
+                    if (!searchGame[0]) {
                         searchGame.push(socket);
                         socket.player.inSearch = true;
                     } else {
@@ -182,12 +187,12 @@ net.createServer(function (socket) {
     });
 
     // Клиент отключился
-    socket.on('end', function () {
+    socket.on('close', function close() {
         clients.splice(clients.indexOf(socket), 1);
         console.log('client left');
     });
 
-}).listen(5000);
+});
 
 // Put a friendly message on the terminal of the server.
 console.log("Chat server running at port 5000\n");
