@@ -121,13 +121,22 @@ net.createServer(function (socket) {
                     });
                     break;
                 case 'getCardStart':
-                    cards.getCardRandom(function (card1) {
-                        cards.getCardRandom(function (card2) {
-                            var obj = {
-                                card1: card1,
-                                card2: card2
-                            };
-                            sendToClient(socket, 'getCardStart', obj);
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardStart', card);
+                        cards.getCardRandom(function (card) {
+                            sendToClient(socket, 'getCardStart', card);
+                            cards.getCardRandom(function (card) {
+                                sendToClient(socket, 'getCardStart', card);
+                                cards.getCardRandom(function (card) {
+                                    sendToClient(socket, 'getCardStart', card);
+                                    cards.getCardRandom(function (card) {
+                                        sendToClient(socket, 'getCardStart', card);
+                                        cards.getCardRandom(function (card) {
+                                            sendToClient(socket, 'getCardStart', card);
+                                        });
+                                    });
+                                });
+                            });
                         });
                     });
                     break;
