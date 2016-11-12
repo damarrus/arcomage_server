@@ -30,7 +30,7 @@ function sendToClient(socket, messageType, data = {}) {
     console.log(socket.player.tower_hp);
     data.messageType = messageType;
     data = JSON.stringify(data);
-    socket.send(data);
+    socket.write(data); //send
     console.log(data)
 }
 
@@ -40,10 +40,13 @@ var searchGame = [];
 var opponent = {};
 // Start a TCP Server
 
-const WebSocketServer = require('ws').Server;
-const wss = new WebSocketServer({ port: 5000 });
+//const WebSocketServer = require('ws').Server;
+//const wss = new WebSocketServer({ port: 5000 });
 
-wss.on('connection', function connection(socket) {
+net.createServer(function (socket) {
+    socket.setNoDelay(true);
+
+//wss.on('connection', function connection(socket) {
 
     // Identify this client
     socket.name = 0;//socket.remoteAddress + ":" + socket.remotePort;
@@ -51,7 +54,7 @@ wss.on('connection', function connection(socket) {
     console.log('client join');
 
     // Handle incoming messages from clients.
-    socket.on('message', function incoming(data) {
+    socket.on('data', function (data) { // function incoming //message/data
         //console.log(data);
         data = data.toString('utf8').replace(/\0+$/, "");
         console.log(data);
@@ -127,11 +130,9 @@ wss.on('connection', function connection(socket) {
                                 self_tower_hp: socket.player.tower_hp,
                                 enemy_tower_hp: opponent.player.tower_hp
                             });
-                            setTimeout(function () {
-                                cards.getCardRandom(function (card) {
-                                    sendToClient(socket, 'getCardRandom', card)
-                                });
-                            }, 500);
+                            cards.getCardRandom(function (card) {
+                                sendToClient(socket, 'getCardRandom', card)
+                            });
                             // боту не отправляем инфу, он и так всё знает
                             if (!socket.withBot) {
                                 sendToClient(opponent, "setTurn", {
@@ -139,12 +140,9 @@ wss.on('connection', function connection(socket) {
                                     self_tower_hp: opponent.player.tower_hp,
                                     enemy_tower_hp: socket.player.tower_hp
                                 });
-
-                                setTimeout(function () {
-                                    cards.getCardByID(data['card_id'], function (card) {
-                                        sendToClient(opponent, "getCardOpponent", card);
-                                    });
-                                }, 500);
+                                cards.getCardByID(data['card_id'], function (card) {
+                                    sendToClient(opponent, "getCardOpponent", card);
+                                });
                             } else {
                                 setTimeout(function () {
                                     cards.getCardRandom(function (card) {
@@ -156,11 +154,9 @@ wss.on('connection', function connection(socket) {
                                                     self_tower_hp: socket.player.tower_hp,
                                                     enemy_tower_hp: opponent.player.tower_hp
                                                 });
-                                                setTimeout(function () {
-                                                    cards.getCardByID(card.card_id, function (card) {
-                                                        sendToClient(socket, "getCardOpponent", card);
-                                                    });
-                                                }, 500);
+                                                cards.getCardByID(card.card_id, function (card) {
+                                                    sendToClient(socket, "getCardOpponent", card);
+                                                });
                                             });
                                         });
 
@@ -192,12 +188,12 @@ wss.on('connection', function connection(socket) {
     });
 
     // Клиент отключился
-    socket.on('close', function close() {
+    socket.on('close', function () { //close
         clients.splice(clients.indexOf(socket), 1);
         console.log('client left');
     });
 
-});
+}).listen(5000);
 
 // Put a friendly message on the terminal of the server.
 console.log("Chat server running at port 5000\n");
