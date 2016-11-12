@@ -38,6 +38,8 @@ function sendToClient(socket, messageType, data = {}) {
 var clients = [];
 var searchGame = [];
 var opponent = {};
+
+const delay = 100;
 // Start a TCP Server
 
 //const WebSocketServer = require('ws').Server;
@@ -118,6 +120,17 @@ net.createServer(function (socket) {
                         sendToClient(socket, 'getCardRandom', card)
                     });
                     break;
+                case 'getCardStart':
+                    cards.getCardRandom(function (card1) {
+                        cards.getCardRandom(function (card2) {
+                            var obj = {
+                                card1: card1,
+                                card2: card2
+                            };
+                            sendToClient(socket, 'getCardStart', obj);
+                        });
+                    });
+                    break;
                 // применение карты
                 case 'useCard':
                     opponent = socket.opponent;
@@ -134,7 +147,7 @@ net.createServer(function (socket) {
                                 cards.getCardRandom(function (card) {
                                     sendToClient(socket, 'getCardRandom', card)
                                 });
-                            }, 500);
+                            }, delay);
                             // боту не отправляем инфу, он и так всё знает
                             if (!socket.withBot) {
                                 sendToClient(opponent, "setTurn", {
@@ -147,7 +160,7 @@ net.createServer(function (socket) {
                                     cards.getCardByID(data['card_id'], function (card) {
                                         sendToClient(opponent, "getCardOpponent", card);
                                     });
-                                }, 500);
+                                }, delay);
                             } else {
                                 setTimeout(function () {
                                     cards.getCardRandom(function (card) {
@@ -163,12 +176,12 @@ net.createServer(function (socket) {
                                                     cards.getCardByID(card.card_id, function (card) {
                                                         sendToClient(socket, "getCardOpponent", card);
                                                     });
-                                                }, 500);
+                                                }, delay);
                                             });
                                         });
 
                                     });
-                                }, 3000)
+                                }, 1500)
                             }
                         });
                     });
