@@ -132,8 +132,10 @@ function socketServer(socket, data) {
                 case 'useCard':
                     opponent = socket.opponent;
 
-                    socket.player.useCard(data['card_id'], true, function () {
-                        opponent.player.useCard(data['card_id'], false, function () {
+                    var discard = data['discard'];
+
+                    socket.player.useCard(data['card_id'], true, discard, function () {
+                        opponent.player.useCard(data['card_id'], false, discard, function () {
                             // конец ход игрока
                             sendToClient(socket, 'setTurn', {
                                 turn: socket.player.turn,
@@ -184,8 +186,8 @@ function socketServer(socket, data) {
                             } else {
                                 setTimeout(function () {
                                     cards.getCardRandom(function (card) {
-                                        socket.player.useCard(card.card_id, false, function () {
-                                            opponent.player.useCard(card.card_id, true, function () {
+                                        socket.player.useCard(card.card_id, false, false, function () {
+                                            opponent.player.useCard(card.card_id, true, false, function () {
                                                 // начало хода игрока
                                                 sendToClient(socket, 'setTurn', {
                                                     turn: socket.player.turn,
