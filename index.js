@@ -130,9 +130,11 @@ net.createServer(function (socket) {
                                 self_tower_hp: socket.player.tower_hp,
                                 enemy_tower_hp: opponent.player.tower_hp
                             });
-                            cards.getCardRandom(function (card) {
-                                sendToClient(socket, 'getCardRandom', card)
-                            });
+                            setTimeout(function () {
+                                cards.getCardRandom(function (card) {
+                                    sendToClient(socket, 'getCardRandom', card)
+                                });
+                            }, 500);
                             // боту не отправляем инфу, он и так всё знает
                             if (!socket.withBot) {
                                 sendToClient(opponent, "setTurn", {
@@ -140,9 +142,12 @@ net.createServer(function (socket) {
                                     self_tower_hp: opponent.player.tower_hp,
                                     enemy_tower_hp: socket.player.tower_hp
                                 });
-                                cards.getCardByID(data['card_id'], function (card) {
-                                    sendToClient(opponent, "getCardOpponent", card);
-                                });
+
+                                setTimeout(function () {
+                                    cards.getCardByID(data['card_id'], function (card) {
+                                        sendToClient(opponent, "getCardOpponent", card);
+                                    });
+                                }, 500);
                             } else {
                                 setTimeout(function () {
                                     cards.getCardRandom(function (card) {
@@ -154,9 +159,11 @@ net.createServer(function (socket) {
                                                     self_tower_hp: socket.player.tower_hp,
                                                     enemy_tower_hp: opponent.player.tower_hp
                                                 });
-                                                cards.getCardByID(card.card_id, function (card) {
-                                                    sendToClient(socket, "getCardOpponent", card);
-                                                });
+                                                setTimeout(function () {
+                                                    cards.getCardByID(card.card_id, function (card) {
+                                                        sendToClient(socket, "getCardOpponent", card);
+                                                    });
+                                                }, 500);
                                             });
                                         });
 
