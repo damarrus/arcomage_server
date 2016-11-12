@@ -165,8 +165,8 @@ function socketServer(socket, data) {
                             if (!socket.withBot) {
                                 sendToClient(opponent, "setTurn", {
                                     turn: opponent.player.turn,
-                                    self_tower_hp: opponent.player.tower_hp,
-                                    enemy_tower_hp: socket.player.tower_hp,
+                                    self_tower_hp: socket.player.tower_hp,
+                                    enemy_tower_hp: opponent.player.tower_hp,
                                     self_wall_hp: socket.player.wall_hp,
                                     enemy_wall_hp: opponent.player.wall_hp,
                                     self_res1: socket.player.res1,
