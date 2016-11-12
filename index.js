@@ -15,6 +15,9 @@ const cards = require('./models/cards');
 const Player = require('./classes/player');
 const Match = require('./classes/match');
 
+const isTestClient = (process.argv[2] = 'test') ? true : false;
+console.log("test mode " + isTestClient);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.engine('hbs', templating.handlebars);
@@ -30,8 +33,8 @@ function sendToClient(socket, messageType, data = {}) {
     console.log(socket.player.tower_hp);
     data.messageType = messageType;
     data = JSON.stringify(data);
-    socket.write(data); //send
-    console.log(data)
+    (isTestClient) ? socket.send(data) : socket.write(data);
+    console.log(data);
 }
 
 // Keep track of the chat clients
@@ -39,24 +42,9 @@ var clients = [];
 var searchGame = [];
 var opponent = {};
 
-const delay = 100;
-// Start a TCP Server
+// Обработчик сообщений
+function socketServer(socket, data) {
 
-//const WebSocketServer = require('ws').Server;
-//const wss = new WebSocketServer({ port: 5000 });
-
-net.createServer(function (socket) {
-    //socket.setNoDelay(true);
-
-//wss.on('connection', function connection(socket) {
-
-    // Identify this client
-    socket.name = 0;//socket.remoteAddress + ":" + socket.remotePort;
-    clients.push(socket);
-    console.log('client join');
-
-    // Handle incoming messages from clients.
-    socket.on('data', function (data) { // function incoming //message/data
         //console.log(data);
         data = data.toString('utf8').replace(/\0+$/, "");
         console.log(data);
@@ -248,15 +236,53 @@ net.createServer(function (socket) {
         } catch (e) {
             console.log(e);
         }
-    });
 
-    // Клиент отключился
-    socket.on('close', function () { //close
-        clients.splice(clients.indexOf(socket), 1);
-        console.log('client left');
-    });
 
-}).listen(5000);
+
+
+}
+
+if (isTestClient) {
+    const WebSocketServer = require('ws').Server;
+    const wss = new WebSocketServer({ port: 5000 });
+
+    wss.on('connection', function connection(socket) {
+        //socket.setNoDelay(true);
+        // Identify this client
+        socket.name = 0;//socket.remoteAddress + ":" + socket.remotePort;
+        clients.push(socket);
+        console.log('client join');
+        // Handle incoming messages from clients.
+        socket.on('message', function incoming(data) { // function incoming //message/data
+            socketServer(socket, data);
+        });
+        // Клиент отключился
+        socket.on('close', function close() { //close
+            clients.splice(clients.indexOf(socket), 1);
+            console.log('client left');
+        });
+    });
+} else {
+    net.createServer(function (socket) {
+
+        //socket.setNoDelay(true);
+        // Identify this client
+        socket.name = 0;//socket.remoteAddress + ":" + socket.remotePort;
+        clients.push(socket);
+        console.log('client join');
+
+        // Handle incoming messages from clients.
+        socket.on('data', function (data) { // function incoming //message/data
+            socketServer(socket, data);
+        });
+        // Клиент отключился
+        socket.on('close', function () { //close
+            clients.splice(clients.indexOf(socket), 1);
+            console.log('client left');
+        });
+    }).listen(5000);
+}
 
 // Put a friendly message on the terminal of the server.
 console.log("Chat server running at port 5000\n");
+

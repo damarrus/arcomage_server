@@ -24,7 +24,7 @@ var cards = {
     getCardRandom: function(callback) {
         var query = 'SELECT count(*) as count_card FROM card';
         connection.query(query, function(err, result) {
-            var id = Math.floor(Math.random() * (result[0].count_card - 2)) + 1;
+            var id = Math.floor(Math.random() * (result[0].count_card)) + 1;
             query = 'SELECT * FROM card WHERE card_id='+id;
             connection.query(query, function(err, result) {
                 callback(result[0]);
