@@ -34,7 +34,9 @@ function sendToClient(socket, messageType, data = {}) {
     data.messageType = messageType;
     data = JSON.stringify(data);
     (isTestClient) ? socket.send(data) : socket.write(data);
-    console.log(data);
+    if (messageType == 'setTurn') {
+        console.log(data);
+    }
 }
 
 // Keep track of the chat clients
