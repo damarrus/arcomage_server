@@ -44,7 +44,7 @@ var opponent = {};
 //const wss = new WebSocketServer({ port: 5000 });
 
 net.createServer(function (socket) {
-    socket.setNoDelay(true);
+    //socket.setNoDelay(true);
 
 //wss.on('connection', function connection(socket) {
 
