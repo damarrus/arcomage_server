@@ -41,13 +41,13 @@ function Player(info = {}, socket = false) {
             if (owner) {
                 switch (card.card_elem) {
                     case 1:
-                        self.res1 += card.card_cost;
+                        self.res1 -= card.card_cost;
                         break;
                     case 2:
-                        self.res2 += card.card_cost;
+                        self.res2 -= card.card_cost;
                         break;
                     case 3:
-                        self.res3 += card.card_cost;
+                        self.res3 -= card.card_cost;
                         break;
                 }
                 self.turn = false;
