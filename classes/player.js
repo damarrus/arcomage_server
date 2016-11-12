@@ -39,6 +39,17 @@ function Player(info = {}, socket = false) {
     this.useCard = function (card_id, owner, callback) {
         cards.getCardByID(card_id, function (card) {
             if (owner) {
+                switch (card.card_elem) {
+                    case 1:
+                        self.res1 += card.card_cost;
+                        break;
+                    case 2:
+                        self.res2 += card.card_cost;
+                        break;
+                    case 3:
+                        self.res3 += card.card_cost;
+                        break;
+                }
                 self.turn = false;
                 self.tower_hp += card.card_self_tower_hp;
                 self.wall_hp += card.card_self_wall_hp;
