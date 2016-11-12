@@ -123,21 +123,21 @@ net.createServer(function (socket) {
                 case 'getCardStart':
                     cards.getCardRandom(function (card) {
                         sendToClient(socket, 'getCardStart', card);
-                        cards.getCardRandom(function (card) {
-                            sendToClient(socket, 'getCardStart', card);
-                            cards.getCardRandom(function (card) {
-                                sendToClient(socket, 'getCardStart', card);
-                                cards.getCardRandom(function (card) {
-                                    sendToClient(socket, 'getCardStart', card);
-                                    cards.getCardRandom(function (card) {
-                                        sendToClient(socket, 'getCardStart', card);
-                                        cards.getCardRandom(function (card) {
-                                            sendToClient(socket, 'getCardStart', card);
-                                        });
-                                    });
-                                });
-                            });
-                        });
+                    });
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardStart', card);
+                    });
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardStart', card);
+                    });
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardStart', card);
+                    });
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardStart', card);
+                    });
+                    cards.getCardRandom(function (card) {
+                        sendToClient(socket, 'getCardStart', card);
                     });
                     break;
                 // применение карты
