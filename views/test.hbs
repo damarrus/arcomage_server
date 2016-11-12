@@ -14,9 +14,25 @@
           integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
             integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.2/require.js"></script>
     <script>
-        var ws = new WebSocket("ws://localhost:5000");
+
+        /*var net = require('net');
+        var client = new net.Socket();
+        console.log(client);*/
+
+
+        /*define(function (require) {
+            var net = require('net');
+            var server = net.createServer(function(socket) {
+                socket.write('Echo server\r\n');
+                socket.pipe(socket);
+            });
+
+            server.listen(5000, 'localhost');
+        });*/
+
+        /*var ws = new WebSocket("ws://localhost:5000");
 
         // и навешивает на новый объект три колл-бека:
 
@@ -27,7 +43,7 @@
         ws.onclose = function() { console.log("Connection closed...") };
 
         // и, наконец, третий - каждый раз, когда браузер получает какие-то данные через веб-сокет
-        ws.onmessage = function(evt) { console.log(evt.data)};
+        ws.onmessage = function(evt) { console.log(evt.data)};*/
 
     </script>
 </head>
@@ -42,6 +58,11 @@
 
 
 <script>
+    var net = require(['net']);
+    //var client = new net.Socket();
+    console.log(net);
+
+
     $('#getCardRandom').click(function () {
         var message = {
             messageType: 'getCardRandom'
