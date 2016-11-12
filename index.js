@@ -15,7 +15,7 @@ const cards = require('./models/cards');
 const Player = require('./classes/player');
 const Match = require('./classes/match');
 
-const isTestClient = (process.argv[2] = 'test') ? true : false;
+const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
 app.use(bodyParser.json());
