@@ -150,7 +150,21 @@ net.createServer(function (socket) {
                             sendToClient(socket, 'setTurn', {
                                 turn: socket.player.turn,
                                 self_tower_hp: socket.player.tower_hp,
-                                enemy_tower_hp: opponent.player.tower_hp
+                                enemy_tower_hp: opponent.player.tower_hp,
+                                self_wall_hp: socket.player.wall_hp,
+                                enemy_wall_hp: opponent.player.wall_hp,
+                                self_res1: socket.player.res1,
+                                self_res2: socket.player.res2,
+                                self_res3: socket.player.res3,
+                                self_gen1: socket.player.gen1,
+                                self_gen2: socket.player.gen2,
+                                self_gen3: socket.player.gen3,
+                                enemy_res1: opponent.player.res1,
+                                enemy_res2: opponent.player.res2,
+                                enemy_res3: opponent.player.res3,
+                                enemy_gen1: opponent.player.gen1,
+                                enemy_gen2: opponent.player.gen2,
+                                enemy_gen3: opponent.player.gen3
                             });
                             cards.getCardRandom(function (card) {
                                 sendToClient(socket, 'getCardRandom', card)
@@ -160,7 +174,21 @@ net.createServer(function (socket) {
                                 sendToClient(opponent, "setTurn", {
                                     turn: opponent.player.turn,
                                     self_tower_hp: opponent.player.tower_hp,
-                                    enemy_tower_hp: socket.player.tower_hp
+                                    enemy_tower_hp: socket.player.tower_hp,
+                                    self_wall_hp: socket.player.wall_hp,
+                                    enemy_wall_hp: opponent.player.wall_hp,
+                                    self_res1: socket.player.res1,
+                                    self_res2: socket.player.res2,
+                                    self_res3: socket.player.res3,
+                                    self_gen1: socket.player.gen1,
+                                    self_gen2: socket.player.gen2,
+                                    self_gen3: socket.player.gen3,
+                                    enemy_res1: opponent.player.res1,
+                                    enemy_res2: opponent.player.res2,
+                                    enemy_res3: opponent.player.res3,
+                                    enemy_gen1: opponent.player.gen1,
+                                    enemy_gen2: opponent.player.gen2,
+                                    enemy_gen3: opponent.player.gen3
                                 });
                                 cards.getCardByID(data['card_id'], function (card) {
                                     sendToClient(opponent, "getCardOpponent", card);
@@ -174,14 +202,27 @@ net.createServer(function (socket) {
                                                 sendToClient(socket, 'setTurn', {
                                                     turn: socket.player.turn,
                                                     self_tower_hp: socket.player.tower_hp,
-                                                    enemy_tower_hp: opponent.player.tower_hp
+                                                    enemy_tower_hp: opponent.player.tower_hp,
+                                                    self_wall_hp: socket.player.wall_hp,
+                                                    enemy_wall_hp: opponent.player.wall_hp,
+                                                    self_res1: socket.player.res1,
+                                                    self_res2: socket.player.res2,
+                                                    self_res3: socket.player.res3,
+                                                    self_gen1: socket.player.gen1,
+                                                    self_gen2: socket.player.gen2,
+                                                    self_gen3: socket.player.gen3,
+                                                    enemy_res1: opponent.player.res1,
+                                                    enemy_res2: opponent.player.res2,
+                                                    enemy_res3: opponent.player.res3,
+                                                    enemy_gen1: opponent.player.gen1,
+                                                    enemy_gen2: opponent.player.gen2,
+                                                    enemy_gen3: opponent.player.gen3
                                                 });
                                                 cards.getCardByID(card.card_id, function (card) {
                                                     sendToClient(socket, "getCardOpponent", card);
                                                 });
                                             });
                                         });
-
                                     });
                                 }, 1500)
                             }
