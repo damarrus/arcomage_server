@@ -106,6 +106,9 @@ function Player(info = {}, socket = false) {
                     self.res3 += self.gen3;
                 } else {
                     self.turn = true;
+                    self.res1 += self.gen1;
+                    self.res2 += self.gen2;
+                    self.res3 += self.gen3;
                 }
             }
             //changeTurn();
