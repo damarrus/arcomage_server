@@ -188,8 +188,8 @@ function socketServer(socket, data) {
                             } else {
                                 setTimeout(function () {
                                     cards.getCardRandom(function (card) {
-                                        socket.player.useCard(card.card_id, false, false, function () {
-                                            opponent.player.useCard(card.card_id, true, false, function () {
+                                        socket.player.useCard(card.card_id, true, false, function () {
+                                            opponent.player.useCard(card.card_id, false, false, function () {
                                                 // начало хода игрока
                                                 sendToClient(socket, 'setTurn', {
                                                     turn: opponent.player.turn,
