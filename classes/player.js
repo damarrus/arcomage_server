@@ -111,7 +111,6 @@ function Player(info = {}, socket = false) {
                     self.res3 += self.gen3;
                 }
             }
-            //changeTurn();
             callback();
         });
     };

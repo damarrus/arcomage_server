@@ -27,11 +27,16 @@
         ws.onclose = function() { console.log("Connection closed...") };
 
         // и, наконец, третий - каждый раз, когда браузер получает какие-то данные через веб-сокет
-        ws.onmessage = function(evt) { console.log(evt.data)};
+
 
     </script>
 </head>
 <body>
+<style>
+    td {
+        border: 1px solid gray;
+    }
+</style>
 
 <button id="getCardRandom">getCardRandom</button>.
 <button id="getCardStart">getCardStart</button>
@@ -40,9 +45,191 @@
 <button id="searchGame">searchGame</button>
 <button id="gameWithBot">gameWithBot</button>
 <button id="useCard">useCard</button>
-
+<button id="discard">discard</button>
+<table>
+    <tr>
+        <td>Person</td>
+        <td>Player</td>
+        <td>Opponent</td>
+    </tr>
+    <tr>
+        <td>turn</td>
+        <td id="self_turn"></td>
+        <td id="enemy_turn"></td>
+    </tr>
+    <tr>
+        <td>tower</td>
+        <td id="self_tower_hp"></td>
+        <td id="enemy_tower_hp"></td>
+    </tr>
+    <tr>
+        <td>wall</td>
+        <td id="self_wall_hp"></td>
+        <td id="enemy_wall_hp"></td>
+    </tr>
+    <tr>
+        <td>res1</td>
+        <td id="self_res1"></td>
+        <td id="enemy_res1"></td>
+    </tr>
+    <tr>
+        <td>gen1</td>
+        <td id="self_gen1"></td>
+        <td id="enemy_gen1"></td>
+    </tr>
+    <tr>
+        <td>res2</td>
+        <td id="self_res2"></td>
+        <td id="enemy_res2"></td>
+    </tr>
+    <tr>
+        <td>gen2</td>
+        <td id="self_gen2"></td>
+        <td id="enemy_gen2"></td>
+    </tr>
+    <tr>
+        <td>res3</td>
+        <td id="self_res3"></td>
+        <td id="enemy_res3"></td>
+    </tr>
+    <tr>
+        <td>gen3</td>
+        <td id="self_gen3"></td>
+        <td id="enemy_gen3"></td>
+    </tr>
+</table>
+<table>
+    <tr>
+        <td>Card</td>
+        <td>Player</td>
+        <td>Opponent</td>
+    </tr>
+    <tr>
+        <td>name</td>
+        <td colspan="2" id="card_name"></td>
+    </tr>
+    <tr>
+        <td>cost</td>
+        <td colspan="2" id="card_cost"></td>
+    </tr>
+    <tr>
+        <td>elem</td>
+        <td colspan="2" id="card_elem"></td>
+    </tr>
+    <tr>
+        <td>tower</td>
+        <td id="card_self_tower_hp"></td>
+        <td id="card_enemy_tower_hp"></td>
+    </tr>
+    <tr>
+        <td>wall</td>
+        <td id="card_self_wall_hp"></td>
+        <td id="card_enemy_wall_hp"></td>
+    </tr>
+    <tr>
+        <td>res1</td>
+        <td id="card_self_res1"></td>
+        <td id="card_enemy_res1"></td>
+    </tr>
+    <tr>
+        <td>gen1</td>
+        <td id="card_self_gen1"></td>
+        <td id="card_enemy_gen1"></td>
+    </tr>
+    <tr>
+        <td>res2</td>
+        <td id="card_self_res2"></td>
+        <td id="card_enemy_res2"></td>
+    </tr>
+    <tr>
+        <td>gen2</td>
+        <td id="card_self_gen2"></td>
+        <td id="card_enemy_gen2"></td>
+    </tr>
+    <tr>
+        <td>res3</td>
+        <td id="card_self_res3"></td>
+        <td id="card_enemy_res3"></td>
+    </tr>
+    <tr>
+        <td>gen3</td>
+        <td id="card_self_gen3"></td>
+        <td id="card_enemy_gen3"></td>
+    </tr>
+</table>
 
 <script>
+
+    ws.onmessage = function(evt) {
+        var data = JSON.parse(evt.data);
+        console.log(data);
+
+        switch (data.messageType) {
+            case 'setTurn':
+                $('#self_turn').text(data.turn);
+                $('#self_tower_hp').text(data.self_tower_hp);
+                $('#enemy_tower_hp').text(data.enemy_tower_hp);
+                $('#self_wall_hp').text(data.self_wall_hp);
+                $('#enemy_wall_hp').text(data.enemy_wall_hp);
+                $('#self_res1').text(data.self_res1);
+                $('#self_res2').text(data.self_res2);
+                $('#self_res3').text(data.self_res3);
+                $('#self_gen1').text(data.self_gen1);
+                $('#self_gen2').text(data.self_gen2);
+                $('#self_gen3').text(data.self_gen3);
+                $('#enemy_res1').text(data.enemy_res1);
+                $('#enemy_res2').text(data.enemy_res2);
+                $('#enemy_res3').text(data.enemy_res3);
+                $('#enemy_gen1').text(data.enemy_gen1);
+                $('#enemy_gen2').text(data.enemy_gen2);
+                $('#enemy_gen3').text(data.enemy_gen3);
+                break;
+            case 'getCardRandom':
+                $('#card_name').text(data.card_name);
+                $('#card_cost').text(data.card_cost);
+                $('#card_elem').text(data.card_elem);
+                $('#card_self_tower_hp').text(data.card_self_tower_hp);
+                $('#card_enemy_tower_hp').text(data.card_enemy_tower_hp);
+                $('#card_self_wall_hp').text(data.card_self_wall_hp);
+                $('#card_enemy_wall_hp').text(data.card_enemy_wall_hp);
+                $('#card_self_res1').text(data.card_self_res1);
+                $('#card_self_res2').text(data.card_self_res2);
+                $('#card_self_res3').text(data.card_self_res3);
+                $('#card_self_gen1').text(data.card_self_gen1);
+                $('#card_self_gen2').text(data.card_self_gen2);
+                $('#card_self_gen3').text(data.card_self_gen3);
+                $('#card_enemy_res1').text(data.card_enemy_res1);
+                $('#card_enemy_res2').text(data.card_enemy_res2);
+                $('#card_enemy_res3').text(data.card_enemy_res3);
+                $('#card_enemy_gen1').text(data.card_enemy_gen1);
+                $('#card_enemy_gen2').text(data.card_enemy_gen2);
+                $('#card_enemy_gen3').text(data.card_enemy_gen3);
+                alert('random');
+                break;
+            case 'getCardOpponent':
+                $('#card_name').text(data.card_name);
+                $('#card_self_tower_hp').text(data.card_self_tower_hp);
+                $('#card_enemy_tower_hp').text(data.card_enemy_tower_hp);
+                $('#card_self_wall_hp').text(data.card_self_wall_hp);
+                $('#card_enemy_wall_hp').text(data.card_enemy_wall_hp);
+                $('#card_self_res1').text(data.card_self_res1);
+                $('#card_self_res2').text(data.card_self_res2);
+                $('#card_self_res3').text(data.card_self_res3);
+                $('#card_self_gen1').text(data.card_self_gen1);
+                $('#card_self_gen2').text(data.card_self_gen2);
+                $('#card_self_gen3').text(data.card_self_gen3);
+                $('#card_enemy_res1').text(data.card_enemy_res1);
+                $('#card_enemy_res2').text(data.card_enemy_res2);
+                $('#card_enemy_res3').text(data.card_enemy_res3);
+                $('#card_enemy_gen1').text(data.card_enemy_gen1);
+                $('#card_enemy_gen2').text(data.card_enemy_gen2);
+                $('#card_enemy_gen3').text(data.card_enemy_gen3);
+                alert('opponent');
+                break;
+
+        }
+    };
+
     $('#getCardRandom').click(function () {
         var message = {
             messageType: 'getCardRandom'
@@ -78,7 +265,15 @@
     $('#useCard').click(function () {
         var message = {
             messageType: 'useCard',
-            card_id: 1
+            card_id: 70
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#discard').click(function () {
+        var message = {
+            messageType: 'useCard',
+            card_id: 70
         };
         message = JSON.stringify(message);
         ws.send(message);

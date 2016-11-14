@@ -216,7 +216,7 @@ function socketServer(socket, data) {
                                             });
                                         });
                                     });
-                                }, 1500)
+                                }, 3000)
                             }
                         });
                     });
