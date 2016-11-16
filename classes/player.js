@@ -24,6 +24,8 @@ function Player(info = {}, socket = false) {
         this.socket = socket;
         this.inSearch = false;
         console.log(this.player_id);
+    } else {
+        this.player_id = 0;
     }
 
     this.getPlayerStatus = function () {

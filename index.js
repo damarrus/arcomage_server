@@ -163,7 +163,8 @@ function socketServer(socket, data) {
                     });*/
                     break;
                 case 'gameWithBot':
-                    opponent = {
+                    game.gameWithBot(socket);
+                    /*opponent = {
                         player: new Player()
                     };
                     socket.player.newGame(true);
@@ -175,7 +176,7 @@ function socketServer(socket, data) {
                         turn: socket.player.turn,
                         self_tower_hp: socket.player.tower_hp,
                         enemy_tower_hp: opponent.player.tower_hp
-                    });
+                    });*/
                     break;
             }
         } catch (e) {

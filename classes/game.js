@@ -51,6 +51,15 @@ function Game() {
         }
     };
 
+    this.gameWithBot = function (socket) {
+        var socket_bot = {
+            player: new Player()
+        };
+        var match = new Match(socket, socket_bot, "gameWithBot", function () {
+            matches[match.getMatchID()] = match;
+        });
+    };
+
     this.startGame = function (socket) {
         setTimeout(function () {
             var match = matches[socket.matchID];

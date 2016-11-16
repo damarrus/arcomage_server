@@ -7,6 +7,11 @@ const carder = require('./card');
 const Messenger = require('./messenger');
 
 function Match(socket_1, socket_2, type = "", callback) {
+    if (type == "gameWithBot") {
+
+    } else {
+
+    }
     var messenger = new Messenger();
     var matchID = 0;
     var player_1_ready = false;
@@ -23,16 +28,19 @@ function Match(socket_1, socket_2, type = "", callback) {
         callback();
     });
 
-    socket_1.player.setPlayerStatus(false, 30, 15, 10, 10, 10, 2, 2, 2);
-    socket_2.player.setPlayerStatus(true, 30, 15, 10, 10, 10, 2, 2, 2);
+    socket_1.player.setPlayerStatus(true, 30, 15, 10, 10, 10, 2, 2, 2);
+    socket_2.player.setPlayerStatus(false, 30, 15, 10, 10, 10, 2, 2, 2);
 
     sendStatus();
 
     function sendStatus() {
         messenger.send(socket_1, "playerStatus", socket_1.player.getPlayerStatus());
-        messenger.send(socket_2, "opponentStatus", socket_1.player.getPlayerStatus());
         messenger.send(socket_1, "opponentStatus", socket_2.player.getPlayerStatus());
-        messenger.send(socket_2, "playerStatus", socket_2.player.getPlayerStatus());
+        if (type != "gameWithBot") {
+            messenger.send(socket_2, "playerStatus", socket_2.player.getPlayerStatus());
+            messenger.send(socket_2, "opponentStatus", socket_1.player.getPlayerStatus());
+        }
+
     }
 
     function sendNewCard(socket) {
@@ -60,15 +68,18 @@ function Match(socket_1, socket_2, type = "", callback) {
         sendNewCard(socket_1);
         sendNewCard(socket_1);
         sendNewCard(socket_1);
-        sendNewCard(socket_2);
-        sendNewCard(socket_2);
-        sendNewCard(socket_2);
-        sendNewCard(socket_2);
-        sendNewCard(socket_2);
-        sendNewCard(socket_2);
+        if (type != "gameWithBot") {
+            sendNewCard(socket_2);
+            sendNewCard(socket_2);
+            sendNewCard(socket_2);
+            sendNewCard(socket_2);
+            sendNewCard(socket_2);
+            sendNewCard(socket_2);
+        }
+
     };
 
-    // TODO: добавить бота
+    // TODO: вынести из дискарда всё общее с обычным использованием карты
     this.useCard = function(player_id, card_id, discard) {
         var self;
         var enemy;
@@ -90,7 +101,9 @@ function Match(socket_1, socket_2, type = "", callback) {
                     card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3);
                 enemy.player.growthRes();
 
-                messenger.send(enemy, 'getCardOpponent', card);
+                if (type != "gameWithBot") {
+                    messenger.send(enemy, 'getCardOpponent', card);
+                }
                 sendStatus();
                 sendNewCard(self);
             } else {
@@ -98,9 +111,28 @@ function Match(socket_1, socket_2, type = "", callback) {
                 enemy.player.changePlayerStatus(true);
                 enemy.player.growthRes();
 
-                messenger.send(enemy, 'getCardOpponent', card);
+                if (type != "gameWithBot") {
+                    messenger.send(enemy, 'getCardOpponent', card);
+                }
                 sendStatus();
                 sendNewCard(self);
+            }
+            if (type == "gameWithBot") {
+                setTimeout(function () {
+                    carder.getCardRandom(function (card) {
+                        enemy.player.costCard(card);
+                        enemy.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp,
+                            card.card_self_res1, card.card_self_res2, card.card_self_res3,
+                            card.card_self_gen1, card.card_self_gen2, card.card_self_gen3);
+                        self.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp,
+                            card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
+                            card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3);
+                        self.player.growthRes();
+
+                        messenger.send(self, 'getCardOpponent', card);
+                        sendStatus();
+                    });
+                }, 2000);
             }
         });
 
