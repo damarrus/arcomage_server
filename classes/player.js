@@ -70,12 +70,19 @@ function Player(info = {}, socket = false) {
             self.tower_hp += self.wall_hp;
             self.wall_hp = 0;
         }
-        self.res1 = (self.res1 += res1 >= 0) ? self.res1 += res1 : 0;
-        self.res2 = (self.res2 += res2 >= 0) ? self.res2 += res2 : 0;
-        self.res3 = (self.res3 += res3 >= 0) ? self.res3 += res3 : 0;
-        self.gen1 = (self.gen1 += gen1 >= 0) ? self.gen1 += gen1 : 0;
-        self.gen2 = (self.gen2 += gen2 >= 0) ? self.gen2 += gen2 : 0;
-        self.gen3 = (self.gen3 += gen3 >= 0) ? self.gen3 += gen3 : 0;
+        self.res1 = self.res1 += res1;
+        self.res2 = self.res2 += res2;
+        self.res3 = self.res3 += res3;
+        self.gen1 = self.gen1 += gen1;
+        self.gen2 = self.gen2 += gen2;
+        self.gen3 = self.gen3 += gen3;
+
+        self.res1 = (self.res1 >= 0) ? self.res1: 0;
+        self.res2 = (self.res2 >= 0) ? self.res2: 0;
+        self.res3 = (self.res3 >= 0) ? self.res3: 0;
+        self.gen1 = (self.gen1 >= 0) ? self.gen1: 0;
+        self.gen2 = (self.gen2 >= 0) ? self.gen2: 0;
+        self.gen3 = (self.gen3 >= 0) ? self.gen3: 0;
     };
     this.growthRes = function () {
         self.res1 += self.gen1;
