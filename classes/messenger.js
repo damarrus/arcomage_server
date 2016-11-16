@@ -11,7 +11,7 @@ function Messenger() {
         data.messageType = messageType;
         data = JSON.stringify(data);
         (isTestClient) ? socket.send(data) : socket.write(data);
-        if (messageType == 'setTurn') {
+        if (messageType != 'getCardRandom') {
             console.log(data);
         }
     }

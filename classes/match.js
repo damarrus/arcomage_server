@@ -75,7 +75,7 @@ function Match(socket_1, socket_2, type = "", callback) {
         if (player_id == player_1_id) {
             self = socket_1;
             enemy = socket_2;
-        } else {
+        } else if (player_id == player_2_id) {
             self = socket_2;
             enemy = socket_1;
         }

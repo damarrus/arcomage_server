@@ -48,7 +48,6 @@ function Game() {
             var match = new Match(socket, opponent, "searchGame", function () {
                 matches[match.getMatchID()] = match;
             });
-
         }
     };
 

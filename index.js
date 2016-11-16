@@ -65,40 +65,8 @@ function socketServer(socket, data) {
                     // TODO: сделать включение/отключение поиска исходя из действий клиента (отмена поиска)
                     game.searchGame(socket);
                     break;
-                // отправка случайной карты
-                case 'getCardRandom':
-                    cards.getCardRandom(function (card) {
-                        sendToClient(socket, 'getCardRandom', card)
-                    });
-                    break;
                 case 'ready':
                     game.startGame(socket);
-                    break;
-                case 'getCardStart':
-                    cards.getCardRandom(function (card) {
-                        socket.player.newCard(card.card_id);
-                        sendToClient(socket, 'getCardStart', card);
-                    });
-                    cards.getCardRandom(function (card) {
-                        socket.player.newCard(card.card_id);
-                        sendToClient(socket, 'getCardStart', card);
-                    });
-                    cards.getCardRandom(function (card) {
-                        socket.player.newCard(card.card_id);
-                        sendToClient(socket, 'getCardStart', card);
-                    });
-                    cards.getCardRandom(function (card) {
-                        socket.player.newCard(card.card_id);
-                        sendToClient(socket, 'getCardStart', card);
-                    });
-                    cards.getCardRandom(function (card) {
-                        socket.player.newCard(card.card_id);
-                        sendToClient(socket, 'getCardStart', card);
-                    });
-                    cards.getCardRandom(function (card) {
-                        socket.player.newCard(card.card_id);
-                        sendToClient(socket, 'getCardStart', card);
-                    });
                     break;
                 // применение карты
                 case 'useCard':
