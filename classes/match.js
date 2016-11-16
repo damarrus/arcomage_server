@@ -9,7 +9,8 @@ const Messenger = require('./messenger');
 function Match(socket_1, socket_2, type = "", callback) {
     var messenger = new Messenger();
     var matchID = 0;
-    var readyPlayers = 0;
+    var player_1_ready = false;
+    var player_2_ready = false;
     var player_1_id = socket_1.player.player_id;
     var player_2_id = socket_2.player.player_id;
     var query = 'INSERT INTO matches (match_player1_id, match_player2_id, match_result) VALUES ('+
@@ -40,12 +41,16 @@ function Match(socket_1, socket_2, type = "", callback) {
         });
     }
 
-    this.readyPlayer = function () {
-        ++readyPlayers;
+    this.readyPlayer = function (player_id) {
+        if (player_id == player_1_id) {
+            player_1_ready = true;
+        } else if (player_id == player_2_id) {
+            player_1_ready = true;
+        }
     };
 
     this.getReadyPlayer = function () {
-        return readyPlayers;
+        return (player_1_ready && player_1_ready);
     };
 
     this.sendCardStart = function () {
