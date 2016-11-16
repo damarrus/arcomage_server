@@ -71,6 +71,9 @@ function socketServer(socket, data) {
                         sendToClient(socket, 'getCardRandom', card)
                     });
                     break;
+                case 'ready':
+                    game.startGame(socket);
+                    break;
                 case 'getCardStart':
                     cards.getCardRandom(function (card) {
                         socket.player.newCard(card.card_id);
