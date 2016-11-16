@@ -54,17 +54,15 @@ function Game() {
 
     this.startGame = function (socket) {
         var match = matches[socket.matchID];
-        match.useCard(socket.player.player_id, card_id, discard);
+        match.readyPlayer(socket.player.player_id);
+        if (match.getReadyPlayer() == 2) {
+
+        }
     };
 
     this.useCard = function (socket, card_id, discard) {
         var match = matches[socket.matchID];
         match.useCard(socket.player.player_id, card_id, discard);
-    };
-
-    this.getCardStart = function (socket) {
-        var match = matches[socket.matchID];
-        match.sendCardStart(socket);
     };
 
     this.closeMatch = function () {

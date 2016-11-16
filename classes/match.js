@@ -41,16 +41,26 @@ function Match(socket_1, socket_2, type = "", callback) {
     }
 
     this.readyPlayer = function () {
-
+        ++readyPlayers;
     };
 
-    this.sendCardStart = function (socket) {
-        sendNewCard(socket);
-        sendNewCard(socket);
-        sendNewCard(socket);
-        sendNewCard(socket);
-        sendNewCard(socket);
-        sendNewCard(socket);
+    this.getReadyPlayer = function () {
+        return readyPlayers;
+    };
+
+    this.sendCardStart = function () {
+        sendNewCard(socket_1);
+        sendNewCard(socket_1);
+        sendNewCard(socket_1);
+        sendNewCard(socket_1);
+        sendNewCard(socket_1);
+        sendNewCard(socket_1);
+        sendNewCard(socket_2);
+        sendNewCard(socket_2);
+        sendNewCard(socket_2);
+        sendNewCard(socket_2);
+        sendNewCard(socket_2);
+        sendNewCard(socket_2);
     };
 
     // TODO: добавить бота
