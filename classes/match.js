@@ -48,11 +48,10 @@ function Match(socket_1, socket_2, type = "", callback) {
     function sendStatus() {
         messenger.send(socket_1, "playerStatus", socket_1.player.getPlayerStatus());
         messenger.send(socket_1, "opponentStatus", socket_2.player.getPlayerStatus());
-
+        if (type != "gameWithBot") {
             messenger.send(socket_2, "playerStatus", socket_2.player.getPlayerStatus());
             messenger.send(socket_2, "opponentStatus", socket_1.player.getPlayerStatus());
         }
-
     }
 
     function sendNewCard(socket) {
@@ -240,7 +239,7 @@ function Match(socket_1, socket_2, type = "", callback) {
     };
     this.getMatchID = function () {
         return matchID;
-    }
+    };
 }
 
 module.exports = Match;
