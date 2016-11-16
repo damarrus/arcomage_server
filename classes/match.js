@@ -38,14 +38,17 @@ function Match(socket_1, socket_2, type = "", callback) {
 
     this.sendStartStatus = function (callback) {
         messenger.send(socket_1, "startStatus", {turn: true});
-        messenger.send(socket_2, "startStatus", {turn: false});
+        if (type != "gameWithBot") {
+            messenger.send(socket_2, "startStatus", {turn: false});
+        }
+        sendStatus();
         callback();
     };
 
     function sendStatus() {
         messenger.send(socket_1, "playerStatus", socket_1.player.getPlayerStatus());
         messenger.send(socket_1, "opponentStatus", socket_2.player.getPlayerStatus());
-        if (type != "gameWithBot") {
+
             messenger.send(socket_2, "playerStatus", socket_2.player.getPlayerStatus());
             messenger.send(socket_2, "opponentStatus", socket_1.player.getPlayerStatus());
         }
