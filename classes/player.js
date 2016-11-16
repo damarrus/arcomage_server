@@ -82,9 +82,9 @@ function Player(info = {}, socket = false) {
         self.res1 = (self.res1 >= 0) ? self.res1: 0;
         self.res2 = (self.res2 >= 0) ? self.res2: 0;
         self.res3 = (self.res3 >= 0) ? self.res3: 0;
-        self.gen1 = (self.gen1 >= 0) ? self.gen1: 0;
-        self.gen2 = (self.gen2 >= 0) ? self.gen2: 0;
-        self.gen3 = (self.gen3 >= 0) ? self.gen3: 0;
+        self.gen1 = (self.gen1 >= 1) ? self.gen1: 1;
+        self.gen2 = (self.gen2 >= 1) ? self.gen2: 1;
+        self.gen3 = (self.gen3 >= 1) ? self.gen3: 1;
     };
     this.growthRes = function () {
         self.res1 += self.gen1;
