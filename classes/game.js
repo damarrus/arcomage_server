@@ -55,8 +55,8 @@ function Game() {
     this.startGame = function (socket) {
         var match = matches[socket.matchID];
         match.readyPlayer(socket.player.player_id);
-        if (match.getReadyPlayer() == 2) {
-
+        if (match.getReadyPlayer()) {
+            match.sendCardStart();
         }
     };
 
