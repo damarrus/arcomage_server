@@ -46,6 +46,7 @@
 <button id="gameWithBot">gameWithBot</button>
 <button id="useCard">useCard</button>
 <button id="discard">discard</button>
+<button id="ready">ready</button>
 <table>
     <tr>
         <td>Person</td>
@@ -293,6 +294,13 @@
     $('#getCardStart').click(function () {
         var message = {
             messageType: 'getCardStart'
+        };
+        message = JSON.stringify(message);
+        ws.send(message);
+    });
+    $('#ready').click(function () {
+        var message = {
+            messageType: 'ready'
         };
         message = JSON.stringify(message);
         ws.send(message);

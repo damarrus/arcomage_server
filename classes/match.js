@@ -45,7 +45,7 @@ function Match(socket_1, socket_2, type = "", callback) {
         if (player_id == player_1_id) {
             player_1_ready = true;
         } else if (player_id == player_2_id) {
-            player_1_ready = true;
+            player_2_ready = true;
         }
     };
 
