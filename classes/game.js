@@ -65,6 +65,7 @@ function Game() {
             var match = matches[socket.matchID];
             match.readyPlayer(socket.player.player_id);
             if (match.getReadyPlayer()) {
+                match.sendStartStatus();
                 match.sendCardStart();
             }
         }, 500)
