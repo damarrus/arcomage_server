@@ -10,6 +10,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const net = require('net');
 
+const Game = require('./classes/game');
 const auth = require('./models/auth');
 const cards = require('./models/cards');
 const Player = require('./classes/player');
@@ -17,6 +18,8 @@ const Match = require('./classes/match');
 
 const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
+
+var game = new Game();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,7 +33,6 @@ app.get('/', function(req, res){
 app.listen(8000);
 
 function sendToClient(socket, messageType, data = {}) {
-    console.log(socket.player.tower_hp);
     data.messageType = messageType;
     data = JSON.stringify(data);
     (isTestClient) ? socket.send(data) : socket.write(data);
@@ -49,60 +51,19 @@ function socketServer(socket, data) {
 
         //console.log(data);
         data = data.toString('utf8').replace(/\0+$/, "");
-        console.log(data);
+        //console.log(data);
         try {
             data = JSON.parse(data);
             console.log(data);
             switch (data['messageType']) {
                 // авторизация
                 case 'auth':
-                    auth(data['login'],data['password'], function (result) {
-                        if (result) {
-                            // создание объекта Игрок
-                            var player = new Player(result, socket);
-                            socket.player_id = result.player_id;
-                            socket.player = player;
-
-                            sendToClient(socket, "auth", {
-                                valid: true
-                            });
-                        } else {
-                            sendToClient(socket, "auth", {
-                                valid: false
-                            });
-                        }
-                    });
+                    game.auth(socket, data['login'], data['password']);
                     break;
                 // Поиск игры
                 case 'searchGame':
                     // TODO: сделать включение/отключение поиска исходя из действий клиента (отмена поиска)
-                    if (!searchGame[0]) {
-                        searchGame.push(socket);
-                        socket.player.inSearch = true;
-                    } else {
-                        opponent = searchGame[0];
-                        searchGame.splice(searchGame.indexOf(opponent), 1);
-
-                        opponent.opponent = socket;
-                        socket.opponent = opponent;
-                        opponent.player.inSearch = false;
-
-                        console.log('начало игры, распределение хода');
-
-                        socket.player.newGame(true);
-                        opponent.player.newGame(false);
-
-                        sendToClient(socket, "setTurn", {
-                            turn: socket.player.turn,
-                            self_tower_hp: socket.player.tower_hp,
-                            enemy_tower_hp: opponent.player.tower_hp
-                        });
-                        sendToClient(opponent, "setTurn", {
-                            turn: opponent.player.turn,
-                            self_tower_hp: opponent.player.tower_hp,
-                            enemy_tower_hp: socket.player.tower_hp
-                        });
-                    }
+                    game.searchGame(socket);
                     break;
                 // отправка случайной карты
                 case 'getCardRandom':
@@ -112,27 +73,35 @@ function socketServer(socket, data) {
                     break;
                 case 'getCardStart':
                     cards.getCardRandom(function (card) {
+                        socket.player.newCard(card.card_id);
                         sendToClient(socket, 'getCardStart', card);
                     });
                     cards.getCardRandom(function (card) {
+                        socket.player.newCard(card.card_id);
                         sendToClient(socket, 'getCardStart', card);
                     });
                     cards.getCardRandom(function (card) {
+                        socket.player.newCard(card.card_id);
                         sendToClient(socket, 'getCardStart', card);
                     });
                     cards.getCardRandom(function (card) {
+                        socket.player.newCard(card.card_id);
                         sendToClient(socket, 'getCardStart', card);
                     });
                     cards.getCardRandom(function (card) {
+                        socket.player.newCard(card.card_id);
                         sendToClient(socket, 'getCardStart', card);
                     });
                     cards.getCardRandom(function (card) {
+                        socket.player.newCard(card.card_id);
                         sendToClient(socket, 'getCardStart', card);
                     });
                     break;
                 // применение карты
                 case 'useCard':
-                    opponent = socket.opponent;
+                    game.useCard(socket, data['card_id'], data['discard']);
+
+                    /*opponent = socket.opponent;
 
                     var discard = data['discard'];
 
@@ -159,6 +128,7 @@ function socketServer(socket, data) {
                                 enemy_gen3: opponent.player.gen3
                             });
                             cards.getCardRandom(function (card) {
+                                socket.player.newCard(card.card_id);
                                 sendToClient(socket, 'getCardRandom', card)
                             });
                             // боту не отправляем инфу, он и так всё знает
@@ -219,7 +189,7 @@ function socketServer(socket, data) {
                                 }, 3000)
                             }
                         });
-                    });
+                    });*/
                     break;
                 case 'gameWithBot':
                     opponent = {

@@ -165,24 +165,27 @@
         console.log(data);
 
         switch (data.messageType) {
-            case 'setTurn':
+            case 'playerStatus':
                 $('#self_turn').text(data.turn);
-                $('#self_tower_hp').text(data.self_tower_hp);
-                $('#enemy_tower_hp').text(data.enemy_tower_hp);
-                $('#self_wall_hp').text(data.self_wall_hp);
-                $('#enemy_wall_hp').text(data.enemy_wall_hp);
-                $('#self_res1').text(data.self_res1);
-                $('#self_res2').text(data.self_res2);
-                $('#self_res3').text(data.self_res3);
-                $('#self_gen1').text(data.self_gen1);
-                $('#self_gen2').text(data.self_gen2);
-                $('#self_gen3').text(data.self_gen3);
-                $('#enemy_res1').text(data.enemy_res1);
-                $('#enemy_res2').text(data.enemy_res2);
-                $('#enemy_res3').text(data.enemy_res3);
-                $('#enemy_gen1').text(data.enemy_gen1);
-                $('#enemy_gen2').text(data.enemy_gen2);
-                $('#enemy_gen3').text(data.enemy_gen3);
+                $('#self_tower_hp').text(data.tower_hp);
+                $('#self_wall_hp').text(data.wall_hp);
+                $('#self_res1').text(data.res1);
+                $('#self_res2').text(data.res2);
+                $('#self_res3').text(data.res3);
+                $('#self_gen1').text(data.gen1);
+                $('#self_gen2').text(data.gen2);
+                $('#self_gen3').text(data.gen3);
+                break;
+            case 'opponentStatus':
+                $('#enemy_turn').text(data.turn);
+                $('#enemy_tower_hp').text(data.tower_hp);
+                $('#enemy_wall_hp').text(data.wall_hp);
+                $('#enemy_res1').text(data.res1);
+                $('#enemy_res2').text(data.res2);
+                $('#enemy_res3').text(data.res3);
+                $('#enemy_gen1').text(data.gen1);
+                $('#enemy_gen2').text(data.gen2);
+                $('#enemy_gen3').text(data.gen3);
                 break;
             case 'getCardRandom':
                 $('#card_name').text(data.card_name);
@@ -204,7 +207,7 @@
                 $('#card_enemy_gen1').text(data.card_enemy_gen1);
                 $('#card_enemy_gen2').text(data.card_enemy_gen2);
                 $('#card_enemy_gen3').text(data.card_enemy_gen3);
-                alert('random');
+                //alert('random');
                 break;
             case 'getCardOpponent':
                 $('#card_name').text(data.card_name);
@@ -224,7 +227,7 @@
                 $('#card_enemy_gen1').text(data.card_enemy_gen1);
                 $('#card_enemy_gen2').text(data.card_enemy_gen2);
                 $('#card_enemy_gen3').text(data.card_enemy_gen3);
-                alert('opponent');
+                //alert('opponent');
                 break;
 
         }
@@ -265,7 +268,8 @@
     $('#useCard').click(function () {
         var message = {
             messageType: 'useCard',
-            card_id: 70
+            card_id: 1,
+            discard: false
         };
         message = JSON.stringify(message);
         ws.send(message);
@@ -273,7 +277,8 @@
     $('#discard').click(function () {
         var message = {
             messageType: 'useCard',
-            card_id: 70
+            card_id: 1,
+            discard: true
         };
         message = JSON.stringify(message);
         ws.send(message);
