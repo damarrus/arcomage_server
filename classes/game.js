@@ -53,11 +53,13 @@ function Game() {
     };
 
     this.startGame = function (socket) {
-        var match = matches[socket.matchID];
-        match.readyPlayer(socket.player.player_id);
-        if (match.getReadyPlayer()) {
-            match.sendCardStart();
-        }
+        setTimeout(function () {
+            var match = matches[socket.matchID];
+            match.readyPlayer(socket.player.player_id);
+            if (match.getReadyPlayer()) {
+                match.sendCardStart();
+            }
+        }, 500)
     };
 
     this.useCard = function (socket, card_id, discard) {
