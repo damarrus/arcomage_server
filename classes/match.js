@@ -9,6 +9,7 @@ const Messenger = require('./messenger');
 function Match(socket_1, socket_2, type = "", callback) {
     var messenger = new Messenger();
     var matchID = 0;
+    var readyPlayers = 0;
     var player_1_id = socket_1.player.player_id;
     var player_2_id = socket_2.player.player_id;
     var query = 'INSERT INTO matches (match_player1_id, match_player2_id, match_result) VALUES ('+
@@ -26,7 +27,6 @@ function Match(socket_1, socket_2, type = "", callback) {
 
     sendStatus();
 
-    // TODO: спросить у Миши, подойдет ли такая отправка?
     function sendStatus() {
         messenger.send(socket_1, "playerStatus", socket_1.player.getPlayerStatus());
         messenger.send(socket_2, "opponentStatus", socket_1.player.getPlayerStatus());
@@ -40,8 +40,17 @@ function Match(socket_1, socket_2, type = "", callback) {
         });
     }
 
-    this.sendCardStart = function (socket) {
+    this.readyPlayer = function () {
 
+    };
+
+    this.sendCardStart = function (socket) {
+        sendNewCard(socket);
+        sendNewCard(socket);
+        sendNewCard(socket);
+        sendNewCard(socket);
+        sendNewCard(socket);
+        sendNewCard(socket);
     };
 
     // TODO: добавить бота

@@ -16,7 +16,7 @@ function Game() {
     this.auth = function (socket, player_login, player_password) {
         var query = 'SELECT count(*) as count_player FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
         db.query(query, function(err, result) {
-            if (result[0].count_player != 0){//result.length != 0) {
+            if (result[0].count_player != 0){
                 query = 'SELECT * FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
                 db.query(query, function(err, result) {
                     socket.player = new Player(result[0], socket);
@@ -52,6 +52,11 @@ function Game() {
         }
     };
 
+    this.startGame = function (socket) {
+        var match = matches[socket.matchID];
+        match.useCard(socket.player.player_id, card_id, discard);
+    };
+
     this.useCard = function (socket, card_id, discard) {
         var match = matches[socket.matchID];
         match.useCard(socket.player.player_id, card_id, discard);
@@ -59,6 +64,7 @@ function Game() {
 
     this.getCardStart = function (socket) {
         var match = matches[socket.matchID];
+        match.sendCardStart(socket);
     };
 
     this.closeMatch = function () {
