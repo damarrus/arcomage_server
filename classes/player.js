@@ -14,6 +14,7 @@ connection.connect(function(err) {
         console.error(err);
 });
 
+// TODO: заменить основные параметры игрока на внешние через this
 function Player(info = {}, socket = false) {
     // Основные параметры игрока
     var self = this,
@@ -111,9 +112,20 @@ function Player(info = {}, socket = false) {
         gen2 = gen2_val;
         gen3 = gen3_val;
     };
+    this.resetPlayerStatus = function () {
+        turn = 0;
+        tower_hp = 0;
+        wall_hp = 0;
+        res1 = 0;
+        res2 = 0;
+        res3 = 0;
+        gen1 = 0;
+        gen2 = 0;
+        gen3 = 0;
+    };
     this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0,
                                         res1_val = 0, res2_val = 0, res3_val = 0,
-                                        gen1_val =0 , gen2_val = 0, gen3_val = 0) {
+                                        gen1_val =0 , gen2_val = 0, gen3_val = 0, callback) {
         turn = turn_val;
         tower_hp += tower_hp_val;
         wall_hp += wall_hp_val;
@@ -128,11 +140,13 @@ function Player(info = {}, socket = false) {
         gen1 = ((gen1 + gen1_val) >= 1) ? (gen1 + gen1_val) : 1;
         gen2 = ((gen2 + gen2_val) >= 1) ? (gen2 + gen2_val) : 1;
         gen3 = ((gen3 + gen3_val) >= 1) ? (gen3 + gen3_val) : 1;
+        callback();
     };
-    this.growthRes = function () {
+    this.growthRes = function (callback) {
         res1 += gen1;
         res2 += gen2;
         res3 += gen3;
+        callback();
     };
     this.costCard = function (card, callback) {
         switch (card.card_elem) {

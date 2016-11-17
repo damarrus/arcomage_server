@@ -11,6 +11,7 @@ function Game() {
 
     var messenger = new Messenger();
     var matches = [];
+    var players = [];
     var inSearch = [];
 
     this.auth = function (socket, player_login, player_password) {
@@ -22,6 +23,7 @@ function Game() {
                         query = 'SELECT * FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
                         db.query(query, function(err, result) {
                             socket.player = new Player(result[0], socket);
+                            players.push(socket.player);
                             messenger.send(socket, "auth", {
                                 valid: true
                             });
@@ -60,7 +62,7 @@ function Game() {
                     socket.opponent = opponent;
                     opponent.player.inSearch = false;
 
-                    var match = new Match(socket, opponent, "searchGame", function () {
+                    new Match(socket, opponent, "searchGame", function (match) {
                         matches[match.getMatchID()] = match;
                     });
                 }
@@ -78,11 +80,8 @@ function Game() {
 
     this.gameWithBot = function (socket) {
         if (!socket.player.getInGame()) {
-            var socket_bot = {
-                player: new Player()
-            };
-            var match = new Match(socket, socket_bot, "gameWithBot", function () {
-                matches[match.getMatchID()] = match;
+            new Match(socket, {player: new Player()}, "gameWithBot", function (match, id) {
+                matches[id] = match;
             });
         } else {
             messenger.send(socket, "error", {
@@ -96,13 +95,12 @@ function Game() {
         if (socket.player.getInGame()) {
 
             setTimeout(function () {
-                var match = matches[socket.matchID];
-                match.readyPlayer(socket.player.getParam('player_id'));
+                matches[socket.matchID].readyPlayer(socket.player.getParam('player_id'));
                 console.log('ingame!!!');
                 console.log(socket.player.getParam('player_id'));
-                if (match.getReadyPlayer()) {
-                    match.sendStartStatus(function () {
-                        match.sendCardStart();
+                if (matches[socket.matchID].getReadyPlayer()) {
+                    matches[socket.matchID].sendStartStatus(function () {
+                        matches[socket.matchID].sendCardStart();
                     });
                 }
             }, 500)
@@ -115,15 +113,16 @@ function Game() {
     };
 
     this.useCard = function (socket, card_id, discard) {
-        if (socket.player.getParam('turn')) {
-            if (socket.player.getInGame()) {
-                var match = matches[socket.matchID];
-                match.useCard(socket.player.getParam('player_id'), card_id, discard);
-                /*if (result) {
-                 match.endMatch(result, function () {
-                 delete matches[socket.matchID];
-                 })
-                 }*/
+        if (socket.player.getInGame()) {
+            if (socket.player.getParam('turn')) {
+                matches[socket.matchID].useCard(socket.player.getParam('player_id'), card_id, discard, function (result) {
+                    if (result == 1 || result == 2) {
+                        console.log('победил игрок ' + result);
+                        matches[socket.matchID].endMatch(result, function () {
+                            matches.splice(socket.matchID, 1);
+                        });
+                    }
+                });
             } else {
                 messenger.send(socket, "error", {
                     method: "useCard",
