@@ -33,9 +33,8 @@ function Game() {
                     }
                 });
             } else {
-                messenger.send(socket, "error", {
-                    method: "auth",
-                    typeError: "emptyLoginOrPass"
+                messenger.send(socket, "auth", {
+                    valid: false
                 });
             }
         } else {
