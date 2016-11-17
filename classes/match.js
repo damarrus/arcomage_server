@@ -9,8 +9,8 @@ const Messenger = require('./messenger');
 function Match(socket_1, socket_2, type = "", callback) {
     var messenger = new Messenger();
     var matchID = 0;
-    var player_1_id = socket_1.player.player_id;
-    var player_2_id = socket_2.player.player_id;
+    var player_1_id = socket_1.player.getParam('player_id');
+    var player_2_id = socket_2.player.getParam('player_id');
     var query = 'INSERT INTO matches (match_player1_id, match_player2_id, match_result) VALUES ('+
         player_1_id +','+
         player_2_id +',0)';

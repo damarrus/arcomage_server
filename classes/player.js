@@ -52,6 +52,7 @@ function Player(info = {}, socket = false) {
             case 'gen1':return gen1;
             case 'gen2':return gen2;
             case 'gen3':return gen3;
+            case 'player_id':return player_id;
         }
     };
     this.setParam = function (type, value) {
@@ -65,6 +66,7 @@ function Player(info = {}, socket = false) {
             case 'gen1':gen1 = value; break;
             case 'gen2':gen2 = value; break;
             case 'gen3':gen3 = value; break;
+            case 'player_id':player_id = value; break;
         }
     };
     this.getPlayerStatus = function () {
