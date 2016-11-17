@@ -90,7 +90,7 @@ function Game() {
         if (socket.player.getInGame()) {
             setTimeout(function () {
                 var match = matches[socket.matchID];
-                match.readyPlayer(socket.player.player_id);
+                match.readyPlayer(socket.player.getParam('player'));
                 if (match.getReadyPlayer()) {
                     match.sendStartStatus(function () {
                         match.sendCardStart();
@@ -109,7 +109,7 @@ function Game() {
         if (socket.player.getParam('turn')) {
             if (socket.player.getInGame()) {
                 var match = matches[socket.matchID];
-                match.useCard(socket.player.player_id, card_id, discard);
+                match.useCard(socket.player.getParam('player_id'), card_id, discard);
                 /*if (result) {
                  match.endMatch(result, function () {
                  delete matches[socket.matchID];
