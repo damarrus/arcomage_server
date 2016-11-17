@@ -22,6 +22,9 @@ function Match(socket_1, socket_2, type = "", callback) {
         callback(self, matchID);
     });
 
+    socket_1.player.setInSearch(false);
+    socket_2.player.setInSearch(false);
+
     socket_1.player.setInGame(true);
     socket_2.player.setInGame(true);
 
@@ -93,9 +96,13 @@ function Match(socket_1, socket_2, type = "", callback) {
     
     function isWin(callback) {
         if (socket_1.player.getParam('tower_hp') <= 0 || socket_2.player.getParam('tower_hp') >= 30) {
-            callback(2);
+            if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 30) {
+                callback(3);
+            } else {
+                callback(1);
+            }
         } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 30) {
-            callback(1);
+            callback(2);
         } else {
             callback(false);
         }
@@ -114,34 +121,38 @@ function Match(socket_1, socket_2, type = "", callback) {
         carder.getCardByID(card_id, function (card) {
             if (!discard) {
                 self.player.costCard(card, function (result) {
-                    self.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp,
-                        card.card_self_res1, card.card_self_res2, card.card_self_res3,
-                        card.card_self_gen1, card.card_self_gen2, card.card_self_gen3,
-                    function () {
-                        enemy.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp,
-                            card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
-                            card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
+                    if (result) {
+                        self.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp,
+                            card.card_self_res1, card.card_self_res2, card.card_self_res3,
+                            card.card_self_gen1, card.card_self_gen2, card.card_self_gen3,
                         function () {
-                            enemy.player.growthRes(function () {
-                                if (type != "gameWithBot") {
-                                    messenger.send(enemy, 'getCardOpponent', card);
-                                }
-                                sendStatus();
-                                isWin(function (result) {
-                                    if (!result) {
-                                        sendNewCard(self);
-                                        if (type == "gameWithBot") {
-                                            useCardBot(function (result) {
-                                                callback(result);
-                                            });
-                                        }
-                                    } else {
-                                        callback(result);
+                            enemy.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp,
+                                card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
+                                card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
+                            function () {
+                                enemy.player.growthRes(function () {
+                                    if (type != "gameWithBot") {
+                                        messenger.send(enemy, 'getCardOpponent', card);
                                     }
+                                    sendStatus();
+                                    isWin(function (result) {
+                                        if (!result) {
+                                            sendNewCard(self);
+                                            if (type == "gameWithBot") {
+                                                useCardBot(function (result) {
+                                                    callback(result);
+                                                });
+                                            }
+                                        } else {
+                                            callback(result);
+                                        }
+                                    });
                                 });
                             });
                         });
-                    });
+                    } else {
+                        callback('error');
+                    }
                 });
             } else {
                 self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0, function () {
@@ -195,7 +206,9 @@ function Match(socket_1, socket_2, type = "", callback) {
                     } else {
                         socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0, function () {
                             socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0, function () {
-                                sendStatus();
+                                socket_1.player.growthRes(function () {
+                                    sendStatus();
+                                });
                             });
                         });
                     }
@@ -209,6 +222,8 @@ function Match(socket_1, socket_2, type = "", callback) {
         db.query(query, function(err, result) {
             socket_1.player.setInGame(false);
             socket_2.player.setInGame(false);
+            socket_1.player.setReady(false);
+            socket_2.player.setReady(false);
             socket_1.player.resetPlayerStatus();
             socket_2.player.resetPlayerStatus();
             callback();

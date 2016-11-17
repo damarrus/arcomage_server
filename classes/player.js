@@ -1,20 +1,7 @@
 /**
  * Created by nikita on 11.11.2016.
  */
-const cards = require('./../models/cards');
-const mysql = require('mysql');
-const connection = mysql.createConnection({
-    host : 'localhost',
-    database : 'arcomage',
-    user : 'root',
-    password : '123456'
-});
-connection.connect(function(err) {
-    if (err)
-        console.error(err);
-});
 
-// TODO: заменить основные параметры игрока на внешние через this
 function Player(info = {}, socket = false) {
     // Основные параметры игрока
     var self = this,
@@ -23,18 +10,10 @@ function Player(info = {}, socket = false) {
         ready = false,
         player_id = info.player_id || 0,
         player_name = info.player_name || 'bot_name',
-        player_login = info.player_login || 'bot_login',
-        matchID = 0;
+        player_login = info.player_login || 'bot_login';
     // Параметры игрока в игре
-    var turn,
-    tower_hp,
-    wall_hp,
-    res1,
-    res2,
-    res3,
-    gen1,
-    gen2,
-    gen3;
+    var turn, tower_hp, wall_hp, res1, res2, res3, gen1, gen2, gen3;
+    var cards = [];
 
     if (!socket) {
         ready = true;
@@ -58,6 +37,8 @@ function Player(info = {}, socket = false) {
             case 'gen2':return gen2;
             case 'gen3':return gen3;
             case 'player_id':return player_id;
+            case 'player_name':return player_name;
+            case 'player_login':return player_login;
         }
     };
     this.setParam = function (type, value) {
@@ -152,7 +133,6 @@ function Player(info = {}, socket = false) {
         switch (card.card_elem) {
             case 1:
                 if (res1 - card.card_cost < 0) {
-                    res1 -= card.card_cost;
                     callback(false);
                 } else {
                     res1 -= card.card_cost;
@@ -161,7 +141,6 @@ function Player(info = {}, socket = false) {
                 break;
             case 2:
                 if (res2 - card.card_cost < 0) {
-                    res2 -= card.card_cost;
                     callback(false);
                 } else {
                     res2 -= card.card_cost;
@@ -170,7 +149,6 @@ function Player(info = {}, socket = false) {
                 break;
             case 3:
                 if (res3 - card.card_cost < 0) {
-                    res3 -= card.card_cost;
                     callback(false);
                 } else {
                     res3 -= card.card_cost;

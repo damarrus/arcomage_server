@@ -47,6 +47,17 @@ function Game() {
         }
     };
 
+    this.unAuth = function (socket) {
+        if (socket.player) {
+            socket.player = null;
+        } else {
+            messenger.send(socket, "error", {
+                method: "auth",
+                typeError: "notAuth"
+            });
+        }
+    };
+
     this.searchGame = function (socket) {
         if (!socket.player.getInGame()) {
             if (!socket.player.getInSearch()) {
@@ -116,10 +127,15 @@ function Game() {
         if (socket.player.getInGame()) {
             if (socket.player.getParam('turn')) {
                 matches[socket.matchID].useCard(socket.player.getParam('player_id'), card_id, discard, function (result) {
-                    if (result == 1 || result == 2) {
+                    if (result == 1 || result == 2 || result == 3) {
                         console.log('победил игрок ' + result);
                         matches[socket.matchID].endMatch(result, function () {
                             matches.splice(socket.matchID, 1);
+                        });
+                    } else if (result == 'error') {
+                        messenger.send(socket, "error", {
+                            method: "useCard",
+                            typeError: "notEnoughRes"
                         });
                     }
                 });
