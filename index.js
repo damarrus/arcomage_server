@@ -59,6 +59,9 @@ function socketServer(socket, data) {
             case 'auth':
                 game.auth(socket, data['login'], data['password']);
                 break;
+            case 'unAuth':
+                game.unAuth(socket);
+                break;
             // Поиск игры
             case 'searchGame':
                 // TODO: сделать включение/отключение поиска исходя из действий клиента (отмена поиска)
