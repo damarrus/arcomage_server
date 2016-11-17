@@ -35,6 +35,8 @@ function Player(info = {}, socket = false) {
     gen2,
     gen3;
 
+    this.setInSearch = function (bool) {inSearch = bool;};
+    this.getInSearch = function () {return inSearch;};
     this.setReady = function (bool) {ready = bool;};
     this.getReady = function () {return ready;};
     this.setInGame = function (bool) {inGame = bool;};

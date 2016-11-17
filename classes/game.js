@@ -41,10 +41,10 @@ function Game() {
 
     this.searchGame = function (socket) {
         if (!socket.player.getInGame()) {
-            if (socket.player.inSearch != true) {
+            if (socket.player.getInSearch() != true) {
                 if (!inSearch[0]) {
                     inSearch.push(socket);
-                    socket.player.inSearch = true;
+                    socket.player.setInSearch(true);
                 } else {
                     console.log('игра найдена');
                     var opponent = inSearch[0];
@@ -60,7 +60,7 @@ function Game() {
                 }
             } else {
                 inSearch.splice(inSearch.indexOf(socket), 1);
-                socket.player.inSearch = false;
+                socket.player.setInSearch(false);
             }
         } else {
             messenger.send(socket, "error", {
