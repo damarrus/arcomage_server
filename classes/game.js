@@ -14,7 +14,7 @@ function Game() {
     var inSearch = [];
 
     this.auth = function (socket, player_login, player_password) {
-        if (socket.player) {
+        if (!socket.player) {
             var query = 'SELECT count(*) as count_player FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
             db.query(query, function(err, result) {
                 if (result[0].count_player != 0){
