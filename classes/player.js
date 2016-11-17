@@ -35,6 +35,10 @@ function Player(info = {}, socket = false) {
     gen2,
     gen3;
 
+    if (!socket) {
+        ready = true;
+    }
+
     this.setInSearch = function (bool) {inSearch = bool;};
     this.getInSearch = function () {return inSearch;};
     this.setReady = function (bool) {ready = bool;};
@@ -134,6 +138,7 @@ function Player(info = {}, socket = false) {
         switch (card.card_elem) {
             case 1:
                 if (res1 - card.card_cost < 0) {
+                    res1 -= card.card_cost;
                     callback(false);
                 } else {
                     res1 -= card.card_cost;
@@ -142,6 +147,7 @@ function Player(info = {}, socket = false) {
                 break;
             case 2:
                 if (res2 - card.card_cost < 0) {
+                    res2 -= card.card_cost;
                     callback(false);
                 } else {
                     res2 -= card.card_cost;
@@ -150,6 +156,7 @@ function Player(info = {}, socket = false) {
                 break;
             case 3:
                 if (res3 - card.card_cost < 0) {
+                    res3 -= card.card_cost;
                     callback(false);
                 } else {
                     res3 -= card.card_cost;

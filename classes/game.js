@@ -41,7 +41,7 @@ function Game() {
 
     this.searchGame = function (socket) {
         if (!socket.player.getInGame()) {
-            if (socket.player.getInSearch() != true) {
+            if (!socket.player.getInSearch()) {
                 if (!inSearch[0]) {
                     inSearch.push(socket);
                     socket.player.setInSearch(true);
@@ -88,9 +88,12 @@ function Game() {
 
     this.startGame = function (socket) {
         if (socket.player.getInGame()) {
+
             setTimeout(function () {
                 var match = matches[socket.matchID];
-                match.readyPlayer(socket.player.getParam('player'));
+                match.readyPlayer(socket.player.getParam('player_id'));
+                console.log('ingame!!!');
+                console.log(socket.player.getParam('player_id'));
                 if (match.getReadyPlayer()) {
                     match.sendStartStatus(function () {
                         match.sendCardStart();

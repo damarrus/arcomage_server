@@ -108,13 +108,14 @@ function Match(socket_1, socket_2, type = "", callback) {
         }
         carder.getCardByID(card_id, function (card) {
             if (!discard) {
-                self.player.costCard(card);
-                self.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp,
-                    card.card_self_res1, card.card_self_res2, card.card_self_res3,
-                    card.card_self_gen1, card.card_self_gen2, card.card_self_gen3);
-                enemy.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp,
-                    card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
-                    card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3);
+                self.player.costCard(card, function (result) {
+                    self.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp,
+                        card.card_self_res1, card.card_self_res2, card.card_self_res3,
+                        card.card_self_gen1, card.card_self_gen2, card.card_self_gen3);
+                    enemy.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp,
+                        card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
+                        card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3);
+                });
             } else {
                 self.player.changePlayerStatus(false);
                 enemy.player.changePlayerStatus(true);
