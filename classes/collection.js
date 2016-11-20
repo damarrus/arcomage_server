@@ -16,8 +16,8 @@ function Collection(player_id, callback) {
         var query = 'SELECT count(*) as count_collection FROM collection WHERE player_id='+player_id;
         db.query(query, function(err, result) {
             if (result[0].count_collection == 0) {
-                startCollection(function () {
-                    loadDecks(callback);
+                setStartCollectionAndDeck(function () {
+                    
                 });
             } else {
                 query = 'SELECT card_id FROM collection WHERE player_id='+player_id;
@@ -41,7 +41,7 @@ function Collection(player_id, callback) {
             }
         });
     }
-    function startCollection(callback) {
+    function setStartCollectionAndDeck(callback) {
         var query = 'INSERT INTO collection (player_id, card_id, card_num) VALUES ' +
             '(' + player_id + ', 1, 1),' +
             '(' + player_id + ', 2, 1),' +
@@ -67,36 +67,36 @@ function Collection(player_id, callback) {
             query = 'SELECT card_id FROM collection WHERE player_id=' + player_id;
             db.query(query, function (err, result) {
                 cards = result;
-                callback();
+                query = 'INSERT INTO deck (player_id, deck_name) VALUES ('+player_id+',startDeck)';
+                db.query(query, function (err, result) {
+                    query = 'SELECT deck_id, deck_name FROM collection WHERE player_id=' + player_id;
+                    db.query(query, function (err, result) {
+                        query = 'INSERT INTO deckcard (deck_id, card_id) VALUES ' +
+                            '(' + result.deck_id + ', 1),' +
+                            '(' + result.deck_id + ', 2),' +
+                            '(' + result.deck_id + ', 3),' +
+                            '(' + result.deck_id + ', 4),' +
+                            '(' + result.deck_id + ', 5),' +
+                            '(' + result.deck_id + ', 6),' +
+                            '(' + result.deck_id + ', 7),' +
+                            '(' + result.deck_id + ', 8),' +
+                            '(' + result.deck_id + ', 9),' +
+                            '(' + result.deck_id + ', 10),' +
+                            '(' + result.deck_id + ', 11),' +
+                            '(' + result.deck_id + ', 12),' +
+                            '(' + result.deck_id + ', 13),' +
+                            '(' + result.deck_id + ', 14),' +
+                            '(' + result.deck_id + ', 15)';
+                        db.query(query, function (err, result) {
+                            callback();
+                        });
+                    });
+                });
             });
         });
     }
     function startDeck(callback) {
-        var query = 'INSERT INTO deck (player_id, deck_name) VALUES ('+player_id+',startDeck)';
-        db.query(query, function (err, result) {
-            query = 'SELECT deck_id, deck_name FROM collection WHERE player_id=' + player_id;
-            db.query(query, function (err, result) {
-                query = 'INSERT INTO deckcard (deck_id, card_id) VALUES ' +
-                    '(' + result.deck_id + ', 1),' +
-                    '(' + result.deck_id + ', 2),' +
-                    '(' + result.deck_id + ', 3),' +
-                    '(' + result.deck_id + ', 4),' +
-                    '(' + result.deck_id + ', 5),' +
-                    '(' + result.deck_id + ', 6),' +
-                    '(' + result.deck_id + ', 7),' +
-                    '(' + result.deck_id + ', 8),' +
-                    '(' + result.deck_id + ', 9),' +
-                    '(' + result.deck_id + ', 10),' +
-                    '(' + result.deck_id + ', 11),' +
-                    '(' + result.deck_id + ', 12),' +
-                    '(' + result.deck_id + ', 13),' +
-                    '(' + result.deck_id + ', 14),' +
-                    '(' + result.deck_id + ', 15)';
-                db.query(query, function (err, result) {
-                    callback();
-                });
-            });
-        });
+
     }
 
     this.getCollection = function () {
