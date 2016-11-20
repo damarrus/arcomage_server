@@ -25,7 +25,8 @@ function Game() {
                             socket.player = new Player(result[0], socket);
                             players.push(socket.player);
                             messenger.send(socket, "auth", {
-                                valid: true
+                                valid: true,
+                                player_name: result[0].player_name
                             });
                         });
                     } else {
@@ -50,10 +51,12 @@ function Game() {
     this.unAuth = function (socket) {
         if (socket.player) {
             socket.player = null;
+            messenger.send(socket, "unAuth", {
+                valid: true
+            });
         } else {
-            messenger.send(socket, "error", {
-                method: "auth",
-                typeError: "notAuth"
+            messenger.send(socket, "unAuth", {
+                valid: false
             });
         }
     };

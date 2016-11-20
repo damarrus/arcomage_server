@@ -20,6 +20,16 @@ const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
 var game = new Game();
+var info = {
+    player_id: 1,
+    player_name: 'vasya',
+    player_login: 2
+};
+var player = new Player(info);
+player.loadCollection(function () {
+    console.log(player.getCollection());
+});
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

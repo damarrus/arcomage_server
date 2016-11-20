@@ -2,12 +2,15 @@
  * Created by nikita on 11.11.2016.
  */
 
+const Collection = require('./collection');
+
 function Player(info = {}, socket = false) {
     // Основные параметры игрока
     var self = this,
         inSearch = false,
         inGame = false,
         ready = false,
+        collection = false,
         player_id = info.player_id || 0,
         player_name = info.player_name || 'bot_name',
         player_login = info.player_login || 'bot_login';
@@ -19,6 +22,16 @@ function Player(info = {}, socket = false) {
         ready = true;
     }
 
+    this.loadCollection = function (callback) {
+        if (!collection) {
+            collection = new Collection(player_id, function () {
+                callback();
+            });
+        }
+    };
+    this.getCollection = function () {
+        return collection.getCollection();
+    };
     this.setInSearch = function (bool) {inSearch = bool;};
     this.getInSearch = function () {return inSearch;};
     this.setReady = function (bool) {ready = bool;};
