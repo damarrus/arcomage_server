@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Ноя 12 2016 г., 16:34
+-- Время создания: Ноя 22 2016 г., 17:42
 -- Версия сервера: 10.1.16-MariaDB
 -- Версия PHP: 5.6.24
 
@@ -122,7 +122,100 @@ INSERT INTO `card` (`card_id`, `card_name`, `card_cost`, `card_elem`, `card_self
 (66, 'CRUUUUSHHHHEEEEEEERRRRRPISKA(newcard)', 5, 3, 0, 0, 0, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (67, 'WEREWOLF BUSHER(newcard)', 8, 3, 0, 0, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (68, 'MIDNIGHT DISCO(newcard)', 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 1, 0),
-(69, 'DIABLO(newcard)', 5, 3, 0, 0, 0, -6, -5, 0, -5, 0, -5, 0, -5, 0, -5, 0, -5, 0);
+(69, 'DIABLO(newcard)', 5, 3, 0, 0, 0, -6, -5, 0, -5, 0, -5, 0, -5, 0, -5, 0, -5, 0),
+(70, 'test', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `collection`
+--
+
+CREATE TABLE `collection` (
+  `collection_id` int(11) NOT NULL,
+  `player_id` int(11) NOT NULL,
+  `card_id` int(11) NOT NULL,
+  `card_amount` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `collection`
+--
+
+INSERT INTO `collection` (`collection_id`, `player_id`, `card_id`, `card_amount`) VALUES
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 1, 3, 1),
+(4, 1, 4, 1),
+(5, 1, 5, 1),
+(6, 1, 6, 1),
+(7, 1, 7, 1),
+(8, 1, 8, 1),
+(9, 1, 9, 1),
+(10, 1, 10, 1),
+(11, 1, 11, 1),
+(12, 1, 12, 1),
+(13, 1, 13, 1),
+(14, 1, 14, 1),
+(15, 1, 15, 1),
+(16, 1, 16, 1),
+(17, 1, 17, 1),
+(18, 1, 18, 1),
+(19, 1, 19, 1),
+(20, 1, 20, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `deck`
+--
+
+CREATE TABLE `deck` (
+  `deck_id` int(11) NOT NULL,
+  `deck_num` int(11) NOT NULL,
+  `deck_name` varchar(50) NOT NULL,
+  `player_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `deck`
+--
+
+INSERT INTO `deck` (`deck_id`, `deck_num`, `deck_name`, `player_id`) VALUES
+(1, 1, 'startDeck', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `deckcard`
+--
+
+CREATE TABLE `deckcard` (
+  `deckCard_id` int(11) NOT NULL,
+  `deck_id` int(11) NOT NULL,
+  `card_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `deckcard`
+--
+
+INSERT INTO `deckcard` (`deckCard_id`, `deck_id`, `card_id`) VALUES
+(63, 1, 2),
+(64, 1, 7),
+(65, 1, 8),
+(66, 1, 9),
+(67, 1, 10),
+(68, 1, 11),
+(69, 1, 12),
+(70, 1, 13),
+(71, 1, 14),
+(72, 1, 15),
+(73, 1, 16),
+(74, 1, 17),
+(75, 1, 18),
+(76, 1, 19),
+(77, 1, 20);
 
 -- --------------------------------------------------------
 
@@ -136,20 +229,6 @@ CREATE TABLE `matches` (
   `match_player2_id` int(11) NOT NULL,
   `match_result` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Дамп данных таблицы `matches`
---
-
-INSERT INTO `matches` (`match_id`, `match_player1_id`, `match_player2_id`, `match_result`) VALUES
-(1, 1, 2, 0),
-(2, 1, 2, 0),
-(3, 1, 2, 0),
-(4, 1, 2, 0),
-(5, 1, 2, 0),
-(6, 1, 2, 0),
-(7, 1, 2, 0),
-(8, 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -204,6 +283,26 @@ ALTER TABLE `card`
   ADD PRIMARY KEY (`card_id`);
 
 --
+-- Индексы таблицы `collection`
+--
+ALTER TABLE `collection`
+  ADD PRIMARY KEY (`collection_id`),
+  ADD KEY `card_id` (`card_id`),
+  ADD KEY `player_id` (`player_id`);
+
+--
+-- Индексы таблицы `deck`
+--
+ALTER TABLE `deck`
+  ADD PRIMARY KEY (`deck_id`);
+
+--
+-- Индексы таблицы `deckcard`
+--
+ALTER TABLE `deckcard`
+  ADD PRIMARY KEY (`deckCard_id`);
+
+--
 -- Индексы таблицы `matches`
 --
 ALTER TABLE `matches`
@@ -229,12 +328,27 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT для таблицы `card`
 --
 ALTER TABLE `card`
-  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+--
+-- AUTO_INCREMENT для таблицы `collection`
+--
+ALTER TABLE `collection`
+  MODIFY `collection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+--
+-- AUTO_INCREMENT для таблицы `deck`
+--
+ALTER TABLE `deck`
+  MODIFY `deck_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT для таблицы `deckcard`
+--
+ALTER TABLE `deckcard`
+  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 --
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT для таблицы `player`
 --
