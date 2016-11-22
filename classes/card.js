@@ -24,6 +24,12 @@ var card = {
             }
         });
     },
+    getAllCards: function(callback) {
+        var query = 'SELECT * FROM card';
+        db.query(query, function(err, result) {
+            callback(result);
+        });
+    },
     getCardRandom: function(callback) {
         var query = 'SELECT count(*) as count_card FROM card';
         db.query(query, function(err, result) {

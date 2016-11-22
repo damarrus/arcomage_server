@@ -31,7 +31,7 @@ var player = new Player(info, socketTest);
 socketTest.player = player;
 var deckcards = [2,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 player.loadCollection(function () {
- test.deleteDeck(2, socketTest);
+ test.getDatabaseCards(socketTest);
 });*/
 
 app.use(bodyParser.json());
@@ -88,6 +88,9 @@ function socketServer(socket, data) {
             // применение карты
             case 'useCard':
                 game.useCard(socket, data['card_id'], data['discard']);
+                break;
+            case 'getDatabaseCards':
+                game.getDatabaseCards(socket);
                 break;
             case 'getCollectionCards':
                 game.getCollectionCards(socket);

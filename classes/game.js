@@ -157,7 +157,18 @@ function Game() {
             });
         }
     };
-
+    this.getDatabaseCards = function (socket) {
+        if (socket.player) {
+            carder.getAllCards(function (result) {
+                messenger.multipleSend(socket, "getCollectionCards", result);
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "getCollectionCards",
+                typeError: "notAuth"
+            });
+        }
+    };
     this.getCollectionCards = function (socket) {
         if (socket.player) {
             socket.player.collection.getCardsID(function (cards) {
