@@ -3,6 +3,7 @@
  */
 
 const Collection = require('./collection');
+const carder = require('./card');
 
 function Player(info = {}, socket = false) {
     // Основные параметры игрока
@@ -18,20 +19,45 @@ function Player(info = {}, socket = false) {
     var turn, tower_hp, wall_hp, res1, res2, res3, gen1, gen2, gen3;
     var cards = [];
 
+    this.player_id = info.player_id || 0;
+
     if (!socket) {
         ready = true;
     }
+    this.collection = false;
 
     this.loadCollection = function (callback) {
-        if (!collection) {
-            collection = new Collection(player_id, function () {
+        if (!this.collection) {
+            this.collection = new Collection(player_id, function () {
                 callback();
             });
+        } else {
+            callback();
         }
     };
-    this.getCollection = function () {
-        return collection.getCollection();
+    this.getCollectionCardsID = function (callback) {
+        this.loadCollection(function () {
+            callback(collection.getCollectionCardsID());
+        });
     };
+    this.getCollectionCards = function (callback) {
+        this.getCollectionCardsID(function (cards) {
+
+        });
+    };
+    this.getDeckCards = function (deck_num, callback) {
+        collection.getDeckCards(deck_num, function (cards) {
+            carder.getCardByMultipleID(cards, function (result) {
+                callback(result);
+            });
+        });
+    };
+    this.setDeckCards = function (deck_num, cards, callback) {
+        collection.setDeckCards(deck_num, cards, function () {
+            callback();
+        });
+    };
+
     this.setInSearch = function (bool) {inSearch = bool;};
     this.getInSearch = function () {return inSearch;};
     this.setReady = function (bool) {ready = bool;};

@@ -12,7 +12,22 @@ function Messenger() {
         data = JSON.stringify(data);
         (isTestClient) ? socket.send(data) : socket.write(data);
         console.log(data);
-    }
+    };
+    this.multipleSend = function (socket, messageType, array = []) {
+        var data = '';
+        var count = 0;
+        array.forEach(function (item, i, arr) {
+            ++count;
+            item.messageType = messageType;
+            data += JSON.stringify(item);
+            if (count == array.length) {
+                (isTestClient) ? socket.send(data) : socket.write(data);
+                console.log('send array '+messageType);
+            }
+        });
+
+
+    };
 }
 
 module.exports = Messenger;

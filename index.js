@@ -9,27 +9,30 @@ const templating = require('consolidate');
 const request = require('request');
 const cheerio = require('cheerio');
 const net = require('net');
+const async = require('async');
 
 const Game = require('./classes/game');
 const auth = require('./models/auth');
-const cards = require('./models/cards');
+const carder = require('./classes/card');
 const Player = require('./classes/player');
 const Match = require('./classes/match');
 
 const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
-var game = new Game();
+/*var game = new Game();
 var info = {
     player_id: 1,
     player_name: 'vasya',
-    player_login: 2
+    player_login: 1
 };
-var player = new Player(info);
+var socketTest = {};
+var player = new Player(info, socketTest);
+socketTest.player = player;
+var deckcards = [2,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 player.loadCollection(function () {
-    console.log(player.getCollection());
-});
-
+    game.deleteDeck(2, socketTest);
+});*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -86,6 +89,27 @@ function socketServer(socket, data) {
                 break;
             case 'gameWithBot':
                 game.gameWithBot(socket);
+                break;
+            case 'getCollectionCards':
+                game.getCollectionCards(socket);
+                break;
+            case 'getAllDecks':
+                game.getAllDecks(socket);
+                break;
+            case 'getDeckCards':
+                game.getDeckCards(data['deck_num'], socket);
+                break;
+            case 'setDeckCards':
+                game.setDeckCards(data['deck_num'], data['cards'], socket);
+                break;
+            case 'createDeck':
+                game.createDeck(data['deck_name'], socket);
+                break;
+            case 'setDeckName':
+                game.setDeckName(data['deck_num'], data['deck_name'], socket);
+                break;
+            case 'deleteDeck':
+                game.deleteDeck(data['deck_num'], socket);
                 break;
         }
     } catch (e) {

@@ -6,6 +6,7 @@ const Match = require('./match');
 const Player = require('./player');
 const Messenger = require('./messenger');
 const db = require('./db');
+const carder = require('./card');
 
 function Game() {
 
@@ -152,6 +153,106 @@ function Game() {
             messenger.send(socket, "error", {
                 method: "useCard",
                 typeError: "notYourTurn"
+            });
+        }
+    };
+
+    this.getCollectionCards = function (socket) {
+        if (socket.player) {
+            socket.player.collection.getCardsID(function (cards) {
+                carder.getCardByMultipleID(cards, function (result) {
+                    messenger.multipleSend(socket, "getCollectionCards", result);
+                });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "getCollectionCards",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.getAllDecks = function (socket) {
+        if (socket.player) {
+            socket.player.collection.getAllDecks(function (decks) {
+                messenger.multipleSend(socket, "getAllDecks", decks);
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "getAllDecks",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.getDeckCards = function (deck_num, socket) {
+        if (socket.player) {
+            socket.player.collection.getDeckByNum(deck_num, function (deck) {
+                deck.getDeckCardsID(function (cards) {
+                    carder.getCardByMultipleID(cards, function (result) {
+                        messenger.multipleSend(socket, "getDeckCards", result);
+                    });
+                });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "getDeckCards",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.setDeckCards = function (deck_num, card_ids, socket) {
+        if (socket.player) {
+            socket.player.collection.getDeckByNum(deck_num, function (deck) {
+                deck.setDeckCards(card_ids, function () {
+
+                });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "setDeckCards",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.createDeck = function (deck_name, socket) {
+        if (socket.player) {
+
+            socket.player.collection.createDeck(deck_name, function () {
+
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "createDeck",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.setDeckName = function (deck_num, deck_name, socket) {
+        if (socket.player) {
+            socket.player.collection.getDeckByNum(deck_num, function (deck) {
+                deck.setDeckName(deck_name, function () {
+
+                });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "setDeck",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.deleteDeck = function (deck_num, socket) {
+        if (socket.player) {
+            socket.player.collection.getDeckByNum(deck_num, function (deck) {
+                deck.deleteDeck(function () {
+                    socket.player.collection.getDecks(function (decks) {
+                        decks.splice(decks.indexOf(deck), 1);
+                    });
+                });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "setDeck",
+                typeError: "notAuth"
             });
         }
     };

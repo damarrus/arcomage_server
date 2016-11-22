@@ -9,6 +9,7 @@
   "author": "Nikita Belousov",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.1.2",
     "body-parser": "^1.15.2",
     "cheerio": "^0.22.0",
     "consolidate": "^0.14.1",

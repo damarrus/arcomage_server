@@ -10,6 +10,20 @@ var card = {
             callback(result[0]);
         });
     },
+    getCardByMultipleID: function(card_ids, callback) {
+        var query = 'SELECT * FROM card WHERE ';
+        var count = 0;
+        card_ids.forEach(function (card_id, i, arr) {
+            ++count;
+            query += 'card_id='+card_id+' OR ';
+            if (count == card_ids.length) {
+                query = query.substring(0, query.length-4);
+                db.query(query, function(err, result) {
+                    callback(result);
+                });
+            }
+        });
+    },
     getCardRandom: function(callback) {
         var query = 'SELECT count(*) as count_card FROM card';
         db.query(query, function(err, result) {
@@ -19,7 +33,7 @@ var card = {
                 callback(result[0]);
             });
         });
-    },
+    }
 };
 
 module.exports = card;
