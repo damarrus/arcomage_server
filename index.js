@@ -77,10 +77,10 @@ function socketServer(socket, data) {
                 break;
             // Поиск игры
             case 'searchGame':
-                game.searchGame(data['deck_num'] = 1, socket);
+                game.searchGame(socket);
                 break;
             case 'gameWithBot':
-                game.gameWithBot(data['deck_num'] = 1, socket);
+                game.gameWithBot(socket);
                 break;
             case 'ready':
                 game.startGame(socket);
