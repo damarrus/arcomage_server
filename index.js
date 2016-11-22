@@ -20,7 +20,7 @@ const Match = require('./classes/match');
 const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
-/*var game = new Game();
+/*var test = new Game();
 var info = {
     player_id: 1,
     player_name: 'vasya',
@@ -31,7 +31,7 @@ var player = new Player(info, socketTest);
 socketTest.player = player;
 var deckcards = [2,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 player.loadCollection(function () {
-    game.deleteDeck(2, socketTest);
+ test.deleteDeck(2, socketTest);
 });*/
 
 app.use(bodyParser.json());
@@ -53,7 +53,7 @@ function sendToClient(socket, messageType, data = {}) {
         console.log(data);
     }
 }
-
+var game = new Game();
 // Keep track of the chat clients
 var clients = [];
 //var searchGame = [];
@@ -77,8 +77,10 @@ function socketServer(socket, data) {
                 break;
             // Поиск игры
             case 'searchGame':
-                // TODO: сделать включение/отключение поиска исходя из действий клиента (отмена поиска)
-                game.searchGame(socket);
+                game.searchGame(data['deck_num'] = 1, socket);
+                break;
+            case 'gameWithBot':
+                game.gameWithBot(data['deck_num'] = 1, socket);
                 break;
             case 'ready':
                 game.startGame(socket);
@@ -86,9 +88,6 @@ function socketServer(socket, data) {
             // применение карты
             case 'useCard':
                 game.useCard(socket, data['card_id'], data['discard']);
-                break;
-            case 'gameWithBot':
-                game.gameWithBot(socket);
                 break;
             case 'getCollectionCards':
                 game.getCollectionCards(socket);

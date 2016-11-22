@@ -52,6 +52,7 @@ function Game() {
     this.unAuth = function (socket) {
         if (socket.player) {
             socket.player = null;
+            players.splice(players.indexOf(socket.player), 1);
             messenger.send(socket, "unAuth", {
                 valid: true
             });
