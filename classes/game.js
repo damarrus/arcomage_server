@@ -63,7 +63,7 @@ function Game() {
         }
     };
 
-    this.searchGame = function (socket) {
+    this.searchGame = function (deck_num, socket) {
         if (!socket.player.getInGame()) {
             if (!socket.player.getInSearch()) {
                 if (!inSearch[0]) {
@@ -94,7 +94,7 @@ function Game() {
         }
     };
 
-    this.gameWithBot = function (socket) {
+    this.gameWithBot = function (deck_num, socket) {
         if (!socket.player.getInGame()) {
             new Match(socket, {player: new Player()}, "gameWithBot", function (match, id) {
                 matches[id] = match;
@@ -160,11 +160,12 @@ function Game() {
     this.getDatabaseCards = function (socket) {
         if (socket.player) {
             carder.getAllCards(function (result) {
-                messenger.multipleSend(socket, "getCollectionCards", result);
+                messenger.send(socket, "getDatabaseCardsCount", {value:result.length});
+                messenger.multipleSend(socket, "getDatabaseCards", result);
             });
         } else {
             messenger.send(socket, "error", {
-                method: "getCollectionCards",
+                method: "getDatabaseCards",
                 typeError: "notAuth"
             });
         }
@@ -173,6 +174,7 @@ function Game() {
         if (socket.player) {
             socket.player.collection.getCardsID(function (cards) {
                 carder.getCardByMultipleID(cards, function (result) {
+                    messenger.send(socket, "getCollectionCardsCount", {value:result.length});
                     messenger.multipleSend(socket, "getCollectionCards", result);
                 });
             });
@@ -200,6 +202,7 @@ function Game() {
             socket.player.collection.getDeckByNum(deck_num, function (deck) {
                 deck.getDeckCardsID(function (cards) {
                     carder.getCardByMultipleID(cards, function (result) {
+                        messenger.send(socket, "getDeckCardsCount", {value:result.length});
                         messenger.multipleSend(socket, "getDeckCards", result);
                     });
                 });

@@ -17,7 +17,8 @@ function Player(info = {}, socket = false) {
         player_login = info.player_login || 'bot_login';
     // Параметры игрока в игре
     var turn, tower_hp, wall_hp, res1, res2, res3, gen1, gen2, gen3;
-    var cards = [];
+    var deckCards = [];
+    var handCards = [];
 
     this.player_id = info.player_id || 0;
 
