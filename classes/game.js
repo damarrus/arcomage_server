@@ -166,9 +166,23 @@ function Game() {
     this.getCollection = function (socket) {
         if (socket.player) {
             socket.player.collection.getCardsID(function (cards) {
-                carder.getCardByMultipleID(cards, function (result) {
-                    messenger.send(socket, "getCollectionCardsCount", {value:result.length});
-                    messenger.multipleSend(socket, "getCollectionCards", result);
+                messenger.send(socket, "getCollectionCardsCount", {value:cards.length});
+                messenger.arraySend(socket, "getCollectionCards", cards);
+                socket.player.collection.getDecks(function (decks) {
+                    messenger.send(socket, "getDecksCount", {value:decks.length});
+                    var count = 0;
+                    decks.forEach(function (deck, i, arr) {
+                        ++count;
+                        deck.getDeckInfo(function (deck_info) {
+                            deck.getDeckCardsID(function (card_ids) {
+                                deck_info.card_ids = card_ids;
+                                messenger.send(socket, "getDeck", deck_info);
+                            });
+                        });
+                        if (count == decks.length) {
+
+                        }
+                    });
                 });
             });
         } else {

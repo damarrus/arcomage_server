@@ -61,8 +61,8 @@ function Deck(isNew, params, callback) {
     this.getDeckCardsID = function (callback) {
         callback(cards);
     };
-    this.getDeckInfo = function () {
-        return {deck_num: deck_num, deck_name: deck_name}
+    this.getDeckInfo = function (callback) {
+        callback({deck_num: deck_num, deck_name: deck_name});
     };
     this.setDeckCards = function (card_ids, callback) {
         var query = 'SELECT count(*) as counter FROM deckcard WHERE deck_id='+deck_id;

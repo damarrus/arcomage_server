@@ -22,18 +22,23 @@ function Messenger() {
             data += JSON.stringify(item);
             if (count == array.length) {
                 (isTestClient) ? socket.send(data) : socket.write(data);
-                console.log('send array '+messageType);
+                console.log('send multiple '+messageType);
             }
         });
     };
-    this.arraySend = function (socket, messageType, array = []) {
-        var data = '';
+    this.arraySend = function (socket, messageType, array = [], data = {}) {
+        var string = '';
         var count = 0;
         array.forEach(function (item, i, arr) {
             ++count;
+            string += item+',';
             item.messageType = messageType;
-            data += JSON.stringify(item);
+
             if (count == array.length) {
+                string = string.substring(0, array.length - 1);
+                data.messageType = messageType;
+                data.card_ids = string;
+                data = JSON.stringify(data);
                 (isTestClient) ? socket.send(data) : socket.write(data);
                 console.log('send array '+messageType);
             }
