@@ -33,10 +33,8 @@ function Messenger() {
         array.forEach(function (item, i, arr) {
             ++count;
             string += item+',';
-            item.messageType = messageType;
-
             if (count == array.length) {
-                string = string.substring(0, array.length - 1);
+                string = string.substring(0, string.length - 1);
                 data.messageType = messageType;
                 data.card_ids = string;
                 data = JSON.stringify(data);

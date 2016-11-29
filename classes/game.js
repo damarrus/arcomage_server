@@ -177,8 +177,7 @@ function Game() {
                             ++count;
                             deck.getDeckInfo(function (deck_info) {
                                 deck.getDeckCardsID(function (card_ids) {
-                                    deck_info.card_ids = card_ids;
-                                    messenger.send(socket, "getDeck", deck_info);
+                                    messenger.arraySend(socket, "getDeck", card_ids, deck_info);
                                 });
                             });
                             if (count == decks.length) {
