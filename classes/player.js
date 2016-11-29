@@ -4,9 +4,11 @@
 
 const Collection = require('./collection');
 const carder = require('./card');
+const Messenger = require('./messenger');
 
 function Player(info = {}, socket = false) {
     // Основные параметры игрока
+    var messenger = new Messenger();
     var self = this,
         inSearch = false,
         inGame = false,
@@ -21,11 +23,58 @@ function Player(info = {}, socket = false) {
     var handCards = [];
 
     this.player_id = info.player_id || 0;
+    this.player_name = info.player_name || 'bot_name';
 
     if (!socket) {
         ready = true;
     }
     this.collection = false;
+
+    this.gethandCards = function () {
+        return handCards;
+    };
+
+    this.setCardsToDeck = function (deck_num, callback) {
+        this.collection.getDeckByNum(deck_num, function (deck) {
+            deck.getDeckCardsID(function (cards) {
+                deckCards = [1,2,3,4,5,6,7];//cards;
+                setStartCardsToHand(function () {
+                    callback();
+                    console.log(deckCards);
+                    console.log(handCards);
+                });
+            })
+        });
+    };
+    function setStartCardsToHand (callback, count = 0) {
+        if (count == 6) {
+            callback();
+        } else {
+            setRandomCardFromDeckToHand(function () {
+                ++count;
+                setStartCardsToHand(callback, count);
+            });
+        }
+    }
+    function setRandomCardFromDeckToHand(callback) {
+        var i = Math.floor(Math.random() * deckCards.length);
+        handCards.push(deckCards[i]);
+        //messenger.send(socket, "getCardRandom", {card_id: deckCards[i]});
+        deckCards.splice(i,1);
+        callback();
+    }
+    this.changeCardFromHand = function (card_id, callback) {
+        var count = 0;
+        handCards.forEach(function (item, i, arr) {
+            if (count == 0 && item == card_id) {
+                ++count;
+                handCards.splice(i,1);
+                setRandomCardFromDeckToHand(function () {
+                    callback();
+                });
+            }
+        });
+    };
 
     this.loadCollection = function (callback) {
         if (!this.collection) {

@@ -31,7 +31,11 @@ var player = new Player(info, socketTest);
 socketTest.player = player;
 var deckcards = [2,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 player.loadCollection(function () {
- test.getDatabaseCards(socketTest);
+    player.setCardsToDeck(1, function () {
+        player.changeCardFromHand(2, function () {
+            console.log(player.gethandCards());
+        });
+    });
 });*/
 
 app.use(bodyParser.json());
@@ -65,6 +69,7 @@ function socketServer(socket, data) {
     data = data.toString('utf8').replace(/\0+$/, "");
     //console.log(data);
     try {
+        //console.log(data);
         data = JSON.parse(data);
         console.log(data);
         switch (data['messageType']) {
@@ -91,6 +96,9 @@ function socketServer(socket, data) {
                 break;
             case 'getDatabaseCards':
                 game.getDatabaseCards(socket);
+                break;
+            case 'getCollection':
+                game.getCollection(socket);
                 break;
             case 'getCollectionCards':
                 game.getCollectionCards(socket);

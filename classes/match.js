@@ -31,9 +31,9 @@ function Match(socket_1, socket_2, type = "", callback) {
     socket_1.player.setPlayerStatus(true, 15, 15, 10, 10, 10, 2, 2, 2);
     socket_2.player.setPlayerStatus(false, 15, 15, 10, 10, 10, 2, 2, 2);
 
-    messenger.send(socket_1, "gameStart", {});
+    messenger.send(socket_1, "gameStart", {opponent_name: socket_2.player.player_id});
     if (type != "gameWithBot") {
-        messenger.send(socket_2, "gameStart", {});
+        messenger.send(socket_2, "gameStart", {opponent_name: socket_1.player.player_id});
     }
 
     this.getMatchID = function () {
