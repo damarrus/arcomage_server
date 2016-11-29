@@ -23,6 +23,7 @@ function Messenger() {
             if (count == array.length) {
                 (isTestClient) ? socket.send(data) : socket.write(data);
                 console.log('send multiple '+messageType);
+                //console.log(data);
             }
         });
     };

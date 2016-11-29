@@ -164,24 +164,27 @@ function Game() {
         });
     };
     this.getCollection = function (socket) {
+        console.log(socket.player);
         if (socket.player) {
-            socket.player.collection.getCardsID(function (cards) {
-                messenger.send(socket, "getCollectionCardsCount", {value:cards.length});
-                messenger.arraySend(socket, "getCollectionCards", cards);
-                socket.player.collection.getDecks(function (decks) {
-                    messenger.send(socket, "getDecksCount", {value:decks.length});
-                    var count = 0;
-                    decks.forEach(function (deck, i, arr) {
-                        ++count;
-                        deck.getDeckInfo(function (deck_info) {
-                            deck.getDeckCardsID(function (card_ids) {
-                                deck_info.card_ids = card_ids;
-                                messenger.send(socket, "getDeck", deck_info);
+            socket.player.loadCollection(function () {
+                socket.player.collection.getCardsID(function (cards) {
+                    messenger.send(socket, "getCollectionCardsCount", {value:cards.length});
+                    messenger.arraySend(socket, "getCollectionCards", cards);
+                    socket.player.collection.getDecks(function (decks) {
+                        messenger.send(socket, "getDecksCount", {value:decks.length});
+                        var count = 0;
+                        decks.forEach(function (deck, i, arr) {
+                            ++count;
+                            deck.getDeckInfo(function (deck_info) {
+                                deck.getDeckCardsID(function (card_ids) {
+                                    deck_info.card_ids = card_ids;
+                                    messenger.send(socket, "getDeck", deck_info);
+                                });
                             });
-                        });
-                        if (count == decks.length) {
+                            if (count == decks.length) {
 
-                        }
+                            }
+                        });
                     });
                 });
             });
