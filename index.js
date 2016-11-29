@@ -69,7 +69,7 @@ function socketServer(socket, data) {
     data = data.toString('utf8').replace(/\0+$/, "");
     //console.log(data);
     try {
-        //console.log(data);
+        console.log(data);
         data = JSON.parse(data);
         console.log(data);
         switch (data['messageType']) {
