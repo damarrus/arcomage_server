@@ -164,7 +164,6 @@ function Game() {
         });
     };
     this.getCollection = function (socket) {
-        console.log(socket.player);
         if (socket.player) {
             socket.player.loadCollection(function () {
                 socket.player.collection.getCardsID(function (cards) {

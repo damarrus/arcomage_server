@@ -99,10 +99,10 @@ function Match(socket_1, socket_2, type = "", callback) {
             if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 30) {
                 callback(3);
             } else {
-                callback(1);
+                callback(2);
             }
         } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 30) {
-            callback(2);
+            callback(1);
         } else {
             callback(false);
         }
