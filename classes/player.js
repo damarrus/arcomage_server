@@ -13,6 +13,7 @@ function Player(info = {}, socket = false) {
         inSearch = false,
         inGame = false,
         ready = false,
+        collection_obj = false,
         collection = false,
         player_id = info.player_id || 0,
         player_name = info.player_name || 'bot_name',
@@ -28,7 +29,7 @@ function Player(info = {}, socket = false) {
     if (!socket) {
         ready = true;
     }
-    this.collection = false;
+    this.collection = new Collection(player_id, function () {});
 
     this.gethandCards = function () {
         return handCards;
@@ -74,14 +75,20 @@ function Player(info = {}, socket = false) {
         });
     };
 
-    this.loadCollection = function (callback) {
+    /*this.loadCollection = function (callback) {
         if (!this.collection) {
-            this.collection = new Collection(player_id, function () {});
-            callback();
+            new Collection(player_id, function (coll) {
+                collection_obj = coll;
+                self.collection = coll;
+                callback(coll);
+            });
         } else {
-            callback();
+            callback(false);
         }
-    };
+    };*/
+    /*this.getCollection = function (callback) {
+        callback(collection_obj);
+    };*/
     this.getCollectionCardsID = function (callback) {
         this.loadCollection(function () {
             callback(collection.getCollectionCardsID());

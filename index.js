@@ -110,7 +110,7 @@ function socketServer(socket, data) {
                 game.getDeckCards(data['deck_num'], socket);
                 break;
             case 'setDeckCards':
-                game.setDeckCards(data['deck_num'], data['cards'], socket);
+                game.setDeckCards(data['deck_num'], data['card_ids'], socket);
                 break;
             case 'createDeck':
                 game.createDeck(data['deck_name'], socket);

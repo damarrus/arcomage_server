@@ -11,6 +11,7 @@ function Collection(player_id, callback) {
 
     var cards = [];
     var decks = [];
+    var self = this;
 
     construct(callback);
     
