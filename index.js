@@ -100,9 +100,9 @@ function socketServer(socket, data) {
             case 'getCollection':
                 game.getCollection(socket);
                 break;
-            case 'getCollectionCards':
+            /*case 'getCollectionCards':
                 game.getCollectionCards(socket);
-                break;
+                break;*/
             case 'getAllDecks':
                 game.getAllDecks(socket);
                 break;

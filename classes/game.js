@@ -112,8 +112,6 @@ function Game() {
 
             setTimeout(function () {
                 matches[socket.matchID].readyPlayer(socket.player.getParam('player_id'));
-                console.log('ingame!!!');
-                console.log(socket.player.getParam('player_id'));
                 if (matches[socket.matchID].getReadyPlayer()) {
                     matches[socket.matchID].sendStartStatus(function () {
                         matches[socket.matchID].sendCardStart();
@@ -193,7 +191,7 @@ function Game() {
             });
         }
     };
-    this.getCollectionCards = function (socket) {
+    /*this.getCollectionCards = function (socket) {
         if (socket.player) {
             socket.player.collection.getCardsID(function (cards) {
                 carder.getCardByMultipleID(cards, function (result) {
@@ -207,7 +205,7 @@ function Game() {
                 typeError: "notAuth"
             });
         }
-    };
+    };*/
     this.getAllDecks = function (socket) {
         if (socket.player) {
             socket.player.collection.getAllDecks(function (decks) {

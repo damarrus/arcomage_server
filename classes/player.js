@@ -37,11 +37,9 @@ function Player(info = {}, socket = false) {
     this.setCardsToDeck = function (deck_num, callback) {
         this.collection.getDeckByNum(deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
-                deckCards = [1,2,3,4,5,6,7];//cards;
+                deckCards = cards;
                 setStartCardsToHand(function () {
                     callback();
-                    console.log(deckCards);
-                    console.log(handCards);
                 });
             })
         });
@@ -78,9 +76,8 @@ function Player(info = {}, socket = false) {
 
     this.loadCollection = function (callback) {
         if (!this.collection) {
-            this.collection = new Collection(player_id, function () {
-                callback();
-            });
+            this.collection = new Collection(player_id, function () {});
+            callback();
         } else {
             callback();
         }
