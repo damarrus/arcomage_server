@@ -69,7 +69,7 @@ function Game() {
                 if (!inSearch[0]) {
                     inSearch.push(socket);
                     socket.player.setInSearch(true);
-                    socket.player.setDeckNum(deck_num);
+                    socket.player.setDeckNum(deck_num, function (result) {});
                 } else {
                     // проверка на полную деку
                     socket.player.setDeckNum(deck_num, function (result) {
