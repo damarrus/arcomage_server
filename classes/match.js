@@ -40,13 +40,14 @@ function Match(socket_1, socket_2, type = "", callback) {
         return matchID;
     };
 
-    this.sendStartStatus = function (callback) {
+    this.sendStartStatus = function () {
         messenger.send(socket_1, "startStatus", {turn: true});
         if (type != "gameWithBot") {
             messenger.send(socket_2, "startStatus", {turn: false});
         }
         sendStatus();
-        callback();
+        socket_1.player.setCardsToDeck();
+        socket_2.player.setCardsToDeck();
     };
 
     function sendStatus() {
@@ -137,7 +138,9 @@ function Match(socket_1, socket_2, type = "", callback) {
                                     sendStatus();
                                     isWin(function (result) {
                                         if (!result) {
-                                            sendNewCard(self);
+                                            self.player.changeCardFromHand(card_id, function () {
+
+                                            });
                                             if (type == "gameWithBot") {
                                                 useCardBot(function (result) {
                                                     callback(result);
@@ -164,7 +167,9 @@ function Match(socket_1, socket_2, type = "", callback) {
                             sendStatus();
                             isWin(function (result) {
                                 if (!result) {
-                                    sendNewCard(self);
+                                    self.player.changeCardFromHand(card_id, function () {
+
+                                    });
                                     if (type == "gameWithBot") {
                                         useCardBot(function (result) {
                                             callback(result);

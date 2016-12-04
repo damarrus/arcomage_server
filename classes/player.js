@@ -15,6 +15,7 @@ function Player(info = {}, socket = false) {
         ready = false,
         collection_obj = false,
         collection = false,
+        deck_num = false,
         player_id = info.player_id || 0,
         player_name = info.player_name || 'bot_name',
         player_login = info.player_login || 'bot_login';
@@ -31,36 +32,47 @@ function Player(info = {}, socket = false) {
     }
     this.collection = new Collection(player_id, function () {});
 
+    this.setDeckNum = function (new_deck_num) {
+        deck_num = new_deck_num;
+    };
+
     this.gethandCards = function () {
         return handCards;
     };
 
-    this.setCardsToDeck = function (deck_num, callback) {
+    this.setCardsToDeck = function (callback = function () {}) {
         this.collection.getDeckByNum(deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
                 deckCards = cards;
+                function setStartCardsToHand (callback, count = 0) {
+                    if (count == 6) {
+                        callback();
+                    } else {
+                        setRandomCardFromDeckToHand(function () {
+                            ++count;
+                            setStartCardsToHand(callback, count);
+                        });
+                    }
+                }
                 setStartCardsToHand(function () {
                     callback();
                 });
             })
         });
     };
-    function setStartCardsToHand (callback, count = 0) {
-        if (count == 6) {
-            callback();
-        } else {
-            setRandomCardFromDeckToHand(function () {
-                ++count;
-                setStartCardsToHand(callback, count);
-            });
-        }
-    }
+
     function setRandomCardFromDeckToHand(callback) {
         var i = Math.floor(Math.random() * deckCards.length);
-        handCards.push(deckCards[i]);
-        //messenger.send(socket, "getCardRandom", {card_id: deckCards[i]});
-        deckCards.splice(i,1);
-        callback();
+        if (deckCards.length != 0) {
+            handCards.push(deckCards[i]);
+            carder.getCardByID(deckCards[i], function (card) {
+                messenger.send(socket, "getCardRandom", card);
+                deckCards.splice(i,1);
+                callback();
+            });
+        } else {
+            callback();
+        }
     }
     this.changeCardFromHand = function (card_id, callback) {
         var count = 0;

@@ -69,6 +69,7 @@ function Game() {
                 if (!inSearch[0]) {
                     inSearch.push(socket);
                     socket.player.setInSearch(true);
+                    socket.player.setDeckNum(deck_num);
                 } else {
                     console.log('игра найдена');
                     var opponent = inSearch[0];
@@ -77,6 +78,7 @@ function Game() {
                     opponent.opponent = socket;
                     socket.opponent = opponent;
                     opponent.player.inSearch = false;
+                    socket.player.setDeckNum(deck_num);
 
                     new Match(socket, opponent, "searchGame", function (match) {
                         matches[match.getMatchID()] = match;
@@ -96,6 +98,7 @@ function Game() {
 
     this.gameWithBot = function (deck_num, socket) {
         if (!socket.player.getInGame()) {
+            socket.player.setDeckNum(deck_num);
             new Match(socket, {player: new Player()}, "gameWithBot", function (match, id) {
                 matches[id] = match;
             });
@@ -113,9 +116,7 @@ function Game() {
             setTimeout(function () {
                 matches[socket.matchID].readyPlayer(socket.player.getParam('player_id'));
                 if (matches[socket.matchID].getReadyPlayer()) {
-                    matches[socket.matchID].sendStartStatus(function () {
-                        matches[socket.matchID].sendCardStart();
-                    });
+                    matches[socket.matchID].sendStartStatus();
                 }
             }, 500)
         } else {
