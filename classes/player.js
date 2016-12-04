@@ -32,8 +32,20 @@ function Player(info = {}, socket = false) {
     }
     this.collection = new Collection(player_id, function () {});
 
-    this.setDeckNum = function (new_deck_num) {
-        deck_num = new_deck_num;
+    this.setDeckNum = function (new_deck_num, callback) {
+        this.collection.getDeckByNum(deck_num, function (deck) {
+            deck.getDeckCardsID(function (cards) {
+                if (deck.isDeckFull()) {
+                    deck_num = new_deck_num;
+                    deckCards = cards;
+                    callback(true);
+                } else {
+                    callback(false);
+                }
+            });
+        });
+
+
     };
 
     this.gethandCards = function () {

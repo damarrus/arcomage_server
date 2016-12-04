@@ -11,7 +11,8 @@ function Deck(isNew, params, callback) {
         deck_num = params.deck_num,
         deck_name = params.deck_name,
         player_id = params.player_id,
-        query;
+        query,
+        full = true;
     if (isNew) {
         query = 'SELECT max(deck_num) as max_num FROM deck WHERE player_id='+player_id;
         db.query(query, function(err, result) {
@@ -30,6 +31,9 @@ function Deck(isNew, params, callback) {
                 result.forEach(function (item, i, arr) {
                     ++count;
                     cards.push(item.card_id);
+                    if (item.card_id == 0) {
+                        full = false;
+                    }
                     if (count == result.length) {
                         callback();
                     }
@@ -39,6 +43,10 @@ function Deck(isNew, params, callback) {
             }
         });
     }
+
+    this.isDeckFull = function () {
+        return full;
+    };
 
     this.setDeckName = function (deck_name, callback) {
         var query = "UPDATE deck SET deck_name='"+deck_name+"' WHERE deck_id="+deck_id;

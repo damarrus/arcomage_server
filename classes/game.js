@@ -71,17 +71,26 @@ function Game() {
                     socket.player.setInSearch(true);
                     socket.player.setDeckNum(deck_num);
                 } else {
-                    console.log('игра найдена');
-                    var opponent = inSearch[0];
-                    inSearch.splice(inSearch.indexOf(opponent), 1);
+                    // проверка на полную деку
+                    socket.player.setDeckNum(deck_num, function (result) {
+                        if (result) {
+                            console.log('игра найдена');
+                            var opponent = inSearch[0];
+                            inSearch.splice(inSearch.indexOf(opponent), 1);
 
-                    opponent.opponent = socket;
-                    socket.opponent = opponent;
-                    opponent.player.inSearch = false;
-                    socket.player.setDeckNum(deck_num);
+                            opponent.opponent = socket;
+                            socket.opponent = opponent;
+                            opponent.player.inSearch = false;
 
-                    new Match(socket, opponent, "searchGame", function (match) {
-                        matches[match.getMatchID()] = match;
+                            new Match(socket, opponent, "searchGame", function (match) {
+                                matches[match.getMatchID()] = match;
+                            });
+                        } else {
+                            messenger.send(socket, "error", {
+                                method: "searchGame",
+                                typeError: "deckIsNotFull"
+                            });
+                        }
                     });
                 }
             } else {
@@ -98,9 +107,18 @@ function Game() {
 
     this.gameWithBot = function (deck_num, socket) {
         if (!socket.player.getInGame()) {
-            socket.player.setDeckNum(deck_num);
-            new Match(socket, {player: new Player()}, "gameWithBot", function (match, id) {
-                matches[id] = match;
+            // проверка на полную деку
+            socket.player.setDeckNum(deck_num, function (result) {
+                if (result) {
+                    new Match(socket, {player: new Player()}, "gameWithBot", function (match, id) {
+                        matches[id] = match;
+                    });
+                } else {
+                    messenger.send(socket, "error", {
+                        method: "searchGame",
+                        typeError: "deckIsNotFull"
+                    });
+                }
             });
         } else {
             messenger.send(socket, "error", {
