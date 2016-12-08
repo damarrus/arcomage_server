@@ -36,9 +36,16 @@ function Player(info = {}, socket = false) {
         this.collection.getDeckByNum(new_deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
                 if (deck.isDeckFull()) {
+                    var count = 0;
                     deck_num = new_deck_num;
-                    deckCards = cards;
-                    callback(true);
+                    deckCards = [];
+                    cards.forEach(function (item, i, arr) {
+                        ++count;
+                        deckCards.push(item);
+                        if (count == cards.length) {
+                            callback(true);
+                        }
+                    });
                 } else {
                     callback(false);
                 }

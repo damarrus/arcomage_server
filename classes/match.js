@@ -28,8 +28,8 @@ function Match(socket_1, socket_2, type = "", callback) {
     socket_1.player.setInGame(true);
     socket_2.player.setInGame(true);
 
-    socket_1.player.setPlayerStatus(true, 15, 15, 10, 10, 10, 2, 2, 2);
-    socket_2.player.setPlayerStatus(false, 15, 15, 10, 10, 10, 2, 2, 2);
+    socket_1.player.setPlayerStatus(true, 15, 10, 10, 10, 10, 2, 2, 2);
+    socket_2.player.setPlayerStatus(false, 15, 10, 10, 10, 10, 2, 2, 2);
 
     messenger.send(socket_1, "gameStart", {opponent_name: socket_2.player.player_id});
     if (type != "gameWithBot") {

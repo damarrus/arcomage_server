@@ -39,7 +39,20 @@ var card = {
                 callback(result[0]);
             });
         });
+    },
+    changeNull: function (callback) {
+        var query = "UPDATE card SET card_enemy_res1 = 0 WHERE card_enemy_res1 is null";
+        db.query(query, function(err, result) {
+            var query = "UPDATE card SET card_enemy_res2 = 0 WHERE card_enemy_res2 is null";
+            db.query(query, function(err, result) {
+                var query = "UPDATE card SET card_enemy_res3 = 0 WHERE card_enemy_res3 is null";
+                db.query(query, function(err, result) {
+                    callback(result);
+                });
+            });
+        });
     }
+
 };
 
 module.exports = card;

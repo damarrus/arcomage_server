@@ -49,6 +49,10 @@ app.get('/', function(req, res){
 });
 app.listen(8000);
 
+/*carder.changeNull(function (result) {
+    console.log(result);
+});*/
+
 function sendToClient(socket, messageType, data = {}) {
     data.messageType = messageType;
     data = JSON.stringify(data);
