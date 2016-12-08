@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Ноя 22 2016 г., 17:45
+-- Время создания: Дек 08 2016 г., 19:48
 -- Версия сервера: 10.1.16-MariaDB
 -- Версия PHP: 5.6.24
 
@@ -29,24 +29,24 @@ SET time_zone = "+00:00";
 CREATE TABLE `card` (
   `card_id` int(11) NOT NULL,
   `card_name` varchar(100) NOT NULL,
-  `card_cost` int(100) NOT NULL,
-  `card_elem` int(100) NOT NULL,
+  `card_cost` int(100) DEFAULT NULL,
+  `card_elem` int(100) DEFAULT NULL,
   `card_self_tower_hp` int(11) DEFAULT NULL,
   `card_enemy_tower_hp` int(11) DEFAULT NULL,
-  `card_self_wall_hp` int(11) NOT NULL,
-  `card_enemy_wall_hp` int(11) NOT NULL,
-  `card_self_res1` int(11) NOT NULL,
-  `card_self_gen1` int(11) NOT NULL,
-  `card_enemy_res1` int(11) NOT NULL,
-  `card_enemy_gen1` int(11) NOT NULL,
-  `card_self_res2` int(11) NOT NULL,
-  `card_self_gen2` int(11) NOT NULL,
-  `card_enemy_res2` int(11) NOT NULL,
-  `card_enemy_gen2` int(11) NOT NULL,
-  `card_self_res3` int(11) NOT NULL,
-  `card_self_gen3` int(11) NOT NULL,
-  `card_enemy_res3` int(11) NOT NULL,
-  `card_enemy_gen3` int(11) NOT NULL
+  `card_self_wall_hp` int(11) DEFAULT NULL,
+  `card_enemy_wall_hp` int(11) DEFAULT NULL,
+  `card_self_res1` int(11) DEFAULT NULL,
+  `card_self_gen1` int(11) DEFAULT NULL,
+  `card_enemy_res1` int(11) DEFAULT NULL,
+  `card_enemy_gen1` int(11) DEFAULT NULL,
+  `card_self_res2` int(11) DEFAULT NULL,
+  `card_self_gen2` int(11) DEFAULT NULL,
+  `card_enemy_res2` int(11) DEFAULT NULL,
+  `card_enemy_gen2` int(11) DEFAULT NULL,
+  `card_self_res3` int(11) DEFAULT NULL,
+  `card_self_gen3` int(11) DEFAULT NULL,
+  `card_enemy_res3` int(11) DEFAULT NULL,
+  `card_enemy_gen3` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -54,76 +54,35 @@ CREATE TABLE `card` (
 --
 
 INSERT INTO `card` (`card_id`, `card_name`, `card_cost`, `card_elem`, `card_self_tower_hp`, `card_enemy_tower_hp`, `card_self_wall_hp`, `card_enemy_wall_hp`, `card_self_res1`, `card_self_gen1`, `card_enemy_res1`, `card_enemy_gen1`, `card_self_res2`, `card_self_gen2`, `card_enemy_res2`, `card_enemy_gen2`, `card_self_res3`, `card_self_gen3`, `card_enemy_res3`, `card_enemy_gen3`) VALUES
-(1, 'fireball', 6, 2, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 'miner', 10, 1, -7, -7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(3, 'waterfall', 3, 2, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(4, 'big dick', 3, 2, 3, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(5, 'drop_table', 3, 2, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(6, 'vodka', 3, 2, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(7, 'yarik pidar', 3, 2, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(8, 'yarik kidala', 3, 2, -10, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(9, 'warrior', 3, 2, 2, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(10, 'bullshit', 3, 2, -6, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(11, 'gg wp', 3, 2, 10, -20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(12, 'lgd push', 3, 2, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(13, 'Bastion(newcard)', 11, 1, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(14, 'BIG HOLE(newcard)', 4, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(15, 'BIG WALL(newcard)', 3, 1, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(16, 'SHITBAG ORE(newcard)', 0, 1, 0, 0, 0, 0, -8, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(17, 'GREAT WALL(newcard)', 7, 1, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(18, 'GREATEST WALL(newcard)', 14, 1, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(19, 'GALLERY(newcard)', 7, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(20, 'GAYGNOMES(newcard)', 5, 1, 0, 0, 4, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(21, 'EARTHQUAKE(newcard)', 0, 1, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0),
-(22, 'BARRACKS(newcard)', 10, 1, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 0, 0),
-(23, 'MAGIC MOUNTAIN(newcard)', 9, 1, 0, 0, 7, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0),
-(24, 'NEW DILDOS(newcard)', 5, 1, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(25, 'NICE WORK BIATCHES(newcard)', 14, 1, 5, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(26, 'ANAL DRILLING(newcard)', 4, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0),
-(27, 'SELF ANUS DRILLING(newcard)', 0, 1, 0, 0, 10, 0, 0, -1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0),
-(28, 'SINGING DICKCOAL(newcard)', 10, 1, 3, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(29, 'GAYSLAVES(newcard)', 5, 1, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, -5, 0, 0, 0),
-(30, 'STONEDICK GARDEN(newcard)', 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0),
-(31, 'HEART OF THE COCKDRAGON(newcard)', 23, 1, 8, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(32, 'ROCKZOOKA(newcard)', 16, 1, 0, 0, 6, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(33, 'WALLSLAMBITCH(newcard)', 5, 1, 0, 0, -6, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(34, 'FORTIFICATION(newcard)', 13, 1, 0, 0, 7, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(35, 'ASSMINERS(newcard)', 2, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(36, 'DIAMOND(newcard)', 17, 2, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(37, 'ANAL EXPLOSION(newcard)', 2, 2, -3, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0),
-(38, 'DICK INTRUSION(newcard)', 4, 2, 4, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -2, 0, 0, 0),
-(39, 'YAROSLAV HOMOHARMONY(newcard)', 6, 2, 3, 0, 3, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
-(40, 'BALLCRACK(newcard)', 7, 2, 0, -9, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0),
-(41, 'ECLIPSE(newcard)', 4, 2, 2, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(42, 'ANAL SHIEL PROTECTION(newcard)', 12, 2, 8, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(43, 'COCKDICK SPEAR(newcard)', 4, 2, 0, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(44, 'FUCK MONASTERY(newcard)', 15, 2, 10, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0),
-(45, 'SOFT UKNOWHAT(newcard)', 7, 2, 5, 0, 0, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(46, 'TOUGH UKNOWHAT(newcard)', 8, 2, 11, 0, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(47, 'FIRE RUBY(newcard)', 14, 2, 6, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(48, 'EVERYONE GET FUCKED(newcard)', 5, 2, -7, -7, 0, 0, 0, 0, 0, 0, 0, -1, 0, -1, 0, 0, 0, 0),
-(49, 'SPELLDICK WEAVERS(newcard)', 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
-(50, 'YARIK ANAL CRACK(newcard)', 3, 2, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(51, 'EMPATHY(newcard)', 12, 2, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(52, 'ARMY OF GAYLOVERS(newcard)', 3, 3, 0, 0, -3, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(53, 'NIGGERSERK(newcard)', 3, 3, -3, 0, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(54, 'MAD YARIK(newcard)', 6, 3, 0, 0, 0, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3, 0),
-(55, 'COCKSUCKER VAMPIRE YARIK(newcard)', 17, 3, 0, 0, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -5, -1),
-(56, 'MIGHTY WARRIOR OF THE FAGGOT DICK ORDER(newcard)', 13, 3, 0, 0, 0, -13, 0, 0, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0),
-(57, 'DICK STEALER(newcard)', 12, 3, 0, 0, 0, 0, 3, 0, -5, 0, 5, 0, -10, 0, 0, 0, 0, 0),
-(58, 'PEAGASUS RIDER(newcard)', 17, 3, 0, -12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(59, 'GAYS ARMY(newcard)', 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0),
-(60, 'GAYNOMES(newcard)', 5, 3, 0, 0, 3, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(61, 'GOBLINS(newcard)', 1, 3, 0, 0, 0, -4, 0, 0, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0),
-(62, 'DIS IS DRAGOM MUTHAFUCKA(newcard)', 25, 3, 0, 0, 0, -20, 0, 0, 0, 0, 0, 0, -10, 0, 0, 0, 0, -1),
-(63, 'STONECOCK GIANT(newcard)', 15, 3, 0, 0, 4, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(64, 'LITTLE DWARF(newcard)', 2, 3, 0, 0, 0, -3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0),
-(65, 'MADCOWCRUSH(newcard)', 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -6, 0, -6, 0),
-(66, 'CRUUUUSHHHHEEEEEEERRRRRPISKA(newcard)', 5, 3, 0, 0, 0, -6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(67, 'WEREWOLF BUSHER(newcard)', 8, 3, 0, 0, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(68, 'MIDNIGHT DISCO(newcard)', 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, 1, 0),
-(69, 'DIABLO(newcard)', 5, 3, 0, 0, 0, -6, -5, 0, -5, 0, -5, 0, -5, 0, -5, 0, -5, 0),
-(70, 'test', 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+(1, 'Plevok', 1, 3, 0, 0, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 'Spustit'' sobak', 2, 3, 0, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'Obstrel', 4, 3, 0, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'Artilleriya', 8, 3, 0, 0, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 'Drakon', 12, 3, 0, 0, 0, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 'stroitel''', 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(7, 'reconstrucia', 3, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(8, 'upgrade', 12, 1, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9, 'pokraska', 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(10, 'kirpich', 4, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(11, 'antiprigar', 11, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(12, 'bolshaya stroyka', 21, 1, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(13, 'volshebnaya povozka', 4, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(14, 'priliv sil', 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0),
+(15, 'portal v zverin', 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0),
+(16, 'deconstuctor', 3, 2, 0, 0, 0, 0, 0, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(17, 'sjiganie many', 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0, 0, 0, 0, 0),
+(18, 'travlya', 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0),
+(19, 'masterskaya', 8, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(20, 'bashnya volshebnika', 8, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+(21, 'veterinarka', 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(22, 'obval', 6, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0),
+(23, 'otyplenie', 6, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0),
+(24, 'otkryt'' kletki', 6, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1),
+(25, 'perestroyka', 9, 1, 10, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(26, 'razbor', 13, 1, 10, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(27, 'ataka', 3, 3, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(28, 'spustit''', 8, 3, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(29, 'podlaya diversiya', 18, 3, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -162,7 +121,27 @@ INSERT INTO `collection` (`collection_id`, `player_id`, `card_id`, `card_amount`
 (17, 1, 17, 1),
 (18, 1, 18, 1),
 (19, 1, 19, 1),
-(20, 1, 20, 1);
+(20, 1, 20, 1),
+(21, 2, 1, 1),
+(22, 2, 2, 1),
+(23, 2, 3, 1),
+(24, 2, 4, 1),
+(25, 2, 5, 1),
+(26, 2, 6, 1),
+(27, 2, 7, 1),
+(28, 2, 8, 1),
+(29, 2, 9, 1),
+(30, 2, 10, 1),
+(31, 2, 11, 1),
+(32, 2, 12, 1),
+(33, 2, 13, 1),
+(34, 2, 14, 1),
+(35, 2, 15, 1),
+(36, 2, 16, 1),
+(37, 2, 17, 1),
+(38, 2, 18, 1),
+(39, 2, 19, 1),
+(40, 2, 20, 1);
 
 -- --------------------------------------------------------
 
@@ -182,7 +161,8 @@ CREATE TABLE `deck` (
 --
 
 INSERT INTO `deck` (`deck_id`, `deck_num`, `deck_name`, `player_id`) VALUES
-(1, 1, 'startDeck', 1);
+(1, 1, 'startDeck', 1),
+(2, 1, 'startDeck', 2);
 
 -- --------------------------------------------------------
 
@@ -201,21 +181,36 @@ CREATE TABLE `deckcard` (
 --
 
 INSERT INTO `deckcard` (`deckCard_id`, `deck_id`, `card_id`) VALUES
-(63, 1, 2),
-(64, 1, 7),
-(65, 1, 8),
-(66, 1, 9),
-(67, 1, 10),
-(68, 1, 11),
-(69, 1, 12),
-(70, 1, 13),
-(71, 1, 14),
-(72, 1, 15),
-(73, 1, 16),
-(74, 1, 17),
-(75, 1, 18),
-(76, 1, 19),
-(77, 1, 20);
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 3),
+(4, 1, 4),
+(5, 1, 5),
+(6, 1, 6),
+(7, 1, 7),
+(8, 1, 8),
+(9, 1, 9),
+(10, 1, 10),
+(11, 1, 11),
+(12, 1, 12),
+(13, 1, 13),
+(14, 1, 14),
+(15, 1, 15),
+(16, 2, 1),
+(17, 2, 2),
+(18, 2, 3),
+(19, 2, 4),
+(20, 2, 5),
+(21, 2, 6),
+(22, 2, 7),
+(23, 2, 8),
+(24, 2, 9),
+(25, 2, 10),
+(26, 2, 11),
+(27, 2, 12),
+(28, 2, 13),
+(29, 2, 14),
+(30, 2, 15);
 
 -- --------------------------------------------------------
 
@@ -229,6 +224,68 @@ CREATE TABLE `matches` (
   `match_player2_id` int(11) NOT NULL,
   `match_result` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `matches`
+--
+
+INSERT INTO `matches` (`match_id`, `match_player1_id`, `match_player2_id`, `match_result`) VALUES
+(1, 1, 0, 2),
+(2, 2, 0, 0),
+(3, 2, 1, 1),
+(4, 1, 0, 2),
+(5, 2, 1, 1),
+(6, 2, 1, 2),
+(7, 1, 0, 1),
+(8, 1, 0, 0),
+(9, 1, 0, 1),
+(10, 1, 0, 0),
+(11, 1, 0, 0),
+(12, 1, 0, 0),
+(13, 1, 0, 0),
+(14, 1, 0, 0),
+(15, 1, 2, 0),
+(16, 1, 2, 0),
+(17, 1, 2, 0),
+(18, 1, 2, 0),
+(19, 1, 2, 0),
+(20, 1, 2, 0),
+(21, 2, 1, 0),
+(22, 1, 0, 2),
+(23, 1, 0, 1),
+(24, 1, 1, 0),
+(25, 2, 1, 3),
+(26, 1, 2, 2),
+(27, 2, 0, 0),
+(28, 1, 0, 2),
+(29, 1, 0, 0),
+(30, 1, 0, 2),
+(31, 1, 0, 1),
+(32, 2, 1, 1),
+(33, 2, 1, 0),
+(34, 1, 0, 1),
+(35, 2, 1, 1),
+(36, 1, 0, 1),
+(37, 1, 0, 0),
+(38, 1, 0, 3),
+(39, 1, 0, 0),
+(40, 1, 0, 0),
+(41, 1, 0, 0),
+(42, 1, 0, 0),
+(43, 1, 0, 0),
+(44, 1, 0, 0),
+(45, 1, 0, 0),
+(46, 1, 0, 0),
+(47, 1, 0, 0),
+(48, 1, 0, 0),
+(49, 1, 0, 0),
+(50, 2, 1, 0),
+(51, 2, 1, 0),
+(52, 1, 2, 0),
+(53, 1, 2, 0),
+(54, 1, 2, 2),
+(55, 1, 2, 2),
+(56, 1, 2, 0);
 
 -- --------------------------------------------------------
 
@@ -249,7 +306,9 @@ CREATE TABLE `player` (
 
 INSERT INTO `player` (`player_id`, `player_name`, `player_login`, `player_password`) VALUES
 (1, 'vasya', '1', '1'),
-(2, 'petya', '2', '2');
+(2, 'petya', '2', '2'),
+(3, 'valera', '3', '3'),
+(4, 'valentin', '4', '4');
 
 -- --------------------------------------------------------
 
@@ -328,12 +387,12 @@ ALTER TABLE `status`
 -- AUTO_INCREMENT для таблицы `card`
 --
 ALTER TABLE `card`
-  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `card_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 --
 -- AUTO_INCREMENT для таблицы `collection`
 --
 ALTER TABLE `collection`
-  MODIFY `collection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `collection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 --
 -- AUTO_INCREMENT для таблицы `deck`
 --
@@ -343,17 +402,17 @@ ALTER TABLE `deck`
 -- AUTO_INCREMENT для таблицы `deckcard`
 --
 ALTER TABLE `deckcard`
-  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 --
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 --
 -- AUTO_INCREMENT для таблицы `player`
 --
 ALTER TABLE `player`
-  MODIFY `player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `player_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT для таблицы `status`
 --
