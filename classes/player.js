@@ -89,11 +89,11 @@ function Player(info = {}, socket = false, callback = function () {}) {
         var i = Math.floor(Math.random() * deckCards.length);
         if (deckCards.length != 0) {
             handCards.push(deckCards[i]);
-            carder.getCardByID(deckCards[i], function (card) {
-                if (player_id != 0) {messenger.send(socket, "getCardRandom", card);}
-                deckCards.splice(i,1);
-                callback();
-            });
+            if (player_id != 0) {
+                messenger.send(socket, "getCardRandom", {card_id: deckCards[i]});
+            }
+            deckCards.splice(i,1);
+            callback();
         } else {
             callback();
         }

@@ -62,12 +62,6 @@ function Match(socket_1, socket_2, type = "", callback) {
         }
     }
 
-    function sendNewCard(socket) {
-        carder.getCardRandom(function (card) {
-            messenger.send(socket, 'getCardRandom', card)
-        });
-    }
-
     this.readyPlayer = function (player_id) {
         if (player_id == player_1_id) {
             socket_1.player.setReady(true);
@@ -78,24 +72,6 @@ function Match(socket_1, socket_2, type = "", callback) {
 
     this.getReadyPlayer = function () {
         return (socket_1.player.getReady() && socket_2.player.getReady());
-    };
-
-    this.sendCardStart = function () {
-        sendNewCard(socket_1);
-        sendNewCard(socket_1);
-        sendNewCard(socket_1);
-        sendNewCard(socket_1);
-        sendNewCard(socket_1);
-        sendNewCard(socket_1);
-        if (type != "gameWithBot") {
-            sendNewCard(socket_2);
-            sendNewCard(socket_2);
-            sendNewCard(socket_2);
-            sendNewCard(socket_2);
-            sendNewCard(socket_2);
-            sendNewCard(socket_2);
-        }
-
     };
     
     function isWin(callback) {
@@ -168,8 +144,10 @@ function Match(socket_1, socket_2, type = "", callback) {
                             function () {
                                 enemy.player.growthRes(function () {
                                     if (type != "gameWithBot") {
-                                        card.discard = false;
-                                        messenger.send(enemy, 'getCardOpponent', card);
+                                        messenger.send(enemy, 'getCardOpponent', {
+                                            card_id: card.card_id,
+                                            discard: false
+                                        });
                                     }
                                     sendStatus();
                                     isWin(function (result) {
@@ -198,8 +176,10 @@ function Match(socket_1, socket_2, type = "", callback) {
                     enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                         enemy.player.growthRes(function () {
                             if (type != "gameWithBot") {
-                                card.discard = true;
-                                messenger.send(enemy, 'getCardOpponent', card);
+                                messenger.send(enemy, 'getCardOpponent', {
+                                    card_id: card.card_id,
+                                    discard: true
+                                });
                             }
                             sendStatus();
                             isWin(function (result) {
@@ -237,8 +217,10 @@ function Match(socket_1, socket_2, type = "", callback) {
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
                                 socket_1.player.growthRes(function () {
-                                    card.discard = false;
-                                    messenger.send(socket_1, 'getCardOpponent', card);
+                                    messenger.send(socket_1, 'getCardOpponent', {
+                                        card_id: card.card_id,
+                                        discard: false
+                                    });
                                     sendStatus();
                                     isWin(function (result) {
                                         callback(result);
@@ -250,8 +232,10 @@ function Match(socket_1, socket_2, type = "", callback) {
                         socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                             socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                                 socket_1.player.growthRes(function () {
-                                    card.discard = true;
-                                    messenger.send(socket_1, 'getCardOpponent', card);
+                                    messenger.send(socket_1, 'getCardOpponent', {
+                                        card_id: card.card_id,
+                                        discard: true
+                                    });
                                     sendStatus();
                                 });
                             });
