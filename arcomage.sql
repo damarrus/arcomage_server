@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 08 2016 г., 19:48
+-- Время создания: Дек 10 2016 г., 12:17
 -- Версия сервера: 10.1.16-MariaDB
 -- Версия PHP: 5.6.24
 
@@ -29,60 +29,63 @@ SET time_zone = "+00:00";
 CREATE TABLE `card` (
   `card_id` int(11) NOT NULL,
   `card_name` varchar(100) NOT NULL,
-  `card_cost` int(100) DEFAULT NULL,
-  `card_elem` int(100) DEFAULT NULL,
-  `card_self_tower_hp` int(11) DEFAULT NULL,
-  `card_enemy_tower_hp` int(11) DEFAULT NULL,
-  `card_self_wall_hp` int(11) DEFAULT NULL,
-  `card_enemy_wall_hp` int(11) DEFAULT NULL,
-  `card_self_res1` int(11) DEFAULT NULL,
-  `card_self_gen1` int(11) DEFAULT NULL,
-  `card_enemy_res1` int(11) DEFAULT NULL,
-  `card_enemy_gen1` int(11) DEFAULT NULL,
-  `card_self_res2` int(11) DEFAULT NULL,
-  `card_self_gen2` int(11) DEFAULT NULL,
-  `card_enemy_res2` int(11) DEFAULT NULL,
-  `card_enemy_gen2` int(11) DEFAULT NULL,
-  `card_self_res3` int(11) DEFAULT NULL,
-  `card_self_gen3` int(11) DEFAULT NULL,
-  `card_enemy_res3` int(11) DEFAULT NULL,
-  `card_enemy_gen3` int(11) DEFAULT NULL
+  `card_res1` int(11) NOT NULL DEFAULT '0',
+  `card_res2` int(11) NOT NULL DEFAULT '0',
+  `card_res3` int(11) NOT NULL DEFAULT '0',
+  `card_self_tower_hp` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_tower_hp` int(11) NOT NULL DEFAULT '0',
+  `card_self_wall_hp` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_wall_hp` int(11) NOT NULL DEFAULT '0',
+  `card_self_hp` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_hp` int(11) NOT NULL DEFAULT '0',
+  `card_self_res1` int(11) NOT NULL DEFAULT '0',
+  `card_self_gen1` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_res1` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_gen1` int(11) NOT NULL DEFAULT '0',
+  `card_self_res2` int(11) NOT NULL DEFAULT '0',
+  `card_self_gen2` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_res2` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_gen2` int(11) NOT NULL DEFAULT '0',
+  `card_self_res3` int(11) NOT NULL DEFAULT '0',
+  `card_self_gen3` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_res3` int(11) NOT NULL DEFAULT '0',
+  `card_enemy_gen3` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `card`
 --
 
-INSERT INTO `card` (`card_id`, `card_name`, `card_cost`, `card_elem`, `card_self_tower_hp`, `card_enemy_tower_hp`, `card_self_wall_hp`, `card_enemy_wall_hp`, `card_self_res1`, `card_self_gen1`, `card_enemy_res1`, `card_enemy_gen1`, `card_self_res2`, `card_self_gen2`, `card_enemy_res2`, `card_enemy_gen2`, `card_self_res3`, `card_self_gen3`, `card_enemy_res3`, `card_enemy_gen3`) VALUES
-(1, 'Plevok', 1, 3, 0, 0, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(2, 'Spustit'' sobak', 2, 3, 0, 0, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(3, 'Obstrel', 4, 3, 0, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(4, 'Artilleriya', 8, 3, 0, 0, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(5, 'Drakon', 12, 3, 0, 0, 0, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(6, 'stroitel''', 1, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(7, 'reconstrucia', 3, 1, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(8, 'upgrade', 12, 1, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(9, 'pokraska', 2, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(10, 'kirpich', 4, 1, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(11, 'antiprigar', 11, 1, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(12, 'bolshaya stroyka', 21, 1, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(13, 'volshebnaya povozka', 4, 2, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(14, 'priliv sil', 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0),
-(15, 'portal v zverin', 4, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0),
-(16, 'deconstuctor', 3, 2, 0, 0, 0, 0, 0, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(17, 'sjiganie many', 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0, 0, 0, 0, 0),
-(18, 'travlya', 3, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0),
-(19, 'masterskaya', 8, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(20, 'bashnya volshebnika', 8, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
-(21, 'veterinarka', 8, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(22, 'obval', 6, 1, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0),
-(23, 'otyplenie', 6, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0),
-(24, 'otkryt'' kletki', 6, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1),
-(25, 'perestroyka', 9, 1, 10, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(26, 'razbor', 13, 1, 10, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(27, 'ataka', 3, 3, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(28, 'spustit''', 8, 3, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-(29, 'podlaya diversiya', 18, 3, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+INSERT INTO `card` (`card_id`, `card_name`, `card_res1`, `card_res2`, `card_res3`, `card_self_tower_hp`, `card_enemy_tower_hp`, `card_self_wall_hp`, `card_enemy_wall_hp`, `card_self_hp`, `card_enemy_hp`, `card_self_res1`, `card_self_gen1`, `card_enemy_res1`, `card_enemy_gen1`, `card_self_res2`, `card_self_gen2`, `card_enemy_res2`, `card_enemy_gen2`, `card_self_res3`, `card_self_gen3`, `card_enemy_res3`, `card_enemy_gen3`) VALUES
+(1, 'Plevok', 0, 0, 1, 0, 0, 0, -2, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(2, 'Spustit'' sobak', 0, 0, 2, 0, 0, 0, -3, 0, -3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(3, 'Obstrel', 0, 0, 4, 0, 0, 0, -5, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(4, 'Artilleriya', 0, 0, 8, 0, 0, 0, -10, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(5, 'Drakon', 0, 0, 12, 0, 0, 0, -15, 0, -15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(6, 'stroitel''', 1, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(7, 'reconstrucia', 3, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(8, 'upgrade', 12, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(9, 'pokraska', 2, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(10, 'kirpich', 4, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(11, 'antiprigar', 11, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(12, 'bolshaya stroyka', 21, 0, 0, 20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(13, 'volshebnaya povozka', 0, 4, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(14, 'priliv sil', 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0),
+(15, 'portal v zverin', 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0),
+(16, 'deconstuctor', 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(17, 'sjiganie many', 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0, 0, 0, 0, 0),
+(18, 'travlya', 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -8, 0),
+(19, 'masterskaya', 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(20, 'bashnya volshebnika', 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0),
+(21, 'veterinarka', 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(22, 'obval', 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0),
+(23, 'otyplenie', 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0),
+(24, 'otkryt'' kletki', 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1),
+(25, 'perestroyka', 9, 0, 0, 10, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(26, 'razbor', 13, 0, 0, 10, 0, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(27, 'ataka', 0, 0, 3, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(28, 'spustit''', 0, 0, 8, 0, -5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(29, 'podlaya diversiya', 0, 0, 18, 0, -10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
