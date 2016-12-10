@@ -209,8 +209,8 @@ function Match(socket_1, socket_2, type = "", callback) {
                             });
                         });
                     } else {
-                        socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0, function () {
-                            socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0, function () {
+                        socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
+                            socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                                 socket_1.player.growthRes(function () {
                                     messenger.send(socket_1, 'getCardOpponent', card);
                                     sendStatus();
