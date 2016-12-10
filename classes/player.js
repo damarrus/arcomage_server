@@ -191,17 +191,6 @@ function Player(info = {}, socket = false) {
         }
     };
 
-    /**
-     * @param {boolean} turn
-     * @param {int} tower_hp
-     * @param {int} wall_hp
-     * @param {int} res1
-     * @param {int} res2
-     * @param {int} res3
-     * @param {int} gen1
-     * @param {int} gen2
-     * @param {int} gen3
-     */
     this.setPlayerStatus = function (turn_val, tower_hp_val, wall_hp_val,
                                      res1_val, res2_val, res3_val,
                                      gen1_val, gen2_val, gen3_val) {
@@ -214,6 +203,8 @@ function Player(info = {}, socket = false) {
         gen1 = gen1_val;
         gen2 = gen2_val;
         gen3 = gen3_val;
+        if (turn_val) this.growthRes(function () {});
+
     };
     this.resetPlayerStatus = function () {
         turn = 0;
@@ -226,12 +217,13 @@ function Player(info = {}, socket = false) {
         gen2 = 0;
         gen3 = 0;
     };
-    this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0,
+    this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0, hp_val = 0,
                                         res1_val = 0, res2_val = 0, res3_val = 0,
                                         gen1_val =0 , gen2_val = 0, gen3_val = 0, callback) {
         turn = turn_val;
         tower_hp += tower_hp_val;
         wall_hp += wall_hp_val;
+        wall_hp += hp_val;
         if (wall_hp < 0) {
             tower_hp += wall_hp;
             wall_hp = 0;
@@ -252,31 +244,13 @@ function Player(info = {}, socket = false) {
         callback();
     };
     this.costCard = function (card, callback) {
-        switch (card.card_elem) {
-            case 1:
-                if (res1 - card.card_cost < 0) {
-                    callback(false);
-                } else {
-                    res1 -= card.card_cost;
-                    callback(true);
-                }
-                break;
-            case 2:
-                if (res2 - card.card_cost < 0) {
-                    callback(false);
-                } else {
-                    res2 -= card.card_cost;
-                    callback(true);
-                }
-                break;
-            case 3:
-                if (res3 - card.card_cost < 0) {
-                    callback(false);
-                } else {
-                    res3 -= card.card_cost;
-                    callback(true);
-                }
-                break;
+        if (res1 - card.card_res1 < 0 || res2 - card.card_res2 < 0 || res3 - card.card_res3 < 0) {
+            callback(false);
+        } else {
+            res1 -= card.card_res1;
+            res2 -= card.card_res2;
+            res3 -= card.card_res3;
+            callback(true);
         }
     };
 

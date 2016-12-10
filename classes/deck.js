@@ -80,7 +80,6 @@ function Deck(isNew, params, callback) {
                 db.query(query, function (err, result) {
                     query = 'INSERT INTO deckcard (deck_id, card_id) VALUES';
                     var count = 0;
-                    console.log(count);
                     card_ids.forEach(function (card_id, i, arr) {
                         ++count;
                         query += ' (' + deck_id + ', ' + card_id + '),';
