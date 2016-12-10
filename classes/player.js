@@ -219,7 +219,7 @@ function Player(info = {}, socket = false) {
     };
     this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0, hp_val = 0,
                                         res1_val = 0, res2_val = 0, res3_val = 0,
-                                        gen1_val =0 , gen2_val = 0, gen3_val = 0, callback) {
+                                        gen1_val = 0 , gen2_val = 0, gen3_val = 0, callback) {
         turn = turn_val;
         tower_hp += tower_hp_val;
         wall_hp += wall_hp_val;

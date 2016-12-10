@@ -158,8 +158,8 @@ function Match(socket_1, socket_2, type = "", callback) {
                     }
                 });
             } else {
-                self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0, function () {
-                    enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0, function () {
+                self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
+                    enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                         enemy.player.growthRes(function () {
                             if (type != "gameWithBot") {
                                 messenger.send(enemy, 'getCardOpponent', card);
