@@ -191,11 +191,11 @@ function Match(socket_1, socket_2, type = "", callback) {
             carder.getCardRandom(function (card) {
                 socket_2.player.costCard(card, function (result) {
                     if (result) {
-                        socket_2.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp, card_self_hp,
+                        socket_2.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp, card.card_self_hp,
                             card.card_self_res1, card.card_self_res2, card.card_self_res3,
                             card.card_self_gen1, card.card_self_gen2, card.card_self_gen3,
                         function () {
-                            socket_1.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp, card_enemy_hp,
+                            socket_1.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp, card.card_enemy_hp,
                                 card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
