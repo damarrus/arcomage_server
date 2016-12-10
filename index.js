@@ -98,6 +98,9 @@ function socketServer(socket, data) {
             case 'useCard':
                 game.useCard(socket, data['card_id'], data['discard']);
                 break;
+            case 'endTurn':
+                game.endTurn(socket);
+                break;
             case 'getDatabaseCards':
                 game.getDatabaseCards(socket);
                 break;

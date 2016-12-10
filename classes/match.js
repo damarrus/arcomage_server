@@ -109,6 +109,36 @@ function Match(socket_1, socket_2, type = "", callback) {
         }
     }
 
+    this.endTurn = function (player_id, callback) {
+        var self;
+        var enemy;
+        if (player_id == player_1_id) {
+            self = socket_1;
+            enemy = socket_2;
+        } else if (player_id == player_2_id) {
+            self = socket_2;
+            enemy = socket_1;
+        }
+        self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
+            enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
+                enemy.player.growthRes(function () {
+                    sendStatus();
+                    isWin(function (result) {
+                        if (!result) {
+                            if (type == "gameWithBot") {
+                                useCardBot(function (result) {
+                                    callback(result);
+                                });
+                            }
+                        } else {
+                            callback(result);
+                        }
+                    });
+                });
+            });
+        });
+    };
+
     this.useCard = function(player_id, card_id, discard, callback) {
         var self;
         var enemy;

@@ -170,16 +170,42 @@ function Game() {
             } else {
                 messenger.send(socket, "error", {
                     method: "useCard",
-                    typeError: "notInGame"
+                    typeError: "notYourTurn"
                 });
             }
         } else {
             messenger.send(socket, "error", {
                 method: "useCard",
-                typeError: "notYourTurn"
+                typeError: "notInGame"
             });
         }
     };
+
+    this.endTurn = function (socket) {
+        if (socket.player.getInGame()) {
+            if (socket.player.getParam('turn')) {
+                matches[socket.matchID].endTurn(socket.player.getParam('player_id'), function (result) {
+                    if (result == 1 || result == 2 || result == 3) {
+                        console.log('победил игрок ' + result);
+                        matches[socket.matchID].endMatch(result, function () {
+                            matches.splice(socket.matchID, 1);
+                        });
+                    }
+                });
+            } else {
+                messenger.send(socket, "error", {
+                    method: "useCard",
+                    typeError: "notYourTurn"
+                });
+            }
+        } else {
+            messenger.send(socket, "error", {
+                method: "useCard",
+                typeError: "notInGame"
+            });
+        }
+    };
+
     this.getDatabaseCards = function (socket) {
         carder.getAllCards(function (result) {
             messenger.send(socket, "getDatabaseCardsCount", {value:result.length});
