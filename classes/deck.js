@@ -88,7 +88,17 @@ function Deck(isNew, params, callback) {
                             query = query.substring(0, query.length - 1);
                             db.query(query, function (err, result) {
                                 cards = card_ids;
-                                callback();
+                                var count_full = 0;
+                                full = true;
+                                card_ids.forEach(function (item, i, arr) {
+                                    ++count_full;
+                                    if (item == 0) {
+                                        full = false;
+                                    }
+                                    if (count_full == card_ids.length) {
+                                        callback();
+                                    }
+                                });
                             });
                         }
                     });
@@ -103,7 +113,17 @@ function Deck(isNew, params, callback) {
                         query = query.substring(0, query.length - 1);
                         db.query(query, function (err, result) {
                             cards = card_ids;
-                            callback();
+                            var count_full = 0;
+                            full = true;
+                            card_ids.forEach(function (item, i, arr) {
+                                ++count_full;
+                                if (item == 0) {
+                                    full = false;
+                                }
+                                if (count_full == card_ids.length) {
+                                    callback();
+                                }
+                            });
                         });
                     }
                 });
