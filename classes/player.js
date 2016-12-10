@@ -6,7 +6,7 @@ const Collection = require('./collection');
 const carder = require('./card');
 const Messenger = require('./messenger');
 
-function Player(info = {}, socket = false) {
+function Player(info = {}, socket = false, callback = function () {}) {
     // Основные параметры игрока
     var messenger = new Messenger();
     var self = this,
@@ -30,28 +30,21 @@ function Player(info = {}, socket = false) {
     if (!socket) {
         ready = true;
     }
-    this.collection = new Collection(player_id, function () {});
 
     this.setDeckNum = function (new_deck_num, callback) {
         this.collection.getDeckByNum(new_deck_num, function (deck) {
-            deck.getDeckCardsID(function (cards) {
-                if (deck.isDeckFull()) {
-                    var count = 0;
-                    deck_num = new_deck_num;
-                    deckCards = [];
-                    cards.forEach(function (item, i, arr) {
-                        ++count;
-                        deckCards.push(item);
-                        if (count == cards.length) {
-                            callback(true);
-                        }
-                    });
-                } else {
-                    callback(false);
-                }
-            });
+            if (deck.isDeckFull()) {
+                deck_num = new_deck_num;
+                callback(true);
+            } else {
+                callback(false);
+            }
         });
     };
+
+    this.collection = new Collection(player_id, function () {
+        callback();
+    });
 
     this.gethandCards = function () {
         return handCards;
@@ -60,7 +53,15 @@ function Player(info = {}, socket = false) {
     this.setCardsToDeck = function (callback = function () {}) {
         this.collection.getDeckByNum(deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
-                deckCards = cards;
+                var count = 0;
+                deckCards = [];
+                cards.forEach(function (item, i, arr) {
+                    ++count;
+                    deckCards.push(item);
+                    if (count == cards.length) {
+                        callback(true);
+                    }
+                });
                 function setStartCardsToHand (callback, count = 0) {
                     if (count == 6) {
                         callback();
@@ -83,7 +84,7 @@ function Player(info = {}, socket = false) {
         if (deckCards.length != 0) {
             handCards.push(deckCards[i]);
             carder.getCardByID(deckCards[i], function (card) {
-                messenger.send(socket, "getCardRandom", card);
+                if (player_id != 0) {messenger.send(socket, "getCardRandom", card);}
                 deckCards.splice(i,1);
                 callback();
             });

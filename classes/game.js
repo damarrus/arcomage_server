@@ -110,8 +110,13 @@ function Game() {
             // проверка на полную деку
             socket.player.setDeckNum(deck_num, function (result) {
                 if (result) {
-                    new Match(socket, {player: new Player()}, "gameWithBot", function (match, id) {
-                        matches[id] = match;
+                    var bot_socket = {};
+                    bot_socket.player = new Player({}, false, function () {
+                        bot_socket.player.setDeckNum(1, function () {
+                            new Match(socket, bot_socket, "gameWithBot", function (match, id) {
+                                matches[id] = match;
+                            });
+                        });
                     });
                 } else {
                     messenger.send(socket, "error", {
