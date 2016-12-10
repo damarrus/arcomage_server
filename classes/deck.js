@@ -12,7 +12,8 @@ function Deck(isNew, params, callback) {
         deck_name = params.deck_name,
         player_id = params.player_id,
         query,
-        full = true;
+        full = true,
+        max_card = 20;
     if (isNew) {
         query = 'SELECT max(deck_num) as max_num FROM deck WHERE player_id='+player_id;
         db.query(query, function(err, result) {
@@ -95,7 +96,6 @@ function Deck(isNew, params, callback) {
             } else {
                 query = 'INSERT INTO deckcard (deck_id, card_id) VALUES';
                 var count = 0;
-                console.log(count);
                 card_ids.forEach(function (card_id, i, arr) {
                     ++count;
                     query += ' (' + deck_id + ', ' + card_id + '),';

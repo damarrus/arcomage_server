@@ -23,11 +23,12 @@ function Game() {
                     if (result[0].count_player != 0){
                         query = 'SELECT * FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
                         db.query(query, function(err, result) {
-                            socket.player = new Player(result[0], socket);
-                            players.push(socket.player);
-                            messenger.send(socket, "auth", {
-                                valid: true,
-                                player_name: result[0].player_name
+                            socket.player = new Player(result[0], socket, function () {
+                                players.push(socket.player);
+                                messenger.send(socket, "auth", {
+                                    valid: true,
+                                    player_name: result[0].player_name
+                                });
                             });
                         });
                     } else {
