@@ -22,6 +22,9 @@ function Match(socket_1, socket_2, type = "", callback) {
         callback(self, matchID);
     });
 
+    socket_1.player.setMatch(this);
+    socket_2.player.setMatch(this);
+
     socket_1.player.setInSearch(false);
     socket_2.player.setInSearch(false);
 
@@ -119,24 +122,26 @@ function Match(socket_1, socket_2, type = "", callback) {
             self = socket_2;
             enemy = socket_1;
         }
-        self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
-            enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
-                enemy.player.growthRes(function () {
-                    sendStatus();
-                    isWin(function (result) {
-                        if (!result) {
-                            if (type == "gameWithBot") {
-                                useCardBot(function (result) {
-                                    callback(result);
-                                });
+        if (self.player.getParam('turn')) {
+            self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
+                enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
+                    enemy.player.growthRes(function () {
+                        sendStatus();
+                        isWin(function (result) {
+                            if (!result) {
+                                if (type == "gameWithBot") {
+                                    useCardBot(function (result) {
+                                        callback(result);
+                                    });
+                                }
+                            } else {
+                                callback(result);
                             }
-                        } else {
-                            callback(result);
-                        }
+                        });
                     });
                 });
             });
-        });
+        }
     };
 
     this.useCard = function(player_id, card_id, discard, callback) {
@@ -260,6 +265,8 @@ function Match(socket_1, socket_2, type = "", callback) {
     this.endMatch = function (result, callback) {
         var query = 'UPDATE matches SET match_result ='+result+' WHERE match_id='+matchID;
         db.query(query, function(err, result) {
+            socket_1.player.clearTimer();
+            socket_2.player.clearTimer();
             socket_1.player.setInGame(false);
             socket_2.player.setInGame(false);
             socket_1.player.setReady(false);

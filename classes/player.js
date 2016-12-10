@@ -16,6 +16,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         collection_obj = false,
         collection = false,
         deck_num = false,
+        timerID,
         player_id = info.player_id || 0,
         player_name = info.player_name || 'bot_name',
         player_login = info.player_login || 'bot_login';
@@ -23,6 +24,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
     var turn, tower_hp, wall_hp, res1, res2, res3, gen1, gen2, gen3;
     var deckCards = [];
     var handCards = [];
+    var match;
 
     this.player_id = info.player_id || 0;
     this.player_name = info.player_name || 'bot_name';
@@ -30,6 +32,10 @@ function Player(info = {}, socket = false, callback = function () {}) {
     if (!socket) {
         ready = true;
     }
+
+    this.setMatch = function (match_obj) {
+        match = match_obj;
+    };
 
     this.setDeckNum = function (new_deck_num, callback) {
         this.collection.getDeckByNum(new_deck_num, function (deck) {
@@ -195,6 +201,14 @@ function Player(info = {}, socket = false, callback = function () {}) {
     this.setPlayerStatus = function (turn_val, tower_hp_val, wall_hp_val,
                                      res1_val, res2_val, res3_val,
                                      gen1_val, gen2_val, gen3_val) {
+        // Запускаем таймер хода
+        if (turn_val) {
+            timerID = setTimeout(function () {
+                match.endTurn(player_id, function () {});
+            }, 45000);
+        } else {
+            clearTimeout(timerID);
+        }
         turn = turn_val;
         tower_hp = tower_hp_val;
         wall_hp = wall_hp_val;
@@ -221,6 +235,14 @@ function Player(info = {}, socket = false, callback = function () {}) {
     this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0, hp_val = 0,
                                         res1_val = 0, res2_val = 0, res3_val = 0,
                                         gen1_val = 0 , gen2_val = 0, gen3_val = 0, callback) {
+        // Запускаем таймер хода
+        if (turn_val) {
+            timerID = setTimeout(function () {
+                match.endTurn(player_id, function () {});
+            }, 45000);
+        } else {
+            clearTimeout(timerID);
+        }
         turn = turn_val;
         tower_hp += tower_hp_val;
         wall_hp += wall_hp_val;
@@ -253,6 +275,10 @@ function Player(info = {}, socket = false, callback = function () {}) {
             res3 -= card.card_res3;
             callback(true);
         }
+    };
+
+    this.clearTimer = function () {
+        clearTimeout(timerID);
     };
 
     this.cardsOnHand = [];
