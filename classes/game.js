@@ -18,7 +18,7 @@ function Game() {
     this.auth = function (socket, player_login, player_password) {
         if (!socket.player) {
             if (player_login != '' && player_password != '') {
-                var query = 'SELECT count(*) as count_player FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
+                var query = "SELECT count(*) as count_player FROM player WHERE player_login='"+player_login+"' AND player_password='"+player_password+"'";
                 db.query(query, function(err, result) {
                     if (result[0].count_player != 0){
                         query = 'SELECT * FROM player WHERE player_login='+player_login+' AND player_password='+player_password;
