@@ -133,6 +133,7 @@ function Match(socket_1, socket_2, type = "", callback) {
                             function () {
                                 enemy.player.growthRes(function () {
                                     if (type != "gameWithBot") {
+                                        card.discard = false;
                                         messenger.send(enemy, 'getCardOpponent', card);
                                     }
                                     sendStatus();
@@ -162,6 +163,7 @@ function Match(socket_1, socket_2, type = "", callback) {
                     enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                         enemy.player.growthRes(function () {
                             if (type != "gameWithBot") {
+                                card.discard = true;
                                 messenger.send(enemy, 'getCardOpponent', card);
                             }
                             sendStatus();
@@ -200,6 +202,7 @@ function Match(socket_1, socket_2, type = "", callback) {
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
                                 socket_1.player.growthRes(function () {
+                                    card.discard = false;
                                     messenger.send(socket_1, 'getCardOpponent', card);
                                     sendStatus();
                                     isWin(function (result) {
@@ -212,6 +215,7 @@ function Match(socket_1, socket_2, type = "", callback) {
                         socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                             socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                                 socket_1.player.growthRes(function () {
+                                    card.discard = true;
                                     messenger.send(socket_1, 'getCardOpponent', card);
                                     sendStatus();
                                 });
