@@ -101,7 +101,7 @@ function Match(socket_1, socket_2, type = "", callback) {
         if (self.player.getParam('turn')) {
             self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                 enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
-                    enemy.player.growthRes(function () {
+                    enemy.player.growthRes(false, function () {
                         sendStatus();
                         isWin(function (result) {
                             if (!result) {
@@ -132,17 +132,18 @@ function Match(socket_1, socket_2, type = "", callback) {
         }
         carder.getCardByID(card_id, function (card) {
             if (!discard) {
+                card.card_endturn = (card.card_endturn != 0);
                 self.player.costCard(card, function (result) {
                     if (result) {
-                        self.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp, card.card_self_hp,
+                        self.player.changePlayerStatus(card.card_endturn, card.card_self_tower_hp, card.card_self_wall_hp, card.card_self_hp,
                             card.card_self_res1, card.card_self_res2, card.card_self_res3,
                             card.card_self_gen1, card.card_self_gen2, card.card_self_gen3,
                         function () {
-                            enemy.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp, card.card_enemy_hp,
+                            enemy.player.changePlayerStatus(!card.card_endturn, card.card_enemy_tower_hp, card.card_enemy_wall_hp, card.card_enemy_hp,
                                 card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
-                                enemy.player.growthRes(function () {
+                                enemy.player.growthRes(card.card_endturn, function () {
                                     if (type != "gameWithBot") {
                                         messenger.send(enemy, 'getCardOpponent', {
                                             card_id: card.card_id,
@@ -156,9 +157,11 @@ function Match(socket_1, socket_2, type = "", callback) {
 
                                             });
                                             if (type == "gameWithBot") {
-                                                useCardBot(function (result) {
-                                                    callback(result);
-                                                });
+                                                if (!card.card_endturn) {
+                                                    useCardBot(function (result) {
+                                                        callback(result);
+                                                    });
+                                                }
                                             }
                                         } else {
                                             callback(result);
@@ -174,7 +177,7 @@ function Match(socket_1, socket_2, type = "", callback) {
             } else {
                 self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                     enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
-                        enemy.player.growthRes(function () {
+                        enemy.player.growthRes(false, function () {
                             if (type != "gameWithBot") {
                                 messenger.send(enemy, 'getCardOpponent', {
                                     card_id: card.card_id,
@@ -208,22 +211,31 @@ function Match(socket_1, socket_2, type = "", callback) {
             carder.getCardRandom(function (card) {
                 socket_2.player.costCard(card, function (result) {
                     if (result) {
-                        socket_2.player.changePlayerStatus(false, card.card_self_tower_hp, card.card_self_wall_hp, card.card_self_hp,
+                        card.card_endturn = (card.card_endturn != 0);
+                        socket_2.player.changePlayerStatus(card.card_endturn, card.card_self_tower_hp, card.card_self_wall_hp, card.card_self_hp,
                             card.card_self_res1, card.card_self_res2, card.card_self_res3,
                             card.card_self_gen1, card.card_self_gen2, card.card_self_gen3,
                         function () {
-                            socket_1.player.changePlayerStatus(true, card.card_enemy_tower_hp, card.card_enemy_wall_hp, card.card_enemy_hp,
+                            socket_1.player.changePlayerStatus(!card.card_endturn, card.card_enemy_tower_hp, card.card_enemy_wall_hp, card.card_enemy_hp,
                                 card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
-                                socket_1.player.growthRes(function () {
+                                socket_1.player.growthRes(card.card_endturn, function () {
                                     messenger.send(socket_1, 'getCardOpponent', {
                                         card_id: card.card_id,
                                         discard: false
                                     });
                                     sendStatus();
                                     isWin(function (result) {
-                                        callback(result);
+                                        if (result) {
+                                            callback(result);
+                                        } else {
+                                            if (card.card_endturn) {
+                                                useCardBot(callback);
+                                            } else {
+                                                callback(result);
+                                            }
+                                        }
                                     });
                                 });
                             });
@@ -231,7 +243,7 @@ function Match(socket_1, socket_2, type = "", callback) {
                     } else {
                         socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                             socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
-                                socket_1.player.growthRes(function () {
+                                socket_1.player.growthRes(false, function () {
                                     messenger.send(socket_1, 'getCardOpponent', {
                                         card_id: card.card_id,
                                         discard: true

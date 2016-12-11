@@ -202,12 +202,11 @@ function Player(info = {}, socket = false, callback = function () {}) {
                                      res1_val, res2_val, res3_val,
                                      gen1_val, gen2_val, gen3_val) {
         // Запускаем таймер хода
+        clearTimeout(timerID);
         if (turn_val) {
             timerID = setTimeout(function () {
                 match.endTurn(player_id, function () {});
             }, 45000);
-        } else {
-            clearTimeout(timerID);
         }
         turn = turn_val;
         tower_hp = tower_hp_val;
@@ -218,7 +217,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         gen1 = gen1_val;
         gen2 = gen2_val;
         gen3 = gen3_val;
-        if (turn_val) this.growthRes(function () {});
+        if (turn_val) this.growthRes(false, function () {});
 
     };
     this.resetPlayerStatus = function () {
@@ -236,16 +235,18 @@ function Player(info = {}, socket = false, callback = function () {}) {
                                         res1_val = 0, res2_val = 0, res3_val = 0,
                                         gen1_val = 0 , gen2_val = 0, gen3_val = 0, callback) {
         // Запускаем таймер хода
+        clearTimeout(timerID);
         if (turn_val) {
             timerID = setTimeout(function () {
                 match.endTurn(player_id, function () {});
             }, 45000);
-        } else {
-            clearTimeout(timerID);
         }
         turn = turn_val;
         tower_hp += tower_hp_val;
         wall_hp += wall_hp_val;
+        if (wall_hp < 0) {
+            wall_hp = 0;
+        }
         wall_hp += hp_val;
         if (wall_hp < 0) {
             tower_hp += wall_hp;
@@ -260,10 +261,12 @@ function Player(info = {}, socket = false, callback = function () {}) {
         gen3 = ((gen3 + gen3_val) >= 1) ? (gen3 + gen3_val) : 1;
         callback();
     };
-    this.growthRes = function (callback) {
-        res1 += gen1;
-        res2 += gen2;
-        res3 += gen3;
+    this.growthRes = function (endTurn, callback) {
+        if (!endTurn) {
+            res1 += gen1;
+            res2 += gen2;
+            res3 += gen3;
+        }
         callback();
     };
     this.costCard = function (card, callback) {

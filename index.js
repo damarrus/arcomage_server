@@ -47,6 +47,9 @@ app.set('views', __dirname + '/views');
 app.get('/', function(req, res){
     res.render('test', {});
 });
+app.get('/cardcreator', function(req, res){
+    res.render('cardcreator', {});
+});
 app.listen(8000);
 
 /*carder.changeNull(function (result) {
