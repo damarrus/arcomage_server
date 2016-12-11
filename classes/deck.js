@@ -13,7 +13,7 @@ function Deck(isNew, params, callback) {
         player_id = params.player_id,
         query,
         full = true,
-        max_card = 20;
+        max_card = 30;
     if (isNew) {
         query = 'SELECT max(deck_num) as max_num FROM deck WHERE player_id='+player_id;
         db.query(query, function(err, result) {

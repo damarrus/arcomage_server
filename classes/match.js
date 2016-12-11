@@ -31,8 +31,8 @@ function Match(socket_1, socket_2, type = "", callback) {
     socket_1.player.setInGame(true);
     socket_2.player.setInGame(true);
 
-    socket_1.player.setPlayerStatus(true, 15, 10, 10, 10, 10, 2, 2, 2);
-    socket_2.player.setPlayerStatus(false, 15, 10, 10, 10, 10, 2, 2, 2);
+    socket_1.player.setPlayerStatus(true, 30, 10, 2, 2, 2, 2, 2, 2);
+    socket_2.player.setPlayerStatus(false, 30, 10, 2, 2, 2, 2, 2, 2);
 
     messenger.send(socket_1, "gameStart", {opponent_name: socket_2.player.player_id});
     if (type != "gameWithBot") {
@@ -75,13 +75,13 @@ function Match(socket_1, socket_2, type = "", callback) {
     };
     
     function isWin(callback) {
-        if (socket_1.player.getParam('tower_hp') <= 0 || socket_2.player.getParam('tower_hp') >= 30) {
-            if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 30) {
+        if (socket_1.player.getParam('tower_hp') <= 0 || socket_2.player.getParam('tower_hp') >= 100) {
+            if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 100) {
                 callback(3);
             } else {
                 callback(2);
             }
-        } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 30) {
+        } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 100) {
             callback(1);
         } else {
             callback(false);
