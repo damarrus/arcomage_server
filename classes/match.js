@@ -21,6 +21,9 @@ function Match(socket_1, socket_2, type = "", callback) {
         socket_2.matchID = matchID;
         callback(self, matchID);
     });
+    if (type == "gameWithBot") {
+        var botTimerID;
+    }
 
     socket_1.player.setMatch(this);
     socket_2.player.setMatch(this);
@@ -219,7 +222,7 @@ function Match(socket_1, socket_2, type = "", callback) {
     };
     
     function useCardBot(callback) {
-        setTimeout(function () {
+        botTimerID = setTimeout(function () {
             carder.getCardRandom(function (card) {
                 socket_2.player.costCard(card, function (result) {
                     if (result) {
@@ -273,6 +276,9 @@ function Match(socket_1, socket_2, type = "", callback) {
     this.endMatch = function (result, callback) {
         var query = 'UPDATE matches SET match_result ='+result+' WHERE match_id='+matchID;
         db.query(query, function(err, result) {
+            if (type == "gameWithBot") {
+                clearTimeout(botTimerID);
+            }
             socket_1.player.clearTimer();
             socket_2.player.clearTimer();
             socket_1.player.setInGame(false);

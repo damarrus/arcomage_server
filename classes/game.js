@@ -226,6 +226,12 @@ function Game() {
         }
     };
 
+    this.endMatch = function (socket) {
+        matches[socket.matchID].endMatch(4, function () {
+            matches.splice(socket.matchID, 1);
+        });
+    };
+
     this.getDatabaseCards = function (socket) {
         carder.getAllCards(function (result) {
             messenger.send(socket, "getDatabaseCardsCount", {value:result.length});

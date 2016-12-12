@@ -180,6 +180,9 @@ if (isTestClient) {
         socket.on('close', function () { //close
             if (socket.player) {
                 socket.player.clearTimer();
+                if (socket.player.getInGame()) {
+                    game.endMatch(socket);
+                }
             }
             clients.splice(clients.indexOf(socket), 1);
             console.log('client left');
