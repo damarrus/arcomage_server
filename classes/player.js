@@ -13,6 +13,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         inSearch = false,
         inGame = false,
         ready = false,
+        changeReady = false,
         collection_obj = false,
         collection = false,
         deck_num = false,
@@ -52,10 +53,6 @@ function Player(info = {}, socket = false, callback = function () {}) {
         callback();
     });
 
-    this.gethandCards = function () {
-        return handCards;
-    };
-
     this.setCardsToDeck = function (callback = function () {}) {
         this.collection.getDeckByNum(deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
@@ -90,7 +87,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         if (deckCards.length != 0) {
             handCards.push(deckCards[i]);
             if (player_id != 0) {
-                messenger.send(socket, "getCardRandom", {card_id: deckCards[i]});
+                messenger.send(socket, "getCardRandom", {card_id: deckCards[i]}); // getCardRandomStart
             }
             deckCards.splice(i,1);
             callback();
@@ -98,6 +95,11 @@ function Player(info = {}, socket = false, callback = function () {}) {
             callback();
         }
     }
+
+    this.changeStartCards = function (card_ids, callback) {
+
+    };
+
     this.changeCardFromHand = function (card_id, callback) {
         var count = 0;
         handCards.forEach(function (item, i, arr) {
@@ -111,20 +113,6 @@ function Player(info = {}, socket = false, callback = function () {}) {
         });
     };
 
-    /*this.loadCollection = function (callback) {
-        if (!this.collection) {
-            new Collection(player_id, function (coll) {
-                collection_obj = coll;
-                self.collection = coll;
-                callback(coll);
-            });
-        } else {
-            callback(false);
-        }
-    };*/
-    /*this.getCollection = function (callback) {
-        callback(collection_obj);
-    };*/
     this.getCollectionCardsID = function (callback) {
         this.loadCollection(function () {
             callback(collection.getCollectionCardsID());
@@ -152,6 +140,8 @@ function Player(info = {}, socket = false, callback = function () {}) {
     this.getInSearch = function () {return inSearch;};
     this.setReady = function (bool) {ready = bool;};
     this.getReady = function () {return ready;};
+    this.setChangeReady = function (bool) {changeReady = bool;};
+    this.getChangeReady = function () {return changeReady;};
     this.setInGame = function (bool) {inGame = bool;};
     this.getInGame = function () {return inGame;};
     this.getParam = function (type) {

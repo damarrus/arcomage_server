@@ -97,6 +97,9 @@ function socketServer(socket, data) {
             case 'ready':
                 game.startGame(socket);
                 break;
+            case 'changeStartCards':
+                game.changeStartCards(socket, data['card_ids']);
+                break;
             // применение карты
             case 'useCard':
                 game.useCard(socket, data['card_id'], data['discard']);
@@ -175,6 +178,9 @@ if (isTestClient) {
         });
         // Клиент отключился
         socket.on('close', function () { //close
+            if (socket.player) {
+                socket.player.clearTimer();
+            }
             clients.splice(clients.indexOf(socket), 1);
             console.log('client left');
         });

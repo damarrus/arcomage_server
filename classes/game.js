@@ -136,7 +136,6 @@ function Game() {
 
     this.startGame = function (socket) {
         if (socket.player.getInGame()) {
-
             setTimeout(function () {
                 matches[socket.matchID].readyPlayer(socket.player.getParam('player_id'));
                 if (matches[socket.matchID].getReadyPlayer()) {
@@ -146,6 +145,27 @@ function Game() {
         } else {
             messenger.send(socket, "error", {
                 method: "startGame",
+                typeError: "notInGame"
+            });
+        }
+    };
+
+    this.changeStartCards = function (socket, card_ids) {
+        if (socket.player.getInGame()) {
+            if (matches[socket.matchID].getReadyPlayer()) {
+                matches[socket.matchID].changeReadyPlayer(socket.player.player_id);
+                if (matches[socket.matchID].getChangeReadyPlayer()) {
+                    matches[socket.matchID].sendStartStatus();
+                }
+            } else {
+                messenger.send(socket, "error", {
+                    method: "changeStartCards",
+                    typeError: "notReady"
+                });
+            }
+        } else {
+            messenger.send(socket, "error", {
+                method: "changeStartCards",
                 typeError: "notInGame"
             });
         }
@@ -240,21 +260,6 @@ function Game() {
             });
         }
     };
-    /*this.getCollectionCards = function (socket) {
-        if (socket.player) {
-            socket.player.collection.getCardsID(function (cards) {
-                carder.getCardByMultipleID(cards, function (result) {
-                    messenger.send(socket, "getCollectionCardsCount", {value:result.length});
-                    messenger.multipleSend(socket, "getCollectionCards", result);
-                });
-            });
-        } else {
-            messenger.send(socket, "error", {
-                method: "getCollectionCards",
-                typeError: "notAuth"
-            });
-        }
-    };*/
     this.getAllDecks = function (socket) {
         if (socket.player) {
             socket.player.collection.getAllDecks(function (decks) {

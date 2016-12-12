@@ -70,8 +70,20 @@ function Match(socket_1, socket_2, type = "", callback) {
         }
     };
 
+    this.changeReadyPlayer = function (player_id) {
+        if (player_id == player_1_id) {
+            socket_1.player.setChangeReady(true);
+        } else if (player_id == player_2_id) {
+            socket_2.player.setChangeReady(true);
+        }
+    };
+
     this.getReadyPlayer = function () {
         return (socket_1.player.getReady() && socket_2.player.getReady());
+    };
+
+    this.getChangeReadyPlayer = function () {
+        return (socket_1.player.getChangeReady() && socket_2.player.getChangeReady());
     };
     
     function isWin(callback) {
