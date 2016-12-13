@@ -14,8 +14,8 @@ function Player(info = {}, socket = false, callback = function () {}) {
         inGame = false,
         ready = false,
         changeReady = false,
-        collection_obj = false,
-        collection = false,
+        //collection_obj = false,
+        //collection = false,
         deck_num = false,
         timerID,
         player_id = info.player_id || 0,
@@ -25,6 +25,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
     var turn, tower_hp, wall_hp, res1, res2, res3, gen1, gen2, gen3;
     var deckCards = [];
     var handCards = [];
+    var discardPileCards = [];
     var match;
 
     this.player_id = info.player_id || 0;
@@ -54,7 +55,16 @@ function Player(info = {}, socket = false, callback = function () {}) {
     });
 
     this.setCardsToDeck = function (callback = function () {}) {
-        this.collection.getDeckByNum(deck_num, function (deck) {
+        setCardsToDeck(function () {
+            setStartCardsToHand(function () {
+                callback();
+            });
+        });
+
+    };
+
+    function setCardsToDeck(callback) {
+        self.collection.getDeckByNum(deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
                 var count = 0;
                 deckCards = [];
@@ -65,35 +75,47 @@ function Player(info = {}, socket = false, callback = function () {}) {
                         callback(true);
                     }
                 });
-                function setStartCardsToHand (callback, count = 0) {
-                    if (count == 6) {
-                        callback();
-                    } else {
-                        setRandomCardFromDeckToHand(function () {
-                            ++count;
-                            setStartCardsToHand(callback, count);
-                        });
-                    }
-                }
-                setStartCardsToHand(function () {
-                    callback();
-                });
             })
         });
-    };
+    }
+
+    function setStartCardsToHand (callback, count = 0) {
+        if (count == 6) {
+            callback();
+        } else {
+            setRandomCardFromDeckToHand(function () {
+                ++count;
+                setStartCardsToHand(callback, count);
+            });
+        }
+    }
 
     function setRandomCardFromDeckToHand(callback) {
         var i = Math.floor(Math.random() * deckCards.length);
-        if (deckCards.length != 0) {
-            handCards.push(deckCards[i]);
-            if (player_id != 0) {
-                messenger.send(socket, "getCardRandom", {card_id: deckCards[i]}); // getCardRandomStart
-            }
+        handCards.push(deckCards[i]);
+        if (player_id != 0) {messenger.send(socket, "getCardRandom", {card_id: deckCards[i]});}
+        if (deckCards.length == 1) {
+            deckCards.splice(i,1);
+            reshuffleDiscardPile(function () {
+                callback();
+            });
+        } else {
             deckCards.splice(i,1);
             callback();
-        } else {
-            callback();
         }
+    }
+    
+    function reshuffleDiscardPile(callback) {
+        var count = 0;
+        deckCards = [];
+        discardPileCards.forEach(function (item, i, arr) {
+            ++count;
+            deckCards.push(item);
+            if (count == discardPileCards.length) {
+                discardPileCards = [];
+                callback(true);
+            }
+        });
     }
 
     this.changeStartCards = function (card_ids, callback) {
@@ -105,6 +127,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         handCards.forEach(function (item, i, arr) {
             if (count == 0 && item == card_id) {
                 ++count;
+                discardPileCards.push(item);
                 handCards.splice(i,1);
                 setRandomCardFromDeckToHand(function () {
                     callback();
