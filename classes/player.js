@@ -136,6 +136,10 @@ function Player(info = {}, socket = false, callback = function () {}) {
         });
     };
 
+    this.getRandomCardFromHand = function () {
+        return handCards[Math.floor(Math.random() * handCards.length)];
+    };
+
     this.getCollectionCardsID = function (callback) {
         this.loadCollection(function () {
             callback(collection.getCollectionCardsID());
@@ -215,12 +219,12 @@ function Player(info = {}, socket = false, callback = function () {}) {
                                      res1_val, res2_val, res3_val,
                                      gen1_val, gen2_val, gen3_val) {
         // Запускаем таймер хода
-        // clearTimeout(timerID);
-        // if (turn_val) {
-        //     timerID = setTimeout(function () {
-        //         match.endTurn(player_id, function () {});
-        //     }, 45000);
-        // }
+        clearTimeout(timerID);
+        if (turn_val) {
+            timerID = setTimeout(function () {
+                match.endTurn(player_id, function () {});
+            }, 45000);
+        }
         turn = turn_val;
         tower_hp = tower_hp_val;
         wall_hp = wall_hp_val;
@@ -248,12 +252,12 @@ function Player(info = {}, socket = false, callback = function () {}) {
                                         res1_val = 0, res2_val = 0, res3_val = 0,
                                         gen1_val = 0 , gen2_val = 0, gen3_val = 0, callback) {
         // Запускаем таймер хода
-        // clearTimeout(timerID);
-        // if (turn_val) {
-        //     timerID = setTimeout(function () {
-        //         match.endTurn(player_id, function () {});
-        //     }, 45000);
-        // }
+        clearTimeout(timerID);
+        if (turn_val) {
+            timerID = setTimeout(function () {
+                match.endTurn(player_id, function () {});
+            }, 45000);
+        }
         turn = turn_val;
         tower_hp += tower_hp_val;
         wall_hp += wall_hp_val;

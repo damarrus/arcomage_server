@@ -223,7 +223,8 @@ function Match(socket_1, socket_2, type = "", callback) {
     
     function useCardBot(callback) {
         botTimerID = setTimeout(function () {
-            carder.getCardRandom(function (card) {
+            var card_id = socket_2.player.getRandomCardFromHand();
+            carder.getCardByID(card_id, function (card) {
                 socket_2.player.costCard(card, function (result) {
                     if (result) {
                         card.card_endturn = (card.card_endturn != 0);
@@ -245,11 +246,13 @@ function Match(socket_1, socket_2, type = "", callback) {
                                         if (result) {
                                             callback(result);
                                         } else {
-                                            if (card.card_endturn) {
-                                                useCardBot(callback);
-                                            } else {
-                                                callback(result);
-                                            }
+                                            socket_2.player.changeCardFromHand(card_id, function () {
+                                                if (card.card_endturn) {
+                                                    useCardBot(callback);
+                                                } else {
+                                                    callback(result);
+                                                }
+                                            });
                                         }
                                     });
                                 });
@@ -259,11 +262,13 @@ function Match(socket_1, socket_2, type = "", callback) {
                         socket_2.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                             socket_1.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                                 socket_1.player.growthRes(false, function () {
-                                    messenger.send(socket_1, 'getCardOpponent', {
-                                        card_id: card.card_id,
-                                        discard: true
+                                    socket_2.player.changeCardFromHand(card_id, function () {
+                                        messenger.send(socket_1, 'getCardOpponent', {
+                                            card_id: card.card_id,
+                                            discard: true
+                                        });
+                                        sendStatus();
                                     });
-                                    sendStatus();
                                 });
                             });
                         });

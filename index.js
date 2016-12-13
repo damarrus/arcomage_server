@@ -80,14 +80,12 @@ function socketServer(socket, data) {
         data = JSON.parse(data);
         console.log(data);
         switch (data['messageType']) {
-            // авторизация
             case 'auth':
                 game.auth(socket, data['login'], data['password']);
                 break;
             case 'unAuth':
                 game.unAuth(socket);
                 break;
-            // Поиск игры
             case 'searchGame':
                 game.searchGame(data['deck_num'] = 1, socket);
                 break;
@@ -100,7 +98,6 @@ function socketServer(socket, data) {
             case 'changeStartCards':
                 game.changeStartCards(socket, data['card_ids']);
                 break;
-            // применение карты
             case 'useCard':
                 game.useCard(socket, data['card_id'], data['discard']);
                 break;
