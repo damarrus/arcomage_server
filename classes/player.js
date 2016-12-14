@@ -33,6 +33,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
 
     if (!socket) {
         ready = true;
+        changeReady = true;
     }
 
     this.setMatch = function (match_obj) {
