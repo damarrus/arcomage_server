@@ -90,7 +90,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         }
     }
 
-    function setRandomCardFromDeckToHand(callback) {
+    function setRandomCardFromDeckToHand(callback = function () {}) {
         var i = Math.floor(Math.random() * deckCards.length);
         handCards.push(deckCards[i]);
         if (player_id != 0) {messenger.send(socket, "getCardRandom", {card_id: deckCards[i]});}
@@ -119,8 +119,35 @@ function Player(info = {}, socket = false, callback = function () {}) {
     }
 
     this.changeStartCards = function (card_ids, callback) {
+        var count = 0;
+        card_ids = card_ids.split(',');
+        card_ids.forEach(function (item, i, arr) {
+            ++count;
+            setRandomCardFromDeckToHand();
+            if (count == card_ids.length) {
+                count = 0;
+                card_ids.forEach(function (card_id, i, arr) {
+                    ++count;
+                    setCardFromHandToDeck(card_id, function () {
+                        if (count == card_ids.length) {
+                            callback();
+                        }
+                    });
+                });
+            }
+        });
 
     };
+
+    function setCardFromHandToDeck(card_id, callback) {
+        handCards.forEach(function (item, i, arr) {
+            if (item == card_id) {
+                deckCards.push(item);
+                handCards.splice(i, 1);
+                callback();
+            }
+        });
+    }
 
     this.changeCardFromHand = function (card_id, callback) {
         var count = 0;

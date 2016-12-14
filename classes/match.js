@@ -34,26 +34,29 @@ function Match(socket_1, socket_2, type = "", callback) {
     socket_1.player.setInGame(true);
     socket_2.player.setInGame(true);
 
-    socket_1.player.setPlayerStatus(true, 30, 10, 2, 2, 2, 2, 2, 2);
-    socket_2.player.setPlayerStatus(false, 30, 10, 2, 2, 2, 2, 2, 2);
-
-    messenger.send(socket_1, "gameStart", {opponent_name: socket_2.player.player_id});
+    messenger.send(socket_1, "gameStart", {opponent_name: socket_2.player.player_name, opponent_deck_type: 1});
     if (type != "gameWithBot") {
-        messenger.send(socket_2, "gameStart", {opponent_name: socket_1.player.player_id});
+        messenger.send(socket_2, "gameStart", {opponent_name: socket_1.player.player_name, opponent_deck_type: 1});
     }
 
     this.getMatchID = function () {
         return matchID;
     };
 
-    this.sendStartStatus = function () {
+    this.sendStartCards = function () {
         messenger.send(socket_1, "startStatus", {turn: true});
         if (type != "gameWithBot") {
             messenger.send(socket_2, "startStatus", {turn: false});
         }
-        sendStatus();
+        //sendStatus();
         socket_1.player.setCardsToDeck();
         socket_2.player.setCardsToDeck();
+    };
+
+    this.sendStartStatus = function () {
+        socket_1.player.setPlayerStatus(true, 30, 10, 2, 2, 2, 2, 2, 2);
+        socket_2.player.setPlayerStatus(false, 30, 10, 2, 2, 2, 2, 2, 2);
+        sendStatus();
     };
 
     function sendStatus() {

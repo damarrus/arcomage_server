@@ -139,7 +139,7 @@ function Game() {
             setTimeout(function () {
                 matches[socket.matchID].readyPlayer(socket.player.getParam('player_id'));
                 if (matches[socket.matchID].getReadyPlayer()) {
-                    matches[socket.matchID].sendStartStatus();
+                    matches[socket.matchID].sendStartCards();
                 }
             }, 500)
         } else {
@@ -153,10 +153,12 @@ function Game() {
     this.changeStartCards = function (socket, card_ids) {
         if (socket.player.getInGame()) {
             if (matches[socket.matchID].getReadyPlayer()) {
-                matches[socket.matchID].changeReadyPlayer(socket.player.player_id);
-                if (matches[socket.matchID].getChangeReadyPlayer()) {
-                    matches[socket.matchID].sendStartStatus();
-                }
+                socket.player.changeStartCards(card_ids, function () {
+                    socket.player.setChangeReady(true);
+                    if (matches[socket.matchID].getChangeReadyPlayer()) {
+                        matches[socket.matchID].sendStartStatus();
+                    }
+                });
             } else {
                 messenger.send(socket, "error", {
                     method: "changeStartCards",
