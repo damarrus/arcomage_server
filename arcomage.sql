@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 11 2016 г., 20:21
+-- Время создания: Дек 14 2016 г., 21:56
 -- Версия сервера: 10.1.16-MariaDB
 -- Версия PHP: 5.6.24
 
@@ -341,6 +341,31 @@ INSERT INTO `collection` (`collection_id`, `player_id`, `card_id`, `card_amount`
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `cond`
+--
+
+CREATE TABLE `cond` (
+  `cond_id` int(11) NOT NULL,
+  `field_id` int(11) NOT NULL,
+  `cond_value` int(11) NOT NULL DEFAULT '0',
+  `cond_sign` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `condcard`
+--
+
+CREATE TABLE `condcard` (
+  `condcard_id` int(11) NOT NULL,
+  `card_id` int(11) NOT NULL,
+  `cond_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `deck`
 --
 
@@ -397,16 +422,6 @@ INSERT INTO `deckcard` (`deckCard_id`, `deck_id`, `card_id`) VALUES
 (18, 2, 18),
 (19, 2, 19),
 (20, 2, 20),
-(21, 2, 21),
-(22, 2, 22),
-(23, 2, 23),
-(24, 2, 24),
-(25, 2, 25),
-(26, 2, 26),
-(27, 2, 27),
-(28, 2, 28),
-(29, 2, 29),
-(30, 2, 30),
 (31, 3, 1),
 (32, 3, 2),
 (33, 3, 3),
@@ -427,46 +442,26 @@ INSERT INTO `deckcard` (`deckCard_id`, `deck_id`, `card_id`) VALUES
 (48, 3, 18),
 (49, 3, 19),
 (50, 3, 20),
-(51, 3, 21),
-(52, 3, 22),
-(53, 3, 23),
-(54, 3, 24),
-(55, 3, 25),
-(56, 3, 26),
-(57, 3, 27),
-(58, 3, 28),
-(59, 3, 29),
-(60, 3, 30),
-(61, 1, 1),
-(62, 1, 2),
-(63, 1, 3),
-(64, 1, 4),
-(65, 1, 5),
-(66, 1, 6),
-(67, 1, 7),
-(68, 1, 8),
-(69, 1, 9),
-(70, 1, 10),
-(71, 1, 11),
-(72, 1, 12),
-(73, 1, 13),
-(74, 1, 14),
-(75, 1, 15),
-(76, 1, 16),
-(77, 1, 17),
-(78, 1, 18),
-(79, 1, 19),
-(80, 1, 20),
-(81, 1, 21),
-(82, 1, 22),
-(83, 1, 23),
-(84, 1, 24),
-(85, 1, 25),
-(86, 1, 26),
-(87, 1, 27),
-(88, 1, 28),
-(89, 1, 29),
-(90, 1, 30);
+(91, 1, 9),
+(92, 1, 10),
+(93, 1, 11),
+(94, 1, 12),
+(95, 1, 13),
+(96, 1, 14),
+(97, 1, 15),
+(98, 1, 19),
+(99, 1, 20);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `field`
+--
+
+CREATE TABLE `field` (
+  `field_id` int(11) NOT NULL,
+  `field_name` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -498,7 +493,27 @@ INSERT INTO `matches` (`match_id`, `match_player1_id`, `match_player2_id`, `matc
 (10, 2, 1, 1),
 (11, 2, 1, 1),
 (12, 2, 1, 1),
-(13, 2, 1, 2);
+(13, 2, 1, 2),
+(14, 2, 0, 0),
+(15, 1, 0, 0),
+(16, 1, 0, 0),
+(17, 1, 0, 0),
+(18, 1, 0, 4),
+(19, 1, 2, 4),
+(20, 2, 0, 4),
+(21, 2, 0, 4),
+(22, 2, 0, 4),
+(23, 2, 0, 4),
+(24, 2, 0, 4),
+(25, 1, 0, 4),
+(26, 1, 0, 4),
+(27, 1, 0, 2),
+(28, 1, 0, 4),
+(29, 1, 0, 2),
+(30, 1, 0, 2),
+(31, 1, 0, 2),
+(32, 1, 0, 4),
+(33, 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -563,6 +578,12 @@ ALTER TABLE `collection`
   ADD KEY `player_id` (`player_id`);
 
 --
+-- Индексы таблицы `cond`
+--
+ALTER TABLE `cond`
+  ADD PRIMARY KEY (`cond_id`);
+
+--
 -- Индексы таблицы `deck`
 --
 ALTER TABLE `deck`
@@ -607,6 +628,11 @@ ALTER TABLE `card`
 ALTER TABLE `collection`
   MODIFY `collection_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
 --
+-- AUTO_INCREMENT для таблицы `cond`
+--
+ALTER TABLE `cond`
+  MODIFY `cond_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT для таблицы `deck`
 --
 ALTER TABLE `deck`
@@ -615,12 +641,12 @@ ALTER TABLE `deck`
 -- AUTO_INCREMENT для таблицы `deckcard`
 --
 ALTER TABLE `deckcard`
-  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=196;
+  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
 --
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 --
 -- AUTO_INCREMENT для таблицы `player`
 --
