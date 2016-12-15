@@ -65,10 +65,12 @@ function Player(info = {}, socket = false, callback = function () {}) {
     };
 
     function setCardsToDeck(callback) {
+        deckCards = [];
+        handCards = [];
+        discardPileCards = [];
         self.collection.getDeckByNum(deck_num, function (deck) {
             deck.getDeckCardsID(function (cards) {
                 var count = 0;
-                deckCards = [];
                 cards.forEach(function (item, i, arr) {
                     ++count;
                     deckCards.push(item);
@@ -120,24 +122,27 @@ function Player(info = {}, socket = false, callback = function () {}) {
     }
 
     this.changeStartCards = function (card_ids, callback) {
-        var count = 0;
-        card_ids = card_ids.split(',');
-        card_ids.forEach(function (item, i, arr) {
-            ++count;
-            setRandomCardFromDeckToHand();
-            if (count == card_ids.length) {
-                count = 0;
-                card_ids.forEach(function (card_id, i, arr) {
-                    ++count;
-                    setCardFromHandToDeck(card_id, function () {
-                        if (count == card_ids.length) {
-                            callback();
-                        }
+        if (card_ids != '') {
+            var count = 0;
+            card_ids = card_ids.split(',');
+            card_ids.forEach(function (item, i, arr) {
+                ++count;
+                setRandomCardFromDeckToHand();
+                if (count == card_ids.length) {
+                    count = 0;
+                    card_ids.forEach(function (card_id, i, arr) {
+                        ++count;
+                        setCardFromHandToDeck(card_id, function () {
+                            if (count == card_ids.length) {
+                                callback();
+                            }
+                        });
                     });
-                });
-            }
-        });
-
+                }
+            });
+        } else {
+            callback();
+        }
     };
 
     function setCardFromHandToDeck(card_id, callback) {
@@ -275,6 +280,9 @@ function Player(info = {}, socket = false, callback = function () {}) {
         gen1 = 0;
         gen2 = 0;
         gen3 = 0;
+        deckCards = [];
+        handCards = [];
+        discardPileCards = [];
     };
     this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0, hp_val = 0,
                                         res1_val = 0, res2_val = 0, res3_val = 0,
