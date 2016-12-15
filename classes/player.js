@@ -283,6 +283,8 @@ function Player(info = {}, socket = false, callback = function () {}) {
         deckCards = [];
         handCards = [];
         discardPileCards = [];
+        ready = false;
+        changeReady = false;
     };
     this.changePlayerStatus = function (turn_val = turn, tower_hp_val = 0, wall_hp_val = 0, hp_val = 0,
                                         res1_val = 0, res2_val = 0, res3_val = 0,
