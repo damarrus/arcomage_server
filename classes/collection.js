@@ -141,7 +141,9 @@ function Collection(player_id, callback) {
             if (result == true) {
                 decks.push(deck);
                 card_ids = card_ids.split(',');
-                deck.setDeckCards(card_ids, callback);
+                deck.setDeckCards(card_ids, function () {
+                    callback(result);
+                });
             } else {
                 callback(result);
             }

@@ -24,7 +24,6 @@ function Deck(isNew, params, callback) {
                         query = "INSERT INTO deck (deck_num, deck_name, player_id) VALUES " +
                             "('" + deck_num + "','" + deck_name + "','" + player_id + "')";
                         db.query(query, function (err, result) {
-                            console.log(result);
                             deck_id = result.insertId;
                             callback(true);
                         });
