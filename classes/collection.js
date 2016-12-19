@@ -136,6 +136,13 @@ function Collection(player_id, callback) {
             }
         })
     };
+    function getDeckByNum(deck_num, callback) {
+        decks.forEach(function (deck, i, arr) {
+            if (deck.getDeckNum() == deck_num) {
+                callback(deck);
+            }
+        });
+    }
     this.createDeck = function (deck_name, deck_num, card_ids, callback) {
         var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function (result) {
             if (result == true) {
@@ -154,16 +161,40 @@ function Collection(player_id, callback) {
             deck.deleteDeck(function (result) {
                 if (result) {
                     decks.splice(decks.indexOf(deck), 1);
-                    callback(true);
+                    var query = "SELECT count(deck_num) as count_deck FROM deck WHERE player_id='"+player_id+"' AND deck_num > '"+deck_num+"'";
+                    db.query(query, function(err, result) {
+                        if (result[0].count_deck > 0) {
+                            switchDeckNum(function () {
+                                callback(true);
+                            }, result[0].count_deck, deck_num);
+                        } else {
+                            callback(true);
+                        }
+                    });
                 } else {
                     callback(result);
                 }
             });
         });
     };
+    function switchDeckNum(callback, count_deck, deck_num, count = 0) {
+        if (count == count_deck) {
+        } else {
+            ++count;
+            var query = "UPDATE deck SET deck_num = '"+ (deck_num + count - 1) +"' " +
+                "WHERE player_id='"+player_id+"' AND deck_num = '"+ (deck_num + count) +"'";
+            db.query(query, function(err, result) {
+                getDeckByNum(deck_num + count, function (deck) {
+                    deck.setDeckNum(deck_num + count - 1);
+                    switchDeckNum(callback, count_deck, deck_num, count);
+                });
+            });
+        }
+    }
     this.getDecks = function (callback) {
         callback(decks);
     };
+
 }
 
 module.exports = Collection;
