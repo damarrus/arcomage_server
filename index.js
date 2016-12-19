@@ -27,13 +27,13 @@ db.query(query, function(err, result) {
     console.log(result[0].deck_num);
 });*/
 
-/*
-var deck = new Deck(false, {deck_id:8,player_id:1,deck_name:'asdf',deck_num:3}, function (err) {
-    deck.deleteDeck(function () {
-        console.log('ura');
+
+/*var deck = new Deck(false, {deck_id:9,player_id:1,deck_name:'kkkddd',deck_num:3}, function (err) {
+    deck.deleteDeck(function (result) {
+        console.log(result);
     });
-});
-*/
+});*/
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -340,7 +340,7 @@ function Game() {
             socket.player.collection.getDeckByNum(deck_num, function (deck) {
                 card_ids = card_ids.split(',');
                 deck.setDeckCards(card_ids, function () {
-
+                    messenger.send(socket, "setDeckCards", {valid:true});
                 });
             });
         } else {
