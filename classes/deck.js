@@ -15,15 +15,16 @@ function Deck(isNew, params, callback) {
         full = true,
         max_card = 20;
     if (isNew) {
-        query = 'SELECT max(deck_num) as max_num FROM deck WHERE player_id='+player_id;
+        query = "SELECT max(deck_num) as max_num FROM deck WHERE player_id='"+player_id+"'";
         db.query(query, function(err, result) {
-            if (result[0].max_num == deck_num) {
+            if (result[0].max_num == (deck_num - 1)) {
                 query = "SELECT count(deck_name) as count_deck_name FROM deck WHERE deck_name='"+deck_name+"' LIMIT 1";
                 db.query(query, function(err, result) {
                     if (result[0].count_deck_name == 0) {
                         query = "INSERT INTO deck (deck_num, deck_name, player_id) VALUES " +
-                            "(" + (result[0].max_num + 1) + ",'" + deck_name + "'," + player_id + ")";
+                            "('" + deck_num + "','" + deck_name + "','" + player_id + "')";
                         db.query(query, function (err, result) {
+                            console.log(result);
                             deck_id = result.insertId;
                             callback(true);
                         });
@@ -67,21 +68,40 @@ function Deck(isNew, params, callback) {
         });
     };
     this.deleteDeck = function (callback) {
-        var query = "SELECT count(deck_id) as count_deck_id FROM deck LIMIT 1";
+        var query = "SELECT count(deck_id) as count_deck_id FROM deck " +
+            "WHERE deck_num = '"+deck_num+"' AND player_id = '"+player_id+"' LIMIT 1";
         db.query(query, function(err, result) {
             if (result[0].count_deck_id > 0) {
                 query = "DELETE FROM deck WHERE deck_id="+deck_id;
                 db.query(query, function(err, result) {
                     query = "DELETE FROM deckcard WHERE deck_id="+deck_id;
                     db.query(query, function(err, result) {
-                        callback(true);
+                        query = "SELECT count(deck_num) as count_deck FROM deck WHERE player_id='"+player_id+"' AND deck_num > '"+deck_num+"'";
+                        db.query(query, function(err, result) {
+                            if (result[0].count_deck > 0) {
+                                function switchDeckNum(callback, count_deck, deck_num, count = 0) {
+                                    if (count == count_deck) {
+                                        callback();
+                                    } else {
+                                        ++count;
+                                        query = "UPDATE deck SET deck_num = '"+ deck_num + count - 1 +"'" +
+                                            "WHERE player_id='"+player_id+"' AND deck_num = '"+ deck_num + count +"'";
+                                        db.query(query, function(err, result) {
+                                            switchDeckNum(callback, count_deck, deck_num, count);
+                                        });
+                                    }
+                                }
+                                switchDeckNum(callback, result[0].count_deck, deck_num);
+                            } else {
+                                callback(true);
+                            }
+                        });
                     });
                 });
             } else {
                 callback('undefinedDeckNum');
             }
         });
-
     };
     this.getDeckNum = function () {
         return deck_num;

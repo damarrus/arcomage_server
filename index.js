@@ -16,27 +16,24 @@ const auth = require('./models/auth');
 const carder = require('./classes/card');
 const Player = require('./classes/player');
 const Match = require('./classes/match');
+const db = require('./classes/db');
+const Deck = require('./classes/deck');
 
 const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
-/*var test = new Game();
-var info = {
-    player_id: 1,
-    player_name: 'vasya',
-    player_login: 1
-};
-var socketTest = {};
-var player = new Player(info, socketTest);
-socketTest.player = player;
-var deckcards = [2,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
-player.loadCollection(function () {
-    player.setCardsToDeck(1, function () {
-        player.changeCardFromHand(2, function () {
-            console.log(player.gethandCards());
-        });
-    });
+/*var query = "SELECT deck_num FROM deck WHERE player_id='"+1+"'";
+db.query(query, function(err, result) {
+    console.log(result[0].deck_num);
 });*/
+
+/*
+var deck = new Deck(false, {deck_id:8,player_id:1,deck_name:'asdf',deck_num:3}, function (err) {
+    deck.deleteDeck(function () {
+        console.log('ura');
+    });
+});
+*/
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -106,9 +103,6 @@ function socketServer(socket, data) {
                 break;
             case 'checkHash':
                 game.checkHash(data['hash'], socket);
-                break;
-            case 'getDatabaseCards':
-                game.getDatabaseCards(socket);
                 break;
             case 'getCollection':
                 game.getCollection(socket);
