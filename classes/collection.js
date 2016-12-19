@@ -140,6 +140,7 @@ function Collection(player_id, callback) {
         var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function (result) {
             if (result == true) {
                 decks.push(deck);
+                card_ids = card_ids.split(',');
                 deck.setDeckCards(card_ids, callback);
             } else {
                 callback(result);
