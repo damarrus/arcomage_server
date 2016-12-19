@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 14 2016 г., 21:56
+-- Время создания: Дек 19 2016 г., 22:45
 -- Версия сервера: 10.1.16-MariaDB
 -- Версия PHP: 5.6.24
 
@@ -383,7 +383,8 @@ CREATE TABLE `deck` (
 INSERT INTO `deck` (`deck_id`, `deck_num`, `deck_name`, `player_id`) VALUES
 (1, 1, 'startDeck', 1),
 (2, 1, 'startDeck', 2),
-(3, 1, 'startDeck', 0);
+(3, 1, 'startDeck', 0),
+(4, 2, 'Fast', 1);
 
 -- --------------------------------------------------------
 
@@ -442,15 +443,46 @@ INSERT INTO `deckcard` (`deckCard_id`, `deck_id`, `card_id`) VALUES
 (48, 3, 18),
 (49, 3, 19),
 (50, 3, 20),
-(91, 1, 9),
-(92, 1, 10),
-(93, 1, 11),
-(94, 1, 12),
-(95, 1, 13),
-(96, 1, 14),
-(97, 1, 15),
-(98, 1, 19),
-(99, 1, 20);
+(120, 1, 1),
+(121, 1, 2),
+(122, 1, 3),
+(123, 1, 4),
+(124, 1, 6),
+(125, 1, 7),
+(126, 1, 8),
+(127, 1, 9),
+(128, 1, 10),
+(129, 1, 11),
+(130, 1, 12),
+(131, 1, 13),
+(132, 1, 14),
+(133, 1, 15),
+(134, 1, 16),
+(135, 1, 17),
+(136, 1, 18),
+(137, 1, 19),
+(138, 1, 20),
+(139, 1, 5),
+(160, 4, 1),
+(161, 4, 2),
+(162, 4, 3),
+(163, 4, 5),
+(164, 4, 7),
+(165, 4, 8),
+(166, 4, 9),
+(167, 4, 10),
+(168, 4, 11),
+(169, 4, 12),
+(170, 4, 13),
+(171, 4, 14),
+(172, 4, 15),
+(173, 4, 16),
+(174, 4, 17),
+(175, 4, 18),
+(176, 4, 19),
+(177, 4, 20),
+(178, 4, 29),
+(179, 4, 30);
 
 -- --------------------------------------------------------
 
@@ -462,6 +494,24 @@ CREATE TABLE `field` (
   `field_id` int(11) NOT NULL,
   `field_name` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `gameconf`
+--
+
+CREATE TABLE `gameconf` (
+  `gameconf_id` int(11) NOT NULL,
+  `gameconf_hash` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `gameconf`
+--
+
+INSERT INTO `gameconf` (`gameconf_id`, `gameconf_hash`) VALUES
+(1, '40dfc9db7db519c314394caa57020189');
 
 -- --------------------------------------------------------
 
@@ -513,7 +563,21 @@ INSERT INTO `matches` (`match_id`, `match_player1_id`, `match_player2_id`, `matc
 (30, 1, 0, 2),
 (31, 1, 0, 2),
 (32, 1, 0, 4),
-(33, 1, 0, 1);
+(33, 1, 0, 1),
+(34, 1, 0, 4),
+(35, 1, 0, 4),
+(36, 1, 0, 4),
+(37, 1, 0, 1),
+(38, 1, 0, 0),
+(39, 1, 0, 1),
+(40, 1, 0, 4),
+(41, 1, 2, 4),
+(42, 2, 1, 1),
+(43, 2, 1, 4),
+(44, 1, 0, 4),
+(45, 1, 0, 4),
+(46, 2, 0, 4),
+(47, 1, 0, 4);
 
 -- --------------------------------------------------------
 
@@ -525,18 +589,19 @@ CREATE TABLE `player` (
   `player_id` int(11) NOT NULL,
   `player_name` varchar(100) NOT NULL,
   `player_login` varchar(50) NOT NULL,
-  `player_password` varchar(50) NOT NULL
+  `player_password` varchar(50) NOT NULL,
+  `player_gold` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `player`
 --
 
-INSERT INTO `player` (`player_id`, `player_name`, `player_login`, `player_password`) VALUES
-(1, 'vasya', '1', '1'),
-(2, 'petya', '2', '2'),
-(3, 'valera', '3', '3'),
-(4, 'valentin', '4', '4');
+INSERT INTO `player` (`player_id`, `player_name`, `player_login`, `player_password`, `player_gold`) VALUES
+(1, 'vasya', '1', '1', 0),
+(2, 'petya', '2', '2', 0),
+(3, 'valera', '3', '3', 0),
+(4, 'valentin', '4', '4', 0);
 
 -- --------------------------------------------------------
 
@@ -596,6 +661,12 @@ ALTER TABLE `deckcard`
   ADD PRIMARY KEY (`deckCard_id`);
 
 --
+-- Индексы таблицы `gameconf`
+--
+ALTER TABLE `gameconf`
+  ADD PRIMARY KEY (`gameconf_id`);
+
+--
 -- Индексы таблицы `matches`
 --
 ALTER TABLE `matches`
@@ -636,17 +707,17 @@ ALTER TABLE `cond`
 -- AUTO_INCREMENT для таблицы `deck`
 --
 ALTER TABLE `deck`
-  MODIFY `deck_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `deck_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 --
 -- AUTO_INCREMENT для таблицы `deckcard`
 --
 ALTER TABLE `deckcard`
-  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
 --
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 --
 -- AUTO_INCREMENT для таблицы `player`
 --

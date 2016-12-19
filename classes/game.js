@@ -264,7 +264,7 @@ function Game() {
     this.checkHash = function (hash, socket) {
         var query = "SELECT gameconf_hash FROM gameconf WHERE gameconf_id = 1";
         db.query(query, function(err, result) {
-            if (result.gameconf_hash != hash) {
+            if (result[0].gameconf_hash != hash) {
                 getDatabaseCards(socket);
             } else {
                 messenger.send(socket, "checkHash", {valid:true});
