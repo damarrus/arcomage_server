@@ -90,7 +90,6 @@ function Collection(player_id, callback) {
         db.query(query, function (err, result) {
             query = "INSERT INTO deck (deck_num, deck_name, player_id) VALUES (1, 'startDeck', "+player_id+")";
             db.query(query, function (err, result) {
-                console.log(result);
                 query = 'INSERT INTO deckcard (deck_id, card_id) VALUES ' +
                     '(' + result.insertId + ', 1),' +
                     '(' + result.insertId + ', 2),' +
@@ -106,7 +105,12 @@ function Collection(player_id, callback) {
                     '(' + result.insertId + ', 12),' +
                     '(' + result.insertId + ', 13),' +
                     '(' + result.insertId + ', 14),' +
-                    '(' + result.insertId + ', 15)';
+                    '(' + result.insertId + ', 15),' +
+                    '(' + result.insertId + ', 16),' +
+                    '(' + result.insertId + ', 17),' +
+                    '(' + result.insertId + ', 18),' +
+                    '(' + result.insertId + ', 19),' +
+                    '(' + result.insertId + ', 20)';
                 db.query(query, function (err, result) {
                     callback();
                 });
@@ -133,9 +137,25 @@ function Collection(player_id, callback) {
         })
     };
     this.createDeck = function (deck_name, deck_num, card_ids, callback) {
-        var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function () {
-            decks.push(deck);
-            deck.setDeckCards(card_ids, callback)
+        var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function (result) {
+            if (result == true) {
+                decks.push(deck);
+                deck.setDeckCards(card_ids, callback);
+            } else {
+                callback(result);
+            }
+        });
+    };
+    this.deleteDeck = function (deck_num, callback) {
+        this.getDeckByNum(deck_num, function (deck) {
+            deck.deleteDeck(function (result) {
+                if (result) {
+                    decks.splice(decks.indexOf(deck), 1);
+                    callback(true);
+                } else {
+                    callback(result);
+                }
+            });
         });
     };
     this.getDecks = function (callback) {

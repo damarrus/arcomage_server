@@ -15,6 +15,22 @@ function Game() {
     var players = [];
     var inSearch = [];
 
+    function addGold(player, callback) {
+        var gold = 100 + player.player_gold;
+        var query = "UPDATE player SET player_gold = '"+gold+"' WHERE player_id = '"+player.player_id+"'";
+        db.query(query, function(err, result) {
+            callback();
+        });
+    }
+
+    function getPlayerByID(player_id, callback) {
+        players.forEach(function (item, i, arr) {
+            if (item.player_id == player_id) {
+                callback(item);
+            }
+        });
+    }
+
     this.auth = function (socket, player_login, player_password) {
         if (!socket.player) {
             if (player_login != '' && player_password != '') {
@@ -177,11 +193,22 @@ function Game() {
         if (socket.player.getInGame()) {
             if (socket.player.getParam('turn')) {
                 matches[socket.matchID].useCard(socket.player.getParam('player_id'), card_id, discard, function (result) {
-                    if (result == 1 || result == 2 || result == 3) {
-                        console.log('победил игрок ' + result);
-                        matches[socket.matchID].endMatch(result, function () {
-                            matches.splice(socket.matchID, 1);
-                        });
+                    if (!isNaN(parseFloat(result)) && isFinite(result)) {
+                        if (result != -1) {
+                            console.log('победил игрок ' + result);
+                            getPlayerByID(result, function (player) {
+                                addGold(player, function () {
+                                    matches[socket.matchID].endMatch(result, function () {
+                                        matches.splice(socket.matchID, 1);
+                                    });
+                                });
+                            });
+                        } else {
+                            messenger.send(socket, "error", {
+                                method: "useCard",
+                                typeError: "DRAW!!!!!"
+                            });
+                        }
                     } else if (result == 'error') {
                         messenger.send(socket, "error", {
                             method: "useCard",
@@ -234,12 +261,23 @@ function Game() {
         });
     };
 
-    this.getDatabaseCards = function (socket) {
+    this.checkHash = function (hash, socket) {
+        var query = "SELECT gameconf_hash FROM gameconf WHERE gameconf_id = 1";
+        db.query(query, function(err, result) {
+            if (result[0].gameconf_hash != hash) {
+                getDatabaseCards(socket);
+            } else {
+                messenger.send(socket, "checkHash", {valid:true});
+            }
+        });
+    };
+
+    function getDatabaseCards(socket) {
         carder.getAllCards(function (result) {
             messenger.send(socket, "getDatabaseCardsCount", {value:result.length});
             messenger.multipleSend(socket, "getDatabaseCards", result);
         });
-    };
+    }
     this.getCollection = function (socket) {
         if (socket.player) {
             socket.player.collection.getCardsID(function (cards) {
@@ -314,12 +352,38 @@ function Game() {
     };
     this.createDeck = function (deck_num, deck_name, card_ids, socket) {
         if (socket.player) {
-            socket.player.collection.createDeck(deck_name, deck_num, card_ids, function () {
-                messenger.send(socket, "createDeck", {valid:true});
+            socket.player.collection.createDeck(deck_name, deck_num, card_ids, function (result) {
+                if (result == true) {
+                    messenger.send(socket, "createDeck", {valid:true});
+                } else {
+                    messenger.send(socket, "error", {
+                        method: "createDeck",
+                        typeError: result
+                    });
+                }
             });
         } else {
             messenger.send(socket, "error", {
                 method: "createDeck",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.deleteDeck = function (deck_num, socket) {
+        if (socket.player) {
+            socket.player.collection.deleteDeck(deck_num, function (result) {
+                if (result == true) {
+                    messenger.send(socket, "deleteDeck", {valid:true});
+                } else {
+                    messenger.send(socket, "error", {
+                        method: "deleteDeck",
+                        typeError: result
+                    });
+                }
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "deleteDeck",
                 typeError: "notAuth"
             });
         }
@@ -338,22 +402,7 @@ function Game() {
             });
         }
     };
-    this.deleteDeck = function (deck_num, socket) {
-        if (socket.player) {
-            socket.player.collection.getDeckByNum(deck_num, function (deck) {
-                deck.deleteDeck(function () {
-                    socket.player.collection.getDecks(function (decks) {
-                        decks.splice(decks.indexOf(deck), 1);
-                    });
-                });
-            });
-        } else {
-            messenger.send(socket, "error", {
-                method: "setDeck",
-                typeError: "notAuth"
-            });
-        }
-    };
+
 }
 
 module.exports = Game;

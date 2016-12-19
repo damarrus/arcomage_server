@@ -67,13 +67,21 @@ function Deck(isNew, params, callback) {
         });
     };
     this.deleteDeck = function (callback) {
-        var query = "DELETE FROM deck WHERE deck_id="+deck_id;
+        var query = "SELECT count(deck_id) as count_deck_id FROM deck LIMIT 1";
         db.query(query, function(err, result) {
-            query = "DELETE FROM deckcard WHERE deck_id="+deck_id;
-            db.query(query, function(err, result) {
-                callback();
-            });
+            if (result[0].count_deck_id > 0) {
+                query = "DELETE FROM deck WHERE deck_id="+deck_id;
+                db.query(query, function(err, result) {
+                    query = "DELETE FROM deckcard WHERE deck_id="+deck_id;
+                    db.query(query, function(err, result) {
+                        callback(true);
+                    });
+                });
+            } else {
+                callback('undefinedDeckNum');
+            }
         });
+
     };
     this.getDeckNum = function () {
         return deck_num;

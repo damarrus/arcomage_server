@@ -95,12 +95,12 @@ function Match(socket_1, socket_2, type = "", callback) {
     function isWin(callback) {
         if (socket_1.player.getParam('tower_hp') <= 0 || socket_2.player.getParam('tower_hp') >= 100) {
             if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 100) {
-                callback(3);
+                callback(-1);
             } else {
-                callback(2);
+                callback(socket_2.player.player_id);
             }
         } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 100) {
-            callback(1);
+            callback(socket_1.player.player_id);
         } else {
             callback(false);
         }

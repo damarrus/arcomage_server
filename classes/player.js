@@ -20,7 +20,8 @@ function Player(info = {}, socket = false, callback = function () {}) {
         timerID,
         player_id = info.player_id || 0,
         player_name = info.player_name || 'bot_name',
-        player_login = info.player_login || 'bot_login';
+        player_login = info.player_login || 'bot_login',
+        player_gold = info.player_gold || -100;
     // Параметры игрока в игре
     var turn, tower_hp, wall_hp, res1, res2, res3, gen1, gen2, gen3;
     var deckCards = [];
@@ -344,15 +345,5 @@ function Player(info = {}, socket = false, callback = function () {}) {
     this.newCard = function (card_id) {
         this.cardsOnHand.push(card_id);
     };
-
-    function deleteCard(card_id) {
-        var counter = 0;
-        self.cardsOnHand.forEach(function (card, i, cardsOnHand) {
-            if (card == card_id && counter == 0) {
-                counter = 1;
-                cardsOnHand.splice(i, 1);
-            }
-        });
-    }
 }
 module.exports = Player;

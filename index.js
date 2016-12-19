@@ -104,6 +104,9 @@ function socketServer(socket, data) {
             case 'endTurn':
                 game.endTurn(socket);
                 break;
+            case 'checkHash':
+                game.checkHash(data['hash'], socket);
+                break;
             case 'getDatabaseCards':
                 game.getDatabaseCards(socket);
                 break;
