@@ -132,10 +132,11 @@ function Collection(player_id, callback) {
             }
         })
     };
-    this.createDeck = function (deck_name) {
-        decks.push(new Deck(true, {player_id:player_id,deck_name:deck_name}, function () {
-
-        }));
+    this.createDeck = function (deck_name, deck_num, card_ids, callback) {
+        var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function () {
+            decks.push(deck);
+            deck.setDeckCards(card_ids, callback)
+        });
     };
     this.getDecks = function (callback) {
         callback(decks);

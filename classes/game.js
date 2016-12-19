@@ -312,11 +312,10 @@ function Game() {
             });
         }
     };
-    this.createDeck = function (deck_name, socket) {
+    this.createDeck = function (deck_num, deck_name, card_ids, socket) {
         if (socket.player) {
-
-            socket.player.collection.createDeck(deck_name, function () {
-
+            socket.player.collection.createDeck(deck_name, deck_num, card_ids, function () {
+                messenger.send(socket, "createDeck", {valid:true});
             });
         } else {
             messenger.send(socket, "error", {
