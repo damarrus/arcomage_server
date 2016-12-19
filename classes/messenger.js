@@ -27,7 +27,7 @@ function Messenger() {
                 setTimeout(function () {
                     (isTestClient) ? socket.send(data1) : socket.write(data1);
                     console.log('send multiple '+messageType);
-                }, 100 * count / 25);
+                }, 250 * count / 25);
             }
         });
     };

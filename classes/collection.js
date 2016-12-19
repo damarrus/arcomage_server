@@ -54,8 +54,8 @@ function Collection(player_id, callback) {
                 db.query(query, function (err, result) {
                     var count = 0;
                     result.forEach(function (item, i, arr) {
-                        ++count;
                         decks.push(new Deck(false, item, function () {
+                            ++count;
                             if (count == result.length) {
                                 callback();
                             }
