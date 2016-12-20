@@ -130,9 +130,13 @@ function Collection(player_id, callback) {
         })
     };
     this.getDeckByNum = function(deck_num, callback) {
+        var count = 0;
         decks.forEach(function (deck, i, arr) {
+            ++count;
             if (deck.getDeckNum() == deck_num) {
                 callback(deck);
+            } else if (count == decks.length) {
+                callback(false);
             }
         })
     };
@@ -158,21 +162,25 @@ function Collection(player_id, callback) {
     };
     this.deleteDeck = function (deck_num, callback) {
         this.getDeckByNum(deck_num, function (deck) {
-            deck.deleteDeck(function (result) {
-                if (result) {
-                    decks.splice(decks.indexOf(deck), 1);
-                    var query = "SELECT count(deck_num) as count_deck FROM deck WHERE player_id='"+player_id+"' AND deck_num > '"+deck_num+"'";
-                    db.query(query, function(err, result) {
-                        if (result[0].count_deck > 0) {
-                            switchDeckNum(callback, result[0].count_deck, deck_num);
-                        } else {
-                            callback(true);
-                        }
-                    });
-                } else {
-                    callback(result);
-                }
-            });
+            if (deck) {
+                deck.deleteDeck(function (result) {
+                    if (result == true) {
+                        decks.splice(decks.indexOf(deck), 1);
+                        var query = "SELECT count(deck_num) as count_deck FROM deck WHERE player_id='"+player_id+"' AND deck_num > '"+deck_num+"'";
+                        db.query(query, function(err, result) {
+                            if (result[0].count_deck > 0) {
+                                switchDeckNum(callback, result[0].count_deck, deck_num);
+                            } else {
+                                callback(true);
+                            }
+                        });
+                    } else {
+                        callback(result);
+                    }
+                });
+            } else {
+                callback('invalidDeckNum');
+            }
         });
     };
     function switchDeckNum(callback, count_deck, deck_num, count = 0) {
