@@ -17,7 +17,7 @@ function Deck(isNew, params, callback) {
     if (isNew) {
         query = "SELECT max(deck_num) as max_num FROM deck WHERE player_id='"+player_id+"'";
         db.query(query, function(err, result) {
-            if (result[0].max_num == (deck_num - 1)) {
+            if ((result[0].max_num == (deck_num - 1)) || (result[0].max_num == null && deck_num == 1)) {
                 query = "SELECT count(deck_name) as count_deck_name FROM deck WHERE deck_name='"+deck_name+"' LIMIT 1";
                 db.query(query, function(err, result) {
                     if (result[0].count_deck_name == 0) {
