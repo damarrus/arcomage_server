@@ -135,7 +135,12 @@ function Collection(player_id, callback) {
         callback(decks[deck_num-1]);
     };
     function getDeckByNum(deck_num, callback) {
-        callback(decks[deck_num-1]);
+        //callback(decks[deck_num-1]);
+        decks.forEach(function (deck, i, arr) {
+            if (deck.getDeckNum() == deck_num) {
+                callback(deck);
+            }
+        });
     }
     this.createDeck = function (deck_name, deck_num, card_ids, callback) {
         var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function (result) {
