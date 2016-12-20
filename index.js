@@ -107,9 +107,6 @@ function socketServer(socket, data) {
             case 'getCollection':
                 game.getCollection(socket);
                 break;
-            /*case 'getCollectionCards':
-                game.getCollectionCards(socket);
-                break;*/
             case 'getAllDecks':
                 game.getAllDecks(socket);
                 break;
@@ -127,6 +124,9 @@ function socketServer(socket, data) {
                 break;
             case 'deleteDeck':
                 game.deleteDeck(data['deck_num'], socket);
+                break;
+            case 'buyPack':
+                game.buyPack(data['pack_count'], socket);
                 break;
         }
     } catch (e) {

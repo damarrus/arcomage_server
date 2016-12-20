@@ -6,7 +6,7 @@ const db = require('./db');
 const carder = require('./card');
 const Messenger = require('./messenger');
 
-function Match(socket_1, socket_2, type = "", callback) {
+function Match(socket_1, socket_2, gameconf, type = "", callback) {
     var self = this;
     var messenger = new Messenger();
     var matchID = 0;
@@ -54,8 +54,8 @@ function Match(socket_1, socket_2, type = "", callback) {
     };
 
     this.sendStartStatus = function () {
-        socket_1.player.setPlayerStatus(true, 30, 10, 2, 2, 2, 2, 2, 2);
-        socket_2.player.setPlayerStatus(false, 30, 10, 2, 2, 2, 2, 2, 2);
+        socket_1.player.setPlayerStatus(true, gameconf.tower_hp, gameconf.wall_hp, gameconf.res, gameconf.res, gameconf.res, gameconf.gen, gameconf.gen, gameconf.gen);
+        socket_2.player.setPlayerStatus(false, gameconf.tower_hp, gameconf.wall_hp, gameconf.res, gameconf.res, gameconf.res, gameconf.gen, gameconf.gen, gameconf.gen);
         sendStatus();
     };
 
@@ -93,13 +93,13 @@ function Match(socket_1, socket_2, type = "", callback) {
     };
     
     function isWin(callback) {
-        if (socket_1.player.getParam('tower_hp') <= 0 || socket_2.player.getParam('tower_hp') >= 100) {
-            if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 100) {
+        if (socket_1.player.getParam('tower_hp') <= 0 || socket_2.player.getParam('tower_hp') >= gameconf.tower_hp_win) {
+            if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= gameconf.tower_hp_win) {
                 callback(-1);
             } else {
                 callback(socket_2.player.player_id);
             }
-        } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= 100) {
+        } else if (socket_2.player.getParam('tower_hp') <= 0 || socket_1.player.getParam('tower_hp') >= gameconf.tower_hp_win) {
             callback(socket_1.player.player_id);
         } else {
             callback(false);
@@ -161,31 +161,39 @@ function Match(socket_1, socket_2, type = "", callback) {
                                 card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
-                                enemy.player.growthRes(card.card_endturn, function () {
-                                    if (type != "gameWithBot") {
-                                        messenger.send(enemy, 'getCardOpponent', {
-                                            card_id: card.card_id,
-                                            discard: false
-                                        });
-                                    }
-                                    sendStatus();
-                                    isWin(function (result) {
-                                        if (!result) {
-                                            self.player.changeCardFromHand(card_id, function () {
-
-                                            });
-                                            if (type == "gameWithBot") {
-                                                if (!card.card_endturn) {
-                                                    useCardBot(function (result) {
-                                                        callback(result);
-                                                    });
-                                                }
+                                sendStatus();
+                                isWin(function (result) {
+                                    if (!result) {
+                                        enemy.player.growthRes(card.card_endturn, function () {
+                                            if (type != "gameWithBot") {
+                                                messenger.send(enemy, 'getCardOpponent', {
+                                                    card_id: card.card_id,
+                                                    discard: false
+                                                });
                                             }
-                                        } else {
-                                            callback(result);
-                                        }
-                                    });
+                                            sendStatus();
+                                            isWin(function (result) {
+                                                if (!result) {
+                                                    self.player.changeCardFromHand(card_id, function () {
+
+                                                    });
+                                                    if (type == "gameWithBot") {
+                                                        if (!card.card_endturn) {
+                                                            useCardBot(function (result) {
+                                                                callback(result);
+                                                            });
+                                                        }
+                                                    }
+                                                } else {
+                                                    callback(result);
+                                                }
+                                            });
+                                        });
+                                    } else {
+                                        callback(result);
+                                    }
                                 });
+
                             });
                         });
                     } else {
@@ -239,25 +247,32 @@ function Match(socket_1, socket_2, type = "", callback) {
                                 card.card_enemy_res1, card.card_enemy_res2, card.card_enemy_res3,
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
-                                socket_1.player.growthRes(card.card_endturn, function () {
-                                    messenger.send(socket_1, 'getCardOpponent', {
-                                        card_id: card.card_id,
-                                        discard: false
-                                    });
-                                    sendStatus();
-                                    isWin(function (result) {
-                                        if (result) {
-                                            callback(result);
-                                        } else {
-                                            socket_2.player.changeCardFromHand(card_id, function () {
-                                                if (card.card_endturn) {
-                                                    useCardBot(callback);
-                                                } else {
+                                sendStatus();
+                                isWin(function (result) {
+                                    if (!result) {
+                                        socket_1.player.growthRes(card.card_endturn, function () {
+                                            messenger.send(socket_1, 'getCardOpponent', {
+                                                card_id: card.card_id,
+                                                discard: false
+                                            });
+                                            sendStatus();
+                                            isWin(function (result) {
+                                                if (result) {
                                                     callback(result);
+                                                } else {
+                                                    socket_2.player.changeCardFromHand(card_id, function () {
+                                                        if (card.card_endturn) {
+                                                            useCardBot(callback);
+                                                        } else {
+                                                            callback(result);
+                                                        }
+                                                    });
                                                 }
                                             });
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        callback(result);
+                                    }
                                 });
                             });
                         });

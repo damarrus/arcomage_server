@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Хост: 127.0.0.1
--- Время создания: Дек 19 2016 г., 22:45
+-- Время создания: Дек 20 2016 г., 21:50
 -- Версия сервера: 10.1.16-MariaDB
 -- Версия PHP: 5.6.24
 
@@ -381,10 +381,9 @@ CREATE TABLE `deck` (
 --
 
 INSERT INTO `deck` (`deck_id`, `deck_num`, `deck_name`, `player_id`) VALUES
-(1, 1, 'startDeck', 1),
 (2, 1, 'startDeck', 2),
 (3, 1, 'startDeck', 0),
-(4, 2, 'Fast', 1);
+(11, 1, 'New deck 1', 1);
 
 -- --------------------------------------------------------
 
@@ -443,46 +442,26 @@ INSERT INTO `deckcard` (`deckCard_id`, `deck_id`, `card_id`) VALUES
 (48, 3, 18),
 (49, 3, 19),
 (50, 3, 20),
-(120, 1, 1),
-(121, 1, 2),
-(122, 1, 3),
-(123, 1, 4),
-(124, 1, 6),
-(125, 1, 7),
-(126, 1, 8),
-(127, 1, 9),
-(128, 1, 10),
-(129, 1, 11),
-(130, 1, 12),
-(131, 1, 13),
-(132, 1, 14),
-(133, 1, 15),
-(134, 1, 16),
-(135, 1, 17),
-(136, 1, 18),
-(137, 1, 19),
-(138, 1, 20),
-(139, 1, 5),
-(160, 4, 1),
-(161, 4, 2),
-(162, 4, 3),
-(163, 4, 5),
-(164, 4, 7),
-(165, 4, 8),
-(166, 4, 9),
-(167, 4, 10),
-(168, 4, 11),
-(169, 4, 12),
-(170, 4, 13),
-(171, 4, 14),
-(172, 4, 15),
-(173, 4, 16),
-(174, 4, 17),
-(175, 4, 18),
-(176, 4, 19),
-(177, 4, 20),
-(178, 4, 29),
-(179, 4, 30);
+(360, 11, 19),
+(361, 11, 20),
+(362, 11, 21),
+(363, 11, 30),
+(364, 11, 32),
+(365, 11, 34),
+(366, 11, 35),
+(367, 11, 36),
+(368, 11, 42),
+(369, 11, 37),
+(370, 11, 46),
+(371, 11, 47),
+(372, 11, 48),
+(373, 11, 4),
+(374, 11, 5),
+(375, 11, 3),
+(376, 11, 54),
+(377, 11, 53),
+(378, 11, 49),
+(379, 11, 52);
 
 -- --------------------------------------------------------
 
@@ -503,15 +482,25 @@ CREATE TABLE `field` (
 
 CREATE TABLE `gameconf` (
   `gameconf_id` int(11) NOT NULL,
-  `gameconf_hash` varchar(255) NOT NULL
+  `gameconf_hash` varchar(255) NOT NULL,
+  `pack_cost` int(11) NOT NULL,
+  `gold_take` int(11) NOT NULL,
+  `max_cards` int(11) NOT NULL,
+  `tower_hp` int(11) NOT NULL,
+  `wall_hp` int(11) NOT NULL,
+  `res` int(11) NOT NULL,
+  `gen` int(11) NOT NULL,
+  `tower_hp_win` int(11) NOT NULL,
+  `once_res_win` int(11) NOT NULL,
+  `all_res_win` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `gameconf`
 --
 
-INSERT INTO `gameconf` (`gameconf_id`, `gameconf_hash`) VALUES
-(1, '40dfc9db7db519c314394caa57020189');
+INSERT INTO `gameconf` (`gameconf_id`, `gameconf_hash`, `pack_cost`, `gold_take`, `max_cards`, `tower_hp`, `wall_hp`, `res`, `gen`, `tower_hp_win`, `once_res_win`, `all_res_win`) VALUES
+(1, '40dfc9db7db519c314394caa57020189', 100, 100, 20, 30, 10, 2, 3, 100, 75, 50);
 
 -- --------------------------------------------------------
 
@@ -577,7 +566,11 @@ INSERT INTO `matches` (`match_id`, `match_player1_id`, `match_player2_id`, `matc
 (44, 1, 0, 4),
 (45, 1, 0, 4),
 (46, 2, 0, 4),
-(47, 1, 0, 4);
+(47, 1, 0, 4),
+(48, 1, 0, 1),
+(49, 1, 0, 1),
+(50, 1, 0, 4),
+(51, 1, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -707,17 +700,17 @@ ALTER TABLE `cond`
 -- AUTO_INCREMENT для таблицы `deck`
 --
 ALTER TABLE `deck`
-  MODIFY `deck_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `deck_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT для таблицы `deckcard`
 --
 ALTER TABLE `deckcard`
-  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=180;
+  MODIFY `deckCard_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=380;
 --
 -- AUTO_INCREMENT для таблицы `matches`
 --
 ALTER TABLE `matches`
-  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+  MODIFY `match_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 --
 -- AUTO_INCREMENT для таблицы `player`
 --

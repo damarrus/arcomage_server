@@ -345,5 +345,9 @@ function Player(info = {}, socket = false, callback = function () {}) {
     this.newCard = function (card_id) {
         this.cardsOnHand.push(card_id);
     };
+
+    this.buyPack = function (pack_count, callback) {
+
+    };
 }
 module.exports = Player;

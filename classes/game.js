@@ -7,16 +7,19 @@ const Player = require('./player');
 const Messenger = require('./messenger');
 const db = require('./db');
 const carder = require('./card');
+const Gameconf = require('./gameconf');
 
 function Game() {
 
     var messenger = new Messenger();
+    var gameconf;
+    new Gameconf(function (result) {gameconf = result;});
     var matches = [];
     var players = [];
     var inSearch = [];
 
     function addGold(player, callback) {
-        var gold = 100 + player.player_gold;
+        var gold = gameconf.gold_take + player.player_gold;
         var query = "UPDATE player SET player_gold = '"+gold+"' WHERE player_id = '"+player.player_id+"'";
         db.query(query, function(err, result) {
             callback();
@@ -99,7 +102,7 @@ function Game() {
                             socket.opponent = opponent;
                             opponent.player.inSearch = false;
 
-                            new Match(socket, opponent, "searchGame", function (match) {
+                            new Match(socket, opponent, gameconf, "searchGame", function (match) {
                                 matches[match.getMatchID()] = match;
                             });
                         } else {
@@ -130,7 +133,7 @@ function Game() {
                     var bot_socket = {};
                     bot_socket.player = new Player({}, false, function () {
                         bot_socket.player.setDeckNum(1, function () {
-                            new Match(socket, bot_socket, "gameWithBot", function (match, id) {
+                            new Match(socket, bot_socket, gameconf, "gameWithBot", function (match, id) {
                                 matches[id] = match;
                             });
                         });
@@ -394,6 +397,25 @@ function Game() {
                 deck.setDeckName(deck_name, function () {
 
                 });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "setDeck",
+                typeError: "notAuth"
+            });
+        }
+    };
+    this.buyPack = function (pack_count, socket) {
+        if (socket.player) {
+            socket.player.buyPack(pack_count, function (result) {
+                if (result == true) {
+
+                } else {
+                    messenger.send(socket, "error", {
+                        method: "buyPack",
+                        typeError: result
+                    });
+                }
             });
         } else {
             messenger.send(socket, "error", {
