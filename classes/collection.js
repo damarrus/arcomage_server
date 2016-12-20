@@ -52,18 +52,20 @@ function Collection(player_id, callback) {
             } else {
                 query = 'SELECT * FROM deck WHERE player_id=' + player_id;
                 db.query(query, function (err, result) {
-                    var count = 0;
-                    result.forEach(function (item, i, arr) {
-                        decks.push(new Deck(false, item, function () {
-                            ++count;
-                            if (count == result.length) {
-                                callback();
-                            }
-                        }));
-                    });
+                    loadDecksRecursive(callback, result);
                 });
             }
         });
+    }
+    function loadDecksRecursive(callback, decks_result, count = 0) {
+        if (count == decks_result.length) {
+            callback();
+        } else {
+            decks.push(new Deck(false, decks_result[count], function () {
+                ++count;
+                loadDecksRecursive(callback, decks_result, count);
+            }));
+        }
     }
     function setStartCollectionAndDeck(callback) {
         var query = 'INSERT INTO collection (player_id, card_id, card_amount) VALUES ' +
@@ -130,22 +132,10 @@ function Collection(player_id, callback) {
         })
     };
     this.getDeckByNum = function(deck_num, callback) {
-        var count = 0;
-        decks.forEach(function (deck, i, arr) {
-            ++count;
-            if (deck.getDeckNum() == deck_num) {
-                callback(deck);
-            } else if (count == decks.length) {
-                callback(false);
-            }
-        })
+        callback(decks[deck_num-1]);
     };
     function getDeckByNum(deck_num, callback) {
-        decks.forEach(function (deck, i, arr) {
-            if (deck.getDeckNum() == deck_num) {
-                callback(deck);
-            }
-        });
+        callback(decks[deck_num-1]);
     }
     this.createDeck = function (deck_name, deck_num, card_ids, callback) {
         var deck = new Deck(true, {player_id:player_id,deck_name:deck_name,deck_num:deck_num}, function (result) {
