@@ -84,10 +84,10 @@ function socketServer(socket, data) {
                 game.unAuth(socket);
                 break;
             case 'searchGame':
-                game.searchGame(data['deck_num'] = 1, socket);
+                game.searchGame(data['deck_num'], socket);
                 break;
             case 'gameWithBot':
-                game.gameWithBot(data['deck_num'] = 1, socket);
+                game.gameWithBot(data['deck_num'], socket);
                 break;
             case 'ready':
                 game.startGame(socket);
