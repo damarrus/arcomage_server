@@ -20,14 +20,14 @@ function Messenger() {
             ++count;
             item.messageType = messageType;
             data += JSON.stringify(item);
-            if ((count % 25 == 0 && count != 0) || count == array.length) {
+            if ((count % 3 == 0 && count != 0) || count == array.length) {
                 var data1 = data;
                 data = '';
-                if (count % 25 != 0) {count = count + 25 - (count % 25);}
+                if (count % 3 != 0) {count = count + 25 - (count % 25);}
                 setTimeout(function () {
                     (isTestClient) ? socket.send(data1) : socket.write(data1);
-                    console.log('send multiple '+messageType);
-                }, 250 * count / 25);
+                    //console.log('send multiple '+messageType);
+                }, 100 * count / 3);
             }
         });
     };
