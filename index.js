@@ -125,6 +125,9 @@ function socketServer(socket, data) {
             case 'deleteDeck':
                 game.deleteDeck(data['deck_num'], socket);
                 break;
+            case 'deleteAllDecks':
+                game.deleteAllDecks(socket);
+                break;
             case 'buyPack':
                 game.buyPack(data['pack_count'], socket);
                 break;

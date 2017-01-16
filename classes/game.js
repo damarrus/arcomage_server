@@ -391,6 +391,25 @@ function Game() {
             });
         }
     };
+    this.deleteAllDecks = function (socket) {
+        if (socket.player) {
+            socket.player.collection.getDecks(function (decks) {
+                var count = 0;
+                decks.forEach(function (item, i, arr) {
+                    ++count;
+                    item.deleteDeck(function () {});
+                    if (count == decks.length) {
+                        messenger.send(socket, "deleteAllDecks", {valid:true});
+                    }
+                });
+            });
+        } else {
+            messenger.send(socket, "error", {
+                method: "deleteAllDecks",
+                typeError: "notAuth"
+            });
+        }
+    };
     this.setDeckName = function (deck_num, deck_name, socket) {
         if (socket.player) {
             socket.player.collection.getDeckByNum(deck_num, function (deck) {
