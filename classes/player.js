@@ -43,7 +43,6 @@ function Player(info = {}, socket = false, callback = function () {}) {
 
     this.setDeckNum = function (new_deck_num, callback) {
         this.collection.getDeckByNum(new_deck_num, function (deck) {
-            console.log(player_name);
             if (deck.isDeckFull()) {
                 deck_num = new_deck_num;
                 callback(true);

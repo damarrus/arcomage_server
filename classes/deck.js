@@ -18,7 +18,8 @@ function Deck(isNew, params, callback) {
         query = "SELECT max(deck_num) as max_num FROM deck WHERE player_id='"+player_id+"'";
         db.query(query, function(err, result) {
             if ((result[0].max_num == (deck_num - 1)) || (result[0].max_num == null && deck_num == 1)) {
-                query = "SELECT count(deck_name) as count_deck_name FROM deck WHERE deck_name='"+deck_name+"' LIMIT 1";
+                query = "SELECT count(deck_name) as count_deck_name FROM deck " +
+                    "WHERE deck_name='"+deck_name+"' AND player_id='"+player_id+"' LIMIT 1";
                 db.query(query, function(err, result) {
                     if (result[0].count_deck_name == 0) {
                         query = "INSERT INTO deck (deck_num, deck_name, player_id) VALUES " +
@@ -65,9 +66,17 @@ function Deck(isNew, params, callback) {
     };
 
     this.setDeckName = function (deck_name, callback) {
-        var query = "UPDATE deck SET deck_name='"+deck_name+"' WHERE deck_id="+deck_id;
+        var query = "SELECT count(deck_name) as count_deck_name FROM deck " +
+            "WHERE deck_name='"+deck_name+"' AND player_id='"+player_id+"' LIMIT 1";
         db.query(query, function(err, result) {
-            callback();
+            if (result[0].count_deck_name == 0) {
+                query = "UPDATE deck SET deck_name='"+deck_name+"' WHERE deck_id="+deck_id;
+                db.query(query, function(err, result) {
+                    callback(true);
+                });
+            } else {
+                callback('deckNameIsNotUnique');
+            }
         });
     };
     this.deleteDeck = function (callback) {

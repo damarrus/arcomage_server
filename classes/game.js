@@ -394,8 +394,15 @@ function Game() {
     this.setDeckName = function (deck_num, deck_name, socket) {
         if (socket.player) {
             socket.player.collection.getDeckByNum(deck_num, function (deck) {
-                deck.setDeckName(deck_name, function () {
-
+                deck.setDeckName(deck_name, function (result) {
+                    if (result == true) {
+                        messenger.send(socket, "setDeckName", {valid:true});
+                    } else {
+                        messenger.send(socket, "error", {
+                            method: "setDeckName",
+                            typeError: result
+                        });
+                    }
                 });
             });
         } else {
