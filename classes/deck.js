@@ -65,19 +65,24 @@ function Deck(isNew, params, callback) {
         return full;
     };
 
-    this.setDeckName = function (deck_name, callback) {
-        var query = "SELECT count(deck_name) as count_deck_name FROM deck " +
-            "WHERE deck_name='"+deck_name+"' AND player_id='"+player_id+"' LIMIT 1";
-        db.query(query, function(err, result) {
-            if (result[0].count_deck_name == 0) {
-                query = "UPDATE deck SET deck_name='"+deck_name+"' WHERE deck_id="+deck_id;
-                db.query(query, function(err, result) {
-                    callback(true);
-                });
-            } else {
-                callback('deckNameIsNotUnique');
-            }
-        });
+    this.setDeckName = function (new_deck_name, callback) {
+        if (new_deck_name != deck_name) {
+            var query = "SELECT count(deck_name) as count_deck_name FROM deck " +
+                "WHERE deck_name='"+new_deck_name+"' AND player_id='"+player_id+"' LIMIT 1";
+            db.query(query, function(err, result) {
+                if (result[0].count_deck_name == 0) {
+                    query = "UPDATE deck SET deck_name='"+new_deck_name+"' WHERE deck_id="+deck_id;
+                    db.query(query, function(err, result) {
+                        deck_name = new_deck_name;
+                        callback(true);
+                    });
+                } else {
+                    callback('deckNameIsNotUnique');
+                }
+            });
+        } else {
+            callback(true);
+        }
     };
     this.deleteDeck = function (callback) {
         var query = "SELECT count(deck_id) as count_deck_id FROM deck " +
