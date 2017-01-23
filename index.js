@@ -85,18 +85,17 @@ function socketServer(socket, data) {
                 break;
             case 'newGame':
                 var game_mode = data['game_mode'].split(',');
-                console.log(game_mode);
                 switch(game_mode[0]) {
-                    case 0:
+                    case '0':
                         switch(game_mode[1]) {
-                            case 0:
+                            case '0':
                                 game.searchGame(data['deck_num'], socket);
                                 break;
                         }
                         break;
-                    case 1:
+                    case '1':
                         switch(game_mode[1]) {
-                            case 0:
+                            case '0':
                                 game.gameWithBot(data['deck_num'], socket);
                                 break;
                         }
