@@ -19,6 +19,8 @@ const Match = require('./classes/match');
 const db = require('./classes/db');
 const Deck = require('./classes/deck');
 
+db.query("SET SESSION wait_timeout = 604800");
+
 const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
