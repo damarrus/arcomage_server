@@ -19,8 +19,6 @@ const Match = require('./classes/match');
 const db = require('./classes/db');
 const Deck = require('./classes/deck');
 
-db.query("SET SESSION wait_timeout = 604800");
-
 const isTestClient = (process.argv[2] == 'test');
 console.log("test mode " + isTestClient);
 
@@ -84,6 +82,25 @@ function socketServer(socket, data) {
                 break;
             case 'unAuth':
                 game.unAuth(socket);
+                break;
+            case 'newGame':
+                var game_mode = data['game_mode'].split(',');
+                switch(game_mode[0]) {
+                    case 0:
+                        switch(game_mode[1]) {
+                            case 0:
+                                game.searchGame(data['deck_num'], socket);
+                                break;
+                        }
+                        break;
+                    case 1:
+                        switch(game_mode[1]) {
+                            case 0:
+                                game.gameWithBot(data['deck_num'], socket);
+                                break;
+                        }
+                        break;
+                }
                 break;
             case 'searchGame':
                 game.searchGame(data['deck_num'], socket);
