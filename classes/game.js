@@ -89,7 +89,9 @@ function Game() {
                 if (!inSearch[0]) {
                     inSearch.push(socket);
                     socket.player.setInSearch(true);
-                    socket.player.setDeckNum(deck_num, function (result) {});
+                    socket.player.setDeckNum(deck_num, function (result) {
+                        messenger.send(socket, "searchGame", {valid:true});
+                    });
                 } else {
                     // проверка на полную деку
                     socket.player.setDeckNum(deck_num, function (result) {
@@ -116,6 +118,7 @@ function Game() {
             } else {
                 inSearch.splice(inSearch.indexOf(socket), 1);
                 socket.player.setInSearch(false);
+                messenger.send(socket, "searchGame", {valid:false});
             }
         } else {
             messenger.send(socket, "error", {
