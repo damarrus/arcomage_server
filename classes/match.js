@@ -202,6 +202,7 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
                     }
                 });
             } else {
+                messenger.send(self, "useCard", {valid:true});
                 self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                     enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                         enemy.player.growthRes(false, function () {
