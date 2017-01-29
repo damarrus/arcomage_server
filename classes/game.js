@@ -175,6 +175,7 @@ function Game() {
     this.changeStartCards = function (socket, card_ids) {
         if (socket.player.getInGame()) {
             if (matches[socket.matchID].getReadyPlayer()) {
+                messenger.send(socket, "changeStartCards", {valid:true});
                 socket.player.changeStartCards(card_ids, function () {
                     socket.player.setChangeReady(true);
                     if (matches[socket.matchID].getChangeReadyPlayer()) {

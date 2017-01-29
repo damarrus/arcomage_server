@@ -124,7 +124,6 @@ function Player(info = {}, socket = false, callback = function () {}) {
 
     this.changeStartCards = function (card_ids, callback) {
         if (1 == 1) {
-            messenger.send(self, "changeStartCards", {valid:true});
             if (card_ids != '') {
                 var count = 0;
                 card_ids = card_ids.split(',');
