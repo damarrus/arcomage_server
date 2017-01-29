@@ -123,26 +123,29 @@ function Player(info = {}, socket = false, callback = function () {}) {
     }
 
     this.changeStartCards = function (card_ids, callback) {
-        if (card_ids != '') {
-            var count = 0;
-            card_ids = card_ids.split(',');
-            card_ids.forEach(function (item, i, arr) {
-                ++count;
-                setRandomCardFromDeckToHand();
-                if (count == card_ids.length) {
-                    count = 0;
-                    card_ids.forEach(function (card_id, i, arr) {
-                        ++count;
-                        setCardFromHandToDeck(card_id, function () {
-                            if (count == card_ids.length) {
-                                callback();
-                            }
+        if (1 == 1) {
+            messenger.send(self, "changeStartCards", {valid:true});
+            if (card_ids != '') {
+                var count = 0;
+                card_ids = card_ids.split(',');
+                card_ids.forEach(function (item, i, arr) {
+                    ++count;
+                    setRandomCardFromDeckToHand();
+                    if (count == card_ids.length) {
+                        count = 0;
+                        card_ids.forEach(function (card_id, i, arr) {
+                            ++count;
+                            setCardFromHandToDeck(card_id, function () {
+                                if (count == card_ids.length) {
+                                    callback();
+                                }
+                            });
                         });
-                    });
-                }
-            });
-        } else {
-            callback();
+                    }
+                });
+            } else {
+                callback();
+            }
         }
     };
 
