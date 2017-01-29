@@ -153,6 +153,7 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
                 card.card_endturn = (card.card_endturn != 0);
                 self.player.costCard(card, function (result) {
                     if (result) {
+                        messenger.send(self, "useCard", {valid:true});
                         self.player.changePlayerStatus(card.card_endturn, card.card_self_tower_hp, card.card_self_wall_hp, card.card_self_hp,
                             card.card_self_res1, card.card_self_res2, card.card_self_res3,
                             card.card_self_gen1, card.card_self_gen2, card.card_self_gen3,
@@ -175,9 +176,6 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
                                             isWin(function (result) {
                                                 if (!result) {
                                                     self.player.changeCardFromHand(card_id, function () {
-                                                        if (type != "gameWithBot") {
-                                                            messenger.send(self, "useCard", {valid:true});
-                                                        }
 
                                                     });
                                                     if (type == "gameWithBot") {
@@ -217,9 +215,6 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
                             isWin(function (result) {
                                 if (!result) {
                                     self.player.changeCardFromHand(card_id, function () {
-                                        if (type != "gameWithBot") {
-                                            messenger.send(self, "useCard", {valid:true});
-                                        }
 
                                     });
                                     if (type == "gameWithBot") {
