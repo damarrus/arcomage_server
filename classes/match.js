@@ -162,19 +162,22 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
                                 card.card_enemy_gen1, card.card_enemy_gen2, card.card_enemy_gen3,
                             function () {
                                 sendStatus();
+                                if (type != "gameWithBot") {
+                                    messenger.send(enemy, 'getCardOpponent', {
+                                        card_id: card.card_id,
+                                        discard: false
+                                    });
+                                }
                                 isWin(function (result) {
                                     if (!result) {
                                         enemy.player.growthRes(card.card_endturn, function () {
-                                            if (type != "gameWithBot") {
-                                                messenger.send(enemy, 'getCardOpponent', {
-                                                    card_id: card.card_id,
-                                                    discard: false
-                                                });
-                                            }
                                             sendStatus();
                                             isWin(function (result) {
                                                 if (!result) {
                                                     self.player.changeCardFromHand(card_id, function () {
+                                                        if (type != "gameWithBot") {
+                                                            messenger.send(self, "useCard", {valid:true});
+                                                        }
 
                                                     });
                                                     if (type == "gameWithBot") {
@@ -214,6 +217,9 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
                             isWin(function (result) {
                                 if (!result) {
                                     self.player.changeCardFromHand(card_id, function () {
+                                        if (type != "gameWithBot") {
+                                            messenger.send(self, "useCard", {valid:true});
+                                        }
 
                                     });
                                     if (type == "gameWithBot") {
