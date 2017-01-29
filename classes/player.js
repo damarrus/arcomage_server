@@ -256,7 +256,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         clearTimeout(timerID);
         if (turn_val) {
             timerID = setTimeout(function () {
-                match.endTurn(player_id, function () {});
+                match.endTurn(player_id, true, function () {});
             }, 45000);
         }
         turn = turn_val;
@@ -294,7 +294,7 @@ function Player(info = {}, socket = false, callback = function () {}) {
         clearTimeout(timerID);
         if (turn_val) {
             timerID = setTimeout(function () {
-                match.endTurn(player_id, function () {});
+                match.endTurn(player_id, true, function () {});
             }, 45000);
         }
         turn = turn_val;

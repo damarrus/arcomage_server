@@ -106,7 +106,7 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
         }
     }
 
-    this.endTurn = function (player_id, callback) {
+    this.endTurn = function (player_id, time_is_over, callback) {
         var self;
         var enemy;
         if (player_id == player_1_id) {
@@ -117,6 +117,9 @@ function Match(socket_1, socket_2, gameconf, type = "", callback) {
             enemy = socket_1;
         }
         if (self.player.getParam('turn')) {
+            if (!time_is_over) {
+                messenger.send(self, "endTurn", {valid:true});
+            }
             self.player.changePlayerStatus(false,0,0,0,0,0,0,0,0,0, function () {
                 enemy.player.changePlayerStatus(true,0,0,0,0,0,0,0,0,0, function () {
                     enemy.player.growthRes(false, function () {

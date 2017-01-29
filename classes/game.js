@@ -239,7 +239,7 @@ function Game() {
     this.endTurn = function (socket) {
         if (socket.player.getInGame()) {
             if (socket.player.getParam('turn')) {
-                matches[socket.matchID].endTurn(socket.player.getParam('player_id'), function (result) {
+                matches[socket.matchID].endTurn(socket.player.getParam('player_id'), false, function (result) {
                     if (result == 1 || result == 2 || result == 3) {
                         console.log('победил игрок ' + result);
                         matches[socket.matchID].endMatch(result, function () {
